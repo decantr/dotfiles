@@ -10,7 +10,7 @@ alias dl='youtube-dl -xf bestaudio --audio-format mp3'
 alias ip='curl ident.me'
 alias up='sudo eopkg up'
 alias o='xdg-open'
-alias re='sudo !!'
+alias re='sudo $(history -p !!)'
 alias bashrc='vim .bashrc; source .bashrc'
 alias F='youtube-dl -F'
 
