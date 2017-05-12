@@ -12,6 +12,12 @@ alias up='sudo eopkg up'
 alias o='xdg-open'
 alias re='sudo !!'
 alias bashrc='vim .bashrc; source .bashrc'
+alias F='youtube-dl -F'
+
+# streaming
+alias squint='mpv -ytdl-format=43/worst'
+alias watch='mpv -ytdl-format=best[height=480]/135'
+alias listen='mpv -ytdl-format=bestaudio'
 
 export LS_OPTIONS='--color=auto -l'
 eval "`dircolors`"
