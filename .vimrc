@@ -4,9 +4,9 @@ Plug 'arcticicestudio/nord-vim'
 Plug 'itchyny/lightline.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'pangloss/vim-javascript', { 'for': 'js' }
+Plug 'joshdick/onedark.vim'
 call plug#end()
 
-colorscheme nord
 
 let g:lightline = {'colorscheme': 'nord','component': {'readonly': '%{&readonly?"x":""}'}}
 
