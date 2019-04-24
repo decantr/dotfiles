@@ -20,7 +20,7 @@ echo "$aliases" >> .config/aliasrc
 
 # i3 changes
 # TODO : Add in grep so no duplicates
-sed -i '9s/^/exec --no-startup-id xrandr --dpi 280\n/' .config/i3/config
+#sed -i '9s/^/exec --no-startup-id xrandr --dpi 280\n/' .config/i3/config
 sed -i '9s/^/exec --no-startup-id setxkbmap -layout gb\n/' .config/i3/config
 sed -i 's/exec --no-startup-id xcompmgr//' .config/i3/config
 sed -i 's/gaps inner 15/gaps inner 5/' .config/i3/config
@@ -37,16 +37,16 @@ sed -i '9s/^/set shiftwidth=2\n/' .vimrc
 sed -i 's/en_us/en_gb/' .vimrc
 
 # dunst
-sed -i 's/350x5-0+24/700-0+64/' .config/dunst/dunstrc
+#sed -i 's/350x5-0+24/700-0+64/' .config/dunst/dunstrc
 
 # exports
-sed -i '3s/^/export GDK_SCALE=2\n/' ~/.profile
-sed -i '4s/^/export XKB_DEFAULT_LAYOUT=gb\n/' ~/.profile
+#sed -i '3s/^/export GDK_SCALE=2\n/' .profile
+sed -i '4s/^/export XKB_DEFAULT_LAYOUT=gb\n/' .profile
 
 # screenshots to Pictures
 sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .scripts/i3cmds/maimpick
 
 # get the bibtorefer script
-curl -L "https://gist.githubusercontent.com/LukeSmithxyz/ffd3f2ca1deac65423c2f32930294b65/raw/ab47f1c104c31a567763f4edb61831f2c908288f/bibtorefer.sh" -o ~/.scripts/tools/bibtorefer
-chmod +x ~/.scripts/tools/bibtorefer
+curl -L "https://gist.githubusercontent.com/LukeSmithxyz/ffd3f2ca1deac65423c2f32930294b65/raw/ab47f1c104c31a567763f4edb61831f2c908288f/bibtorefer.sh" -o .scripts/tools/bibtorefer
+chmod +x .scripts/tools/bibtorefer
 
