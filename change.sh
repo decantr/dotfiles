@@ -33,8 +33,8 @@ sed -i 's/gaps inner current set 15; gaps outer current set 15/gaps inner curren
 # replace "[help] \n interval=once" with ""
 
 # vimrc
-sed -i '9s/^/set tabstop=2\n/' .vimrc
-sed -i '9s/^/set shiftwidth=2\n/' .vimrc
+echo 'set tabstop=2' >> .vimrc
+echo 'set shiftwidth=2' >> .vimrc
 sed -i 's/en_us/en_gb/' .vimrc
 
 # dunst
