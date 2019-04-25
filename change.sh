@@ -33,9 +33,9 @@ sed -i 's/gaps inner current set 15; gaps outer current set 15/gaps inner curren
 # replace "[help] \n interval=once" with ""
 
 # vimrc
-echo 'set tabstop=2' >> .vimrc
-echo 'set shiftwidth=2' >> .vimrc
-sed -i 's/en_us/en_gb/' .vimrc
+echo 'set tabstop=2' >> .config/nvim/init.vim
+echo 'set shiftwidth=2' >> .config/nvim/init.vim
+sed -i 's/en_us/en_gb/' .config/nvim/init.vim
 echo '
 """ groff
 	" Code snippets
@@ -43,7 +43,7 @@ echo '
 	autocmd FileType groff inoremap ,i <Enter>.I ""<Enter><++><Esc>ka
 	autocmd FileType groff inoremap ,cw <Enter>.CW ""<Enter><++><Esc>kf"a
 	autocmd FileType groff inoremap ,li <Enter>.IP \[bu]<Enter>
-' >> .vimrc
+' >> .config/nvim/init.vim
 
 
 # dunst
