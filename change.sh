@@ -21,8 +21,6 @@ echo "$aliases" >> .config/aliasrc
 # i3 changes
 # TODO : Add in grep so no duplicates
 #sed -i '9s/^/exec --no-startup-id xrandr --dpi 280\n/' .config/i3/config
-sed -i '9s/^/exec_always --no-startup-id xrandr --output eDP-1 --mode 1920x1080 --primary --output DP-1 --off --output DP-2 --off/' .config/i3/config
-sed -i '9s/^/exec --no-startup-id setxkbmap -layout gb\n/' .config/i3/config
 sed -i 's/exec --no-startup-id xcompmgr//' .config/i3/config
 sed -i 's/gaps inner 15/gaps inner 5/' .config/i3/config
 sed -i 's/gaps outer 15/gaps outer 0/' .config/i3/config
@@ -31,6 +29,10 @@ sed -i 's/bindsym $mod+w			exec $term -e nmtui/bindsym $mod+w			exec networkmana
 sed -i 's/gaps inner current set 15; gaps outer current set 15/gaps inner current set 5; gaps outer current set 0/' .config/i3/config
 # i3blocks
 # replace "[help] \n interval=once" with ""
+
+# xinitrc
+sed -ei "\$ixrandr --output eDP-1 --mode 1920x1080 --primary" .xinitrc
+sed -ei "\$isetxkbmap -layout gb" .xinitrc
 
 # vimrc
 sed -i '12s/^/Plug "junegunn/limelight.vim"\n/' .config/nvim/init.vim
