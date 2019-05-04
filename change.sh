@@ -81,9 +81,7 @@ sed -i '4s/^/export XKB_DEFAULT_LAYOUT=gb\n/' .profile
 sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .scripts/i3cmds/maimpick
 
 # get the bibtorefer script
-if [ ! -f ".scripts/tools/bibtorefer" ]; then
-	mv tools/bibtorefer .scripts/tools/bibtorefer
-fi
+cp tools/* .scripts/tools/
 
 # Fix compiler
 sed -i "s/-kejpt/-kept/" .scripts/tools/compiler

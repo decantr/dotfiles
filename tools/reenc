@@ -1,0 +1,5 @@
+#!/bin/sh
+if [ "$2" = "" ]; then out=out.mp4;
+else out="$2"; fi
+ffmpeg -y -v -8 -i "$1" -an "$out"
+echo "From: $(du -bsh $1 | cut -f 1) to $(du -bsh $out | cut -f 1)"

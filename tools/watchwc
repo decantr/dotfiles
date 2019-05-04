@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ -f "$1" ]; then
+	file="$1"
+	if echo "$1" | grep -q ".ms"; then
+		file="${1%%.*}".pdf
+	fi
+	clear
+	words=$(getwc "$file")
+	roughpercent=$(( 100 * $words / 14000 + (1000 * $words / 14000 % 10 >= 5 ? 1 : 0) ))
+	printf "Currently at : $words words ($roughpercent%%)"
+fi
