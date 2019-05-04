@@ -75,7 +75,6 @@ sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .scripts/i3cmds/maimpick
 
 # get the bibtorefer script
 if [ ! -f ".scripts/tools/bibtorefer" ]; then
-	curl -L "https://gist.githubusercontent.com/LukeSmithxyz/ffd3f2ca1deac65423c2f32930294b65/raw/ab47f1c104c31a567763f4edb61831f2c908288f/bibtorefer.sh" -o .scripts/tools/bibtorefer
-	chmod +x .scripts/tools/bibtorefer
+	mv tools/bibtorefer .scripts/tools/bibtorefer
 fi
 
