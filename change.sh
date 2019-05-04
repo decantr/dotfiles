@@ -6,6 +6,22 @@
 # files from github.com/lukesmithxyz/voidrice
 #
 
+# determine whether we are making a bridge or a node
+printf "::    Is this display HiDPi [y/N] "
+read -r REPLY
+if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Nn]$"; then
+	hidpi=false
+elif echo "$REPLY" | grep -qvwE "^[Yy]$"; then
+	echo ::    Invalid && exit 1;
+fi
+
+# perform hidpi changes
+if $hidpi ; then
+	sed -i '9s/^/exec --no-startup-id xrandr --dpi 280\n/' .config/i3/config
+	sed -i 's/350x5-0+24/700-0+64/' .config/dunst/dunstrc
+	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
+fi
+
 # aliases
 aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	ytwatch='mpv --really-quiet -ytdl-format=best[height=480]/22/135' \\
@@ -20,7 +36,6 @@ echo "$aliases" >> .config/aliasrc
 
 # i3 changes
 # TODO : Add in grep so no duplicates
-#sed -i '9s/^/exec --no-startup-id xrandr --dpi 280\n/' .config/i3/config
 sed -i 's/exec --no-startup-id xcompmgr//' .config/i3/config
 sed -i 's/gaps inner 15/gaps inner 5/' .config/i3/config
 sed -i 's/gaps outer 15/gaps outer 0/' .config/i3/config
@@ -52,12 +67,7 @@ echo '
 	map <leader>l :Limelight!!<CR>
 ' >> .config/nvim/init.vim
 
-
-# dunst
-#sed -i 's/350x5-0+24/700-0+64/' .config/dunst/dunstrc
-
 # exports
-#sed -i '3s/^/export GDK_SCALE=2\n/' .profile
 sed -i '4s/^/export XKB_DEFAULT_LAYOUT=gb\n/' .profile
 
 # screenshots to Pictures
