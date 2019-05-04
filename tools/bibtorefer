@@ -2,6 +2,7 @@
 # From https://gist.github.com/LukeSmithxyz/ffd3f2ca1deac65423c2f32930294b65
 # 	by Luke Smith
 
+echo
 sed "
 	s/title\s*=\s*{\(.*\)},*/%T \1/I
 	s/author\s*=\s*{\(.*\)},*/%A \1/I
@@ -11,6 +12,7 @@ sed "
 	s/volume\s*=\s*{\(.*\)},*/%V \1/I
 	s/number\s*=\s*{\(.*\)},*/%N \1/I
 	s/pages\s*=\s*{\(.*\)},*/%P \1/I
+	s/url\s*=\s*{\(.*\)},*/%O \1/I
 	s/year\s*=\s*\([0-9]*\),*/%D \1/I
 	s/^\s*//g
 	/^[^%]/d
