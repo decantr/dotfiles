@@ -56,11 +56,18 @@ echo 'set tabstop=2' >> .config/nvim/init.vim
 echo 'set shiftwidth=2' >> .config/nvim/init.vim
 echo '
 """ groff
+	" Word Count
+	autocmd FileType groff map <leader>w :w !watchwc <c-r>%<CR>
 	" Code snippets
 	autocmd FileType groff inoremap ,b <Enter>.B ""<Enter><++><Esc>ka
 	autocmd FileType groff inoremap ,i <Enter>.I ""<Enter><++><Esc>ka
 	autocmd FileType groff inoremap ,cw <Enter>.CW ""<Enter><++><Esc>kf"a
 	autocmd FileType groff inoremap ,li <Enter>.IP \[bu]<Enter>
+	autocmd FileType groff inoremap ,gli <Enter>.RS<Enter>.RS<Enter>.IP \[bu]<Enter>.RE<Enter>.RE<Esc>2kA<Enter>
+	autocmd FileType groff inoremap ,gcode <Enter>.CW<Enter>.TS<Enter>box centre;<Enter>l.<Enter>.SM<Enter>$<Enter>.TE<Enter>.R<Enter>.REF "<++>"<Enter><++><Esc>4kA
+
+	""" Refer
+	inoremap ,gref <Enter>%K <Enter>%O <++><Enter>%D <++><Enter>%I <++><Enter>%A <++><Enter>%T <++><Enter><Esc>6kA
 
 """ Limelight
 	let g:limelight_conceal_ctermfg = 'darkgray'
