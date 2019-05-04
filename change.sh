@@ -85,3 +85,5 @@ if [ ! -f ".scripts/tools/bibtorefer" ]; then
 	mv tools/bibtorefer .scripts/tools/bibtorefer
 fi
 
+# Fix compiler
+sed -i "s/-kejpt/-kept/" .scripts/tools/compiler
