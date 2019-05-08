@@ -8,6 +8,8 @@ User will be asked if deploying to a HiDPi screen, it is worth noting that this 
 Notes
 -----
 
-# compile groff with images
-# NOTE : just remove -j
-# *\.ms) refer -PS -e "$file" | groff -me -ms -kept -T ps | ps2pdfwr - "$base".pdf ;;
+to compile groff with images, just remove -j
+`refer -PS -e "$file" | groff -me -ms -kept -T ps | ps2pdfwr - "$base".pdf ;;`
+
+xorg.conf.d for tapping
+
