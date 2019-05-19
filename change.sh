@@ -49,7 +49,7 @@ sed -i 's/gaps inner current set 15; gaps outer current set 15/gaps inner curren
 sed -i "\$isetxkbmap -layout gb" .xinitrc
 
 # vimrc
-sed -i '12s/^/Plug "junegunn\/limelight.vim"\n/' .config/nvim/init.vim
+sed -i "12s/^/Plug 'junegunn\/limelight.vim'\n/" .config/nvim/init.vim
 sed -i 's/en_us/en_gb/' .config/nvim/init.vim
 echo 'set tabstop=2' >> .config/nvim/init.vim
 echo 'set shiftwidth=2' >> .config/nvim/init.vim
