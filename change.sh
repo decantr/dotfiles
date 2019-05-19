@@ -17,7 +17,7 @@ fi
 
 # perform hidpi changes
 if $hidpi ; then
-	sed -i '9s/^/exec --no-startup-id xrandr --dpi 280\n/' .config/i3/config
+	sed -ei "\$ixrandr --output eDP-1 --dpi 280" .xinitrc
 	sed -i 's/350x5-0+24/700-0+64/' .config/dunst/dunstrc
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
 fi
@@ -46,7 +46,6 @@ sed -i 's/gaps inner current set 15; gaps outer current set 15/gaps inner curren
 # replace "[help] \n interval=once" with ""
 
 # xinitrc
-sed -ei "\$ixrandr --output eDP-1 --mode 1920x1080 --primary" .xinitrc
 sed -ei "\$isetxkbmap -layout gb" .xinitrc
 
 # vimrc
