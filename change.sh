@@ -17,7 +17,7 @@ fi
 
 # perform hidpi changes
 if $hidpi ; then
-	sed -ei "\$ixrandr --output eDP-1 --dpi 280" .xinitrc
+	sed -i "\$ixrandr --output eDP-1 --dpi 280" .xinitrc
 	sed -i 's/350x5-0+24/700-0+64/' .config/dunst/dunstrc
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
 fi
@@ -46,10 +46,10 @@ sed -i 's/gaps inner current set 15; gaps outer current set 15/gaps inner curren
 # replace "[help] \n interval=once" with ""
 
 # xinitrc
-sed -ei "\$isetxkbmap -layout gb" .xinitrc
+sed -i "\$isetxkbmap -layout gb" .xinitrc
 
 # vimrc
-sed -i '12s/^/Plug "junegunn/limelight.vim"\n/' .config/nvim/init.vim
+sed -i '12s/^/Plug "junegunn\/limelight.vim"\n/' .config/nvim/init.vim
 sed -i 's/en_us/en_gb/' .config/nvim/init.vim
 echo 'set tabstop=2' >> .config/nvim/init.vim
 echo 'set shiftwidth=2' >> .config/nvim/init.vim
@@ -69,7 +69,7 @@ echo '
 	inoremap ,gref <Enter>%K <Enter>%O <++><Enter>%D <++><Enter>%I <++><Enter>%A <++><Enter>%T <++><Enter><Esc>6kA
 
 """ Limelight
-	let g:limelight_conceal_ctermfg = 'darkgray'
+	let g:limelight_conceal_ctermfg = "darkgray"
 	map <leader>l :Limelight!!<CR>
 ' >> .config/nvim/init.vim
 
@@ -77,10 +77,10 @@ echo '
 sed -i '4s/^/export XKB_DEFAULT_LAYOUT=gb\n/' .profile
 
 # screenshots to Pictures
-sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .scripts/i3cmds/maimpick
+sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
 
 # get the bibtorefer script
-cp tools/* .scripts/tools/
+cp tools/* .local/bin/tools/
 
 # Fix compiler
-sed -i "s/-kejpt/-kept/" .scripts/tools/compiler
+sed -i "s/-kejpt/-kept/" .local/bin/tools/compiler
