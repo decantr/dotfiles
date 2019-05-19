@@ -7,6 +7,11 @@
 #
 
 # determine whether we are making a bridge or a node
+
+git clone https://gitlab.com/LukeSmithxyz/voidrice.git
+cd voidrice
+git checkout archi3
+
 printf "::    Is this display HiDPi [y/N] "
 read -r REPLY
 if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Nn]$"; then
@@ -80,7 +85,7 @@ sed -i '4s/^/export XKB_DEFAULT_LAYOUT=gb\n/' .profile
 sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
 
 # get the bibtorefer script
-cp tools/* .local/bin/tools/
+cp ../tools/* .local/bin/tools/
 
 # Fix compiler
 sed -i "s/-kejpt/-kept/" .local/bin/tools/compiler
