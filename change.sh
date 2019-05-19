@@ -32,9 +32,9 @@ aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	ytwatch='mpv --really-quiet -ytdl-format=best[height=480]/22/135' \\
 	ytlisten='mpv --really-quiet -ytdl-format=bestaudio' \\
 	steam='steam -no-browser -silent' \\
-	wgon='sudo wg-quick up wg0 && notify_send \'Wireguard Activated\'' \\
-	wgoff='sudo wg-quick down wg0 && notify_send \'Wireguard Deactivated\'' \\
-	song='youtube-dl -i -f bestaudio -x --audio-format=mp3 --audio-quality 0 --embed-thumbnail -o \'~/Music-Inc/%(uploader)s - %(title)s.%(ext)s\'' \\
+	wgon='sudo wg-quick up wg0 && notify_send \"Wireguard Activated\"' \\
+	wgoff='sudo wg-quick down wg0 && notify_send \"Wireguard Deactivated\"' \\
+	song='youtube-dl -i -f bestaudio -x --audio-format=mp3 --audio-quality 0 --embed-thumbnail -o \"~/Music-Inc/%(uploader)s - %(title)s.%(ext)s\"' \\
 	ident='echo $(curl -s ident.me)' \\
 	homegit='git --work-tree=$HOME --git-dir=$HOME/repos/voidrice'"
 echo "$aliases" >> .config/aliasrc
