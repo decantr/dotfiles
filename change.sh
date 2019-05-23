@@ -22,9 +22,10 @@ fi
 
 # perform hidpi changes
 if $hidpi ; then
+	cp .Xdefaults ~
+	sed -i "\$ixrdb ~/.Xdefaults" .xinitrc
 	sed -i "\$ixrandr --output eDP-1 --dpi 192" .xinitrc
 	sed -i 's/350x5-0+24/700-0+48/' .config/dunst/dunstrc
-	sed -i 's/mono 10/ mono 20/' .config/i3/config
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
 fi
 
