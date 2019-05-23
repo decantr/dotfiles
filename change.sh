@@ -30,8 +30,8 @@ fi
 
 # aliases
 aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
-	ytwatch='mpv --really-quiet -ytdl-format=best[height=480]/22/135' \\
-	ytlisten='mpv --really-quiet -ytdl-format=bestaudio' \\
+	ytwatch='mpv --really-quiet -ytdl-format=18/best[height=480]/22/135' \\
+	ytlisten='mpv --really-quiet -ytdl-format=171/250/bestaudio' \\
 	steam='steam -no-browser -silent' \\
 	wgon='sudo wg-quick up wg0 && notify_send \"Wireguard Activated\"' \\
 	wgoff='sudo wg-quick down wg0 && notify_send \"Wireguard Deactivated\"' \\
