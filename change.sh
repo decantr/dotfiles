@@ -6,11 +6,19 @@
 # files from github.com/lukesmithxyz/voidrice
 #
 
-# determine whether we are making a bridge or a node
+if [ -d voidrice ] ; then
+	cd voidrice
+	git reset --hard
+else
+	git clone https://github.com/LukeSmithxyz/voidrice.git
+	cd voidrice
+fi
 
-git clone https://gitlab.com/LukeSmithxyz/voidrice.git
-cd voidrice
-git checkout archi3
+printf "::    Y for i3, N for dwm [y/N]"
+read -r REPLY
+if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Nn]$"; then
+	git checkout voiddwm
+fi
 
 printf "::    Is this display HiDPi [y/N] "
 read -r REPLY
@@ -22,9 +30,9 @@ fi
 
 # perform hidpi changes
 if $hidpi ; then
-	cp .Xdefaults ~
-	sed -i "\$ixrdb ~/.Xdefaults" .xinitrc
-	sed -i "\$ixrandr --output eDP-1 --dpi 192" .xinitrc
+	cp ../.Xdefaults .
+	sed -i '/dunst/a xrdb ~/.Xdefaults' .xinitrc
+	sed -i '/dunst/a xrandr --output eDP-1 --dpi 192' .xinitrc
 	sed -i 's/350x5-0+24/700-0+48/' .config/dunst/dunstrc
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
 fi
@@ -43,12 +51,14 @@ echo "$aliases" >> .config/aliasrc
 
 # i3 changes
 # TODO : Add in grep so no duplicates
+if [ -d .config/i3 ]; then
 sed -i 's/gaps inner 15/gaps inner 5/' .config/i3/config
 sed -i 's/gaps outer 15/gaps outer 0/' .config/i3/config
 sed -i 's/bindsym $mod+w			exec $term -e nmtui/bindsym $mod+w			exec networkmanager_dmenu/' .config/i3/config
 sed -i 's/gaps inner current set 15; gaps outer current set 15/gaps inner current set 5; gaps outer current set 0/' .config/i3/config
 # i3blocks
 # replace "[help] \n interval=once" with ""
+fi
 
 # xinitrc
 sed -i 's/xcompmgr/#xcompmgr/' .xinitrc
@@ -83,10 +93,10 @@ echo '
 sed -i '4s/^/export XKB_DEFAULT_LAYOUT=gb\n/' .profile
 
 # screenshots to Pictures
-sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
+sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 
 # get the bibtorefer script
-cp ../tools/* .local/bin/tools/
+cp ../bin/* .local/bin/
 
 # Fix compiler
-sed -i "s/-kejpt/-kept/" .local/bin/tools/compiler
+sed -i "s/-kejpt/-kept/" .local/bin/compiler
