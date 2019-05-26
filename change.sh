@@ -37,6 +37,22 @@ if $hidpi ; then
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
 fi
 
+# exports
+sed -i '4s/^/export XKB_DEFAULT_LAYOUT=gb\n/' .profile
+
+# screenshots to Pictures
+sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
+
+# get the bibtorefer script
+cp ../bin/* .local/bin/
+
+# Fix compiler
+sed -i "s/-kejpt/-kept/" .local/bin/compiler
+
+# keybinds
+sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
+
+
 # aliases
 aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	ytwatch='mpv --really-quiet -ytdl-format=18/best[height=480]/22/135' \\
@@ -50,14 +66,11 @@ aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 echo "$aliases" >> .config/aliasrc
 
 # i3 changes
-# TODO : Add in grep so no duplicates
 if [ -d .config/i3 ]; then
-sed -i 's/gaps inner 15/gaps inner 5/' .config/i3/config
-sed -i 's/gaps outer 15/gaps outer 0/' .config/i3/config
-sed -i 's/bindsym $mod+w			exec $term -e nmtui/bindsym $mod+w			exec networkmanager_dmenu/' .config/i3/config
-sed -i 's/gaps inner current set 15; gaps outer current set 15/gaps inner current set 5; gaps outer current set 0/' .config/i3/config
-# i3blocks
-# replace "[help] \n interval=once" with ""
+	sed -i 's/gaps inner 15/gaps inner 5/' .config/i3/config
+	sed -i 's/gaps outer 15/gaps outer 0/' .config/i3/config
+	sed -i 's/bindsym $mod+w			exec $term -e nmtui/bindsym $mod+w			exec networkmanager_dmenu/' .config/i3/config
+	sed -i 's/gaps inner current set 15; gaps outer current set 15/gaps inner current set 5; gaps outer current set 0/' .config/i3/config
 fi
 
 # xinitrc
@@ -88,19 +101,3 @@ echo '
 	let g:limelight_conceal_ctermfg = "darkgray"
 	map <leader>l :Limelight!!<CR>
 ' >> .config/nvim/init.vim
-
-# exports
-sed -i '4s/^/export XKB_DEFAULT_LAYOUT=gb\n/' .profile
-
-# screenshots to Pictures
-sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
-
-# get the bibtorefer script
-cp ../bin/* .local/bin/
-
-# Fix compiler
-sed -i "s/-kejpt/-kept/" .local/bin/compiler
-
-# keybinds
-sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
-
