@@ -28,10 +28,11 @@ elif echo "$REPLY" | grep -qvwE "^[Yy]$"; then
 	echo ::    Invalid && exit 1;
 fi
 
+cp ../.Xdefaults .
+
 # perform hidpi changes
 if $hidpi ; then
-	cp ../.Xdefaults .
-	sed -i '/dunst/a xrdb ~/.Xdefaults' .xinitrc
+	sed -i 's/Monospace-11/Monospace-16/' .Xdefaults
 	sed -i '/dunst/a xrandr --output eDP-1 --dpi 192' .xinitrc
 	sed -i 's/350x5-0+24/700-0+48/' .config/dunst/dunstrc
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
@@ -74,6 +75,7 @@ fi
 # xinitrc
 sed -i 's/xcompmgr/#xcompmgr/' .xinitrc
 sed -i 's/variant altgr-intl/layout gb' .xinitrc
+sed -i '/dunst/a xrdb ~/.Xdefaults' .xinitrc
 
 # vimrc
 sed -i "12s/^/Plug 'junegunn\/limelight.vim'\n/" .config/nvim/init.vim
