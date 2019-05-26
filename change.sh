@@ -32,6 +32,7 @@ fi
 cp ../bin/* .local/bin/
 cp ../.Xdefaults .
 cp ../wall.jpg .config/
+cp ~/.config/newsboat/urls .config/newsboat/
 
 # perform hidpi changes
 if $hidpi ; then
