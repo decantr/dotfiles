@@ -28,7 +28,10 @@ elif echo "$REPLY" | grep -qvwE "^[Yy]$"; then
 	echo ::    Invalid && exit 1;
 fi
 
+# copy files in
+cp ../bin/* .local/bin/
 cp ../.Xdefaults .
+cp ../wall.jpg .config/
 
 # perform hidpi changes
 if $hidpi ; then
@@ -38,8 +41,6 @@ if $hidpi ; then
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
 fi
 
-# get the bibtorefer script
-cp ../bin/* .local/bin/
 
 # script changes
 sed -i "s/-kejpt/-kept/" .local/bin/compiler
