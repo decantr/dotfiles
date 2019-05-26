@@ -62,7 +62,7 @@ fi
 
 # xinitrc
 sed -i 's/xcompmgr/#xcompmgr/' .xinitrc
-sed -i '/setxkbmap/a setxkbmap -layout gb' .xinitrc
+sed -i 's/variant altgr-intl/layout gb' .xinitrc
 
 # vimrc
 sed -i "12s/^/Plug 'junegunn\/limelight.vim'\n/" .config/nvim/init.vim
