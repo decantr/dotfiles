@@ -38,17 +38,12 @@ if $hidpi ; then
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
 fi
 
-# exports
-sed -i '4s/^/export XKB_DEFAULT_LAYOUT=gb\n/' .profile
-
-# screenshots to Pictures
-sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
-
 # get the bibtorefer script
 cp ../bin/* .local/bin/
 
-# Fix compiler
+# script changes
 sed -i "s/-kejpt/-kept/" .local/bin/compiler
+sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 
 # keybinds
 sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
