@@ -52,7 +52,6 @@ sed -i "s/-kejpt/-kept/" .local/bin/compiler
 # keybinds
 sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
 
-
 # aliases
 aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	ytwatch='mpv --really-quiet -ytdl-format=18/best[height=480]/22/135' \\
