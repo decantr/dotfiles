@@ -100,3 +100,7 @@ cp ../bin/* .local/bin/
 
 # Fix compiler
 sed -i "s/-kejpt/-kept/" .local/bin/compiler
+
+# keybinds
+sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
+
