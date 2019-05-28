@@ -58,6 +58,8 @@ aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	wgoff='sudo wg-quick down wg0 && notify_send \"Wireguard Deactivated\"' \\
 	song='youtube-dl -i -f bestaudio -x --audio-format=mp3 --audio-quality 0 --embed-thumbnail -o \"~/Music-Inc/%(uploader)s - %(title)s.%(ext)s\"' \\
 	ident='echo \$(curl -s ident.me)' \\
+	p='sudo pacman' \\
+	SS='sudo systemctl' \\
 	"
 echo "$aliases" >> .config/aliasrc
 
