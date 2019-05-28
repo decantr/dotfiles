@@ -37,7 +37,7 @@ cp ~/.config/newsboat/urls .config/newsboat/
 # perform hidpi changes
 if $hidpi ; then
 	sed -i 's/Monospace-11/Monospace-16/' .Xdefaults
-	sed -i '/dunst/a xrandr --output eDP-1 --dpi 192' .xinitrc
+	sed -i '/dunst/a xrandr --output eDP-1 --dpi 192' .xprofile
 	sed -i 's/350x5-0+24/700-0+48/' .config/dunst/dunstrc
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
 fi
