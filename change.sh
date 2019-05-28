@@ -42,7 +42,6 @@ if $hidpi ; then
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
 fi
 
-
 # script changes
 sed -i "s/-kejpt/-kept/" .local/bin/compiler
 sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
