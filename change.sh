@@ -70,7 +70,7 @@ fi
 
 # xprofile
 sed -i 's/xcompmgr/#xcompmgr/' .xprofile
-sed -i 's/setxkbmap/setxkbmap layout gb/' .xprofile
+sed -i 's/setxkbmap/setxkbmap -layout gb/' .xprofile
 sed -i '/unclutter/a xrdb ~/.Xdefaults &' .xprofile
 
 # vimrc
