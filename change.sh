@@ -31,7 +31,7 @@ fi
 # copy files in
 cp ../bin/* .local/bin/
 cp ../.Xdefaults .
-cp ../wall.jpg .config/
+cp ../wall.png .config/
 cp ~/.config/newsboat/urls .config/newsboat/
 
 # perform hidpi changes
