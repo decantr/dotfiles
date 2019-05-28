@@ -1,0 +1,11 @@
+#!/bin/sh
+
+status() { \
+	printf "| %s%% " "$(cat /sys/class/power_supply/BAT0/capacity)"
+	printf "| %s" "$(date '+%Y %b %d (%a) %I:%M%p')"
+}
+
+while :; do
+	xsetroot -name "$(status)"
+	sleep 1m
+done
