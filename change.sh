@@ -48,6 +48,7 @@ fi
 
 # keybinds
 sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
+sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
 
 # aliases
 aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
