@@ -7,11 +7,11 @@
 #
 
 if [ -d voidrice ] ; then
-	cd voidrice
+	cd voidrice || exit 1
 	git reset --hard 1>/dev/null && echo "::  Resetting repo"
 else
 	git clone https://github.com/LukeSmithxyz/voidrice.git 1> /dev/null && echo "::  Cloned repo"
-	cd voidrice
+	cd voidrice || exit 1
 fi
 
 printf "::  Use \"i3\" or \"dwm\" [i/D]: "
