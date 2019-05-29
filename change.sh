@@ -46,10 +46,6 @@ if $hidpi ; then
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
 fi
 
-# script changes
-sed -i "s/-kejpt/-kept/" .local/bin/compiler
-sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
-
 # keybinds
 sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
 
@@ -67,11 +63,18 @@ aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	"
 echo "$aliases" >> .config/aliasrc
 
-# i3 changes
+# repo specific changes
 if [ -d .config/i3 ]; then
+	# i3 changes
 	sed -i 's/gaps inner 15/gaps inner 5/' .config/i3/config
 	sed -i 's/gaps outer 15/gaps outer 0/' .config/i3/config
 	sed -i 's/gaps inner current set 15; gaps outer current set 15/gaps inner current set 5; gaps outer current set 0/' .config/i3/config
+	sed -i "s/-kejpt/-kept/" .local/bin/tools/compiler
+	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
+else
+	# script changes
+	sed -i "s/-kejpt/-kept/" .local/bin/compiler
+	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 fi
 
 # xprofile
