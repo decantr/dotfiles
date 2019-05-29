@@ -8,18 +8,18 @@
 
 if [ -d voidrice ] ; then
 	cd voidrice
-	git reset --hard
+	git reset --hard 1>/dev/null && echo "::  Resetting repo"
 else
-	git clone https://github.com/LukeSmithxyz/voidrice.git
+	git clone https://github.com/LukeSmithxyz/voidrice.git 1> /dev/null && echo "::  Cloned repo"
 	cd voidrice
 fi
 
 printf "::  Use \"i3\" or \"dwm\" [i/D]: "
 read -r REPLY
 if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Dd]$"; then
-	git checkout voiddwm &> /dev/null
+	git checkout voiddwm 1> /dev/null
 elif echo "$REPLY" | grep -qwE "^[Ii]$"; then
-	git checkout archi3 &> /dev/null
+	git checkout archi3 1> /dev/null
 else echo "::  Invalid" && exit 1
 fi
 
