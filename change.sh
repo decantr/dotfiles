@@ -14,11 +14,16 @@ else
 	cd voidrice
 fi
 
-printf "::    Y for i3, N for dwm [y/N]"
+printf "::  Use \"i3\" or \"dwm\" [i/D]: "
 read -r REPLY
-if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Nn]$"; then
-	git checkout voiddwm
+if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Dd]$"; then
+	git checkout voiddwm &> /dev/null
+elif echo "$REPLY" | grep -qwE "^[Ii]$"; then
+	git checkout archi3 &> /dev/null
+else echo "::  Invalid" && exit 1
 fi
+
+git pull &> /dev/null
 
 printf "::    Is this display HiDPi [y/N] "
 read -r REPLY
