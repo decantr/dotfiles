@@ -69,8 +69,10 @@ if [ -d .config/i3 ]; then
 	sed -i 's/gaps inner 15/gaps inner 5/' .config/i3/config
 	sed -i 's/gaps outer 15/gaps outer 0/' .config/i3/config
 	sed -i 's/gaps inner current set 15; gaps outer current set 15/gaps inner current set 5; gaps outer current set 0/' .config/i3/config
+	# changes that only need to be made on arch
 	sed -i "s/-kejpt/-kept/" .local/bin/tools/compiler
 	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
+	sed -i 's/-variant altgr-intl //' .xprofile
 else
 	# script changes
 	sed -i "s/-kejpt/-kept/" .local/bin/compiler
