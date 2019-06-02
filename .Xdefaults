@@ -1,8 +1,8 @@
 !! Set a default font and font size as below:
-st.font: Monospace-16;
+st.font: Monospace-18
 
 ! st.termname: st-256color
-st.borderpx: 16
+st.borderpx: 15
 
 /* !! tomorrow */
 *.color0:				#1d1f21
