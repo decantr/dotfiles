@@ -112,3 +112,12 @@ echo '
 	let g:limelight_conceal_ctermfg = "darkgray"
 	map <leader>l :Limelight!!<CR>
 ' >> .config/nvim/init.vim
+
+# vconsole changes
+[ -f /etc/vconsole.conf ] || sudo touch /etc/vconsole.conf
+( grep -q "KEYMAP" /etc/vconsole.conf ) ||
+	sudo sh -c 'echo "KEYMAP=i386/qwerty/uk.map.gz" >> /etc/vconsole.conf'
+( grep -q "FONT" /etc/vconsole.conf ) ||
+	sudo sh -c 'echo "FONT=ter-116n" >> /etc/vconsole.conf'
+$hidpi && sudo sed -i 's/ter-116n/ter-132n/' /etc/vconsole.conf
+

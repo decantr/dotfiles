@@ -12,9 +12,3 @@ to compile groff with images, just remove -j
 `refer -PS -e "$file" | groff -me -ms -kept -T ps | ps2pdfwr - "$base".pdf ;;`
 
 xorg.conf.d for tapping
-
-vconsole
---------
-@ /etc/vconsole.conf
-# KEYMAP=i386/qwerty/uk.map.gz
-# FONT=ter-132n
