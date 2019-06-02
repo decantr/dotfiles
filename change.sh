@@ -38,6 +38,7 @@ cp ../bin/* .local/bin/
 cp ../.Xdefaults .
 cp ../wall.png .config/
 cp ~/.config/newsboat/urls .config/newsboat/
+sudo cp ../xorg.conf.d/* /etc/X11/xorg.conf.d/
 
 # perform hidpi changes
 if $hidpi ; then
