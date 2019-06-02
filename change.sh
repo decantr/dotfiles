@@ -79,6 +79,8 @@ else
 	# script changes
 	sed -i "s/-kejpt/-kept/" .local/bin/compiler
 	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
+	# void to arch changes
+	sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
 fi
 
 # xprofile
