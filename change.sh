@@ -38,7 +38,6 @@ cp ../bin/* .local/bin/
 cp ../.Xdefaults .
 cp ../wall.png .config/
 cp ~/.config/newsboat/urls .config/newsboat/
-sudo cp -n ../xorg.conf.d/* /etc/X11/xorg.conf.d/
 
 # perform hidpi changes
 if $hidpi ; then
@@ -112,6 +111,16 @@ echo '
 	let g:limelight_conceal_ctermfg = "darkgray"
 	map <leader>l :Limelight!!<CR>
 ' >> .config/nvim/init.vim
+
+# prompt for changes to system
+printf "::    Do you want to edit the current system? [y/N] "
+read -r REPLY
+if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Yy]$"; then
+	exit 0;
+fi
+
+# copy mouse and touchpad settings
+sudo cp -n ../xorg.conf.d/* /etc/X11/xorg.conf.d/
 
 # vconsole changes
 [ -f /etc/vconsole.conf ] || sudo touch /etc/vconsole.conf
