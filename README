@@ -7,6 +7,10 @@ Based on the voidrice dotfiles by Luke Smith (lukesmith.xyz) available
 User will be asked if deploying to a HiDPi screen, it is worth noting that this
  causes issues with multimonitor displays and thus is not enabled by default.
 
+The script creates a commit to the git repo that you should copy over to your
+ $HOME folder ( with the command below ). This will allow you to run
+ git status and git diff to ensure no local changes are clobbered.
+
 Install
 -------
 
@@ -16,6 +20,16 @@ To get the lastest changes just run
 To install/update
 	$ cd "voidrice"
 	$ rsync -a . ~
+
+Update
+------
+
+When you want to update simply check for changed files in $HOME with
+
+	$ git status -s --untracked-files=no
+	$ git diff
+
+Once you have backed up changes, simply follow the same steps to Install
 
 Notes
 -----
