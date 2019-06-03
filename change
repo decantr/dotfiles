@@ -89,6 +89,7 @@ fi
 sed -i 's/xcompmgr/#xcompmgr/' .xprofile
 sed -i 's/setxkbmap/setxkbmap -layout gb/' .xprofile
 sed -i '/unclutter/a xrdb ~/.Xdefaults &' .xprofile
+sed -i '/dwmbar/i mpd &' .xprofile
 
 # vimrc
 sed -i "/goyo.vim/a Plug 'junegunn\/limelight.vim'" .config/nvim/init.vim
