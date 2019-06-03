@@ -18,7 +18,7 @@ To install/update
 Notes
 -----
 
-to compile groff with images, just remove -j
-`refer -PS -e "$file" | groff -me -ms -kept -T ps | ps2pdfwr - "$base".pdf ;;`
+to compile groff with images
+	$ refer -PS -e $INPUT.ms | groff -me -ms -kept -T ps | ps2pdf - $OUTPUT.pdf
+note the removal of the '-j' flag, this causes a hang with many .PSPIC elements
 
-xorg.conf.d for tapping
