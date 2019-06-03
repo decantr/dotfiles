@@ -1,0 +1,55 @@
+--- .config/sxhkd/sxhkdrc	2019-06-03 18:39:10.283526908 +0100
++++ .config/sxhkd/sxhkdrc	2019-06-03 16:48:36.126726511 +0100
+@@ -77,39 +77,39 @@
+
+ # Pause audio
+ super + {_,shift +} p
+-	mpc {toggle,pause}
++	lmc {toggle,pause}
+ # Changes to next/previous tracks
+ super + {comma,period}
+-	mpc {prev,next}
++	lmc {prev,next}
+ # Restart track
+ super + shift + less
+-	mpc seek 0%
++	lmc replay
+ # Seek foward in song
+ super + {_,shift +} bracketright
+-	mpc seek +{10,120}
++	lmc forward {10,120}
+ # Seek backward in song
+ super + {_,shift +} bracketleft
+-	mpc seek -{10,120}
++	lmc back {10,120}
+ # Increase volume
+ super + {equal,plus}
+-	amixer sset Master {5,15}%+; refbar
++	lmc up {5,15}
+ # Decrease volume
+ super {_,shift +} + minus
+-	amixer sset Master {5,15}%-; refbar
++	lmc down {5,15}
+ super + shift + m
+-	amixer sset Master toggle; refbar
++	lmc mute
+
+ # Audiokeys
+ XF86AudioMute
+-	amixer sset Master toggle; refbar
++	lmc mute
+ XF86Audio{Raise,Lower}Volume
+-	amixer sset Master 5%{+,-}; refbar
++	lmc {up, down} 15; refbar
+ XF86Audio{Next,Prev}
+-	mpc {next,prev}
++	lmc {next,prev}
+ XF86Audio{Pause,Play,Stop}
+-	mpc {pause,play,stop}
++	lmc {pause,play,stop}
+ XF86Audio{Rewind,Forward}
+-	mpc seek {-,+}10
++	lmc {back, forward} 10
+ XF86AudioRecord
+ 	dmenurecord
+ XF86AudioMedia
