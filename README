@@ -1,9 +1,11 @@
 My Dotfiles
 ===========
 
-Based on the voidrice dotfiles by Luke Smith (lukesmith.xyz) available from git.lukesmith.xyz/dotfiles
+Based on the voidrice dotfiles by Luke Smith (lukesmith.xyz) available
+ from git.lukesmith.xyz/dotfiles
 
-User will be asked if deploying to a HiDPi screen, it is worth noting that this causes issues with multimonitor displays and thus is not enabled by default.
+User will be asked if deploying to a HiDPi screen, it is worth noting that this
+ causes issues with multimonitor displays and thus is not enabled by default.
 
 Install
 -------
