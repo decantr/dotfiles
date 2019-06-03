@@ -115,7 +115,7 @@ echo '
 # prompt for changes to system
 printf "::    Do you want to edit the current system? [y/N] "
 read -r REPLY
-if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Yy]$"; then
+if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Nn]$"; then
 	exit 0;
 fi
 
