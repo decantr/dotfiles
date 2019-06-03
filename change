@@ -11,7 +11,8 @@ if [ -d voidrice ] ; then
 	git fetch origin
 	git reset --hard origin 1>/dev/null && echo "::  Resetting repo"
 else
-	git clone https://github.com/LukeSmithxyz/voidrice.git 1> /dev/null && echo "::  Cloned repo"
+	git clone https://github.com/LukeSmithxyz/voidrice.git 1> /dev/null &&
+		echo "::  Cloned repo"
 	cd voidrice || exit 1
 fi
 
