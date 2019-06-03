@@ -91,9 +91,10 @@ sed -i '/unclutter/a xrdb ~/.Xdefaults &' .xprofile
 # vimrc
 sed -i "12s/^/Plug 'junegunn\/limelight.vim'\n/" .config/nvim/init.vim
 sed -i 's/en_us/en_gb/' .config/nvim/init.vim
-echo 'set tabstop=2' >> .config/nvim/init.vim
-echo 'set shiftwidth=2' >> .config/nvim/init.vim
 echo '
+set tabstop=2
+set shiftwidth=2
+
 """ groff
 	" Word Count
 	autocmd FileType groff map <leader>w :w !watchwc <c-r>%<CR>
