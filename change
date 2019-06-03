@@ -89,7 +89,7 @@ sed -i 's/setxkbmap/setxkbmap -layout gb/' .xprofile
 sed -i '/unclutter/a xrdb ~/.Xdefaults &' .xprofile
 
 # vimrc
-sed -i "12s/^/Plug 'junegunn\/limelight.vim'\n/" .config/nvim/init.vim
+sed -i "/goyo.vim/a Plug 'junegunn\/limelight.vim'" .config/nvim/init.vim
 sed -i 's/en_us/en_gb/' .config/nvim/init.vim
 echo '
 set tabstop=2
