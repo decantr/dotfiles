@@ -117,7 +117,7 @@ set shiftwidth=2
 ' >> .config/nvim/init.vim
 
 git add .
-git commit -am "!! Install point !!"
+git commit -qam "!! Install point !!"
 
 # prompt for changes to system
 printf "::  Do you want to edit the current system? [y/N] "
