@@ -39,4 +39,5 @@ i.e. \`lmc r\` for \`lmc restart\`.
 EOF
 esac
 
-pkill -RTMIN+10 i3blocks
+[ pgrep dwm &> /dev/null ] && refbar
+[ pgrep i3 &> /dev/null ] && pkill -RTMIN+10 i3blocks
