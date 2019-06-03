@@ -25,6 +25,7 @@ elif echo "$REPLY" | grep -qwE "^[Ii]$"; then
 else echo "::  Invalid" && exit 1
 fi
 
+git reset -q --hard
 git checkout -q origin/$branch 1> /dev/null
 echo "::  Updating"
 git pull -q --progress &> /dev/null
