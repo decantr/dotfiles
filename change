@@ -8,7 +8,8 @@
 
 if [ -d voidrice ] ; then
 	cd voidrice || exit 1
-	git reset --hard 1>/dev/null && echo "::  Resetting repo"
+	git fetch origin
+	git reset --hard origin 1>/dev/null && echo "::  Resetting repo"
 else
 	git clone https://github.com/LukeSmithxyz/voidrice.git 1> /dev/null && echo "::  Cloned repo"
 	cd voidrice || exit 1
@@ -111,6 +112,9 @@ echo '
 	let g:limelight_conceal_ctermfg = "darkgray"
 	map <leader>l :Limelight!!<CR>
 ' >> .config/nvim/init.vim
+
+git add .
+git commit -am "!! Install point !!"
 
 # prompt for changes to system
 printf "::    Do you want to edit the current system? [y/N] "
