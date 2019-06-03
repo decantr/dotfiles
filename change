@@ -29,12 +29,12 @@ git checkout -q origin/$branch 1> /dev/null
 echo "::  Updating"
 git pull -q --progress &> /dev/null
 
-printf "::    Is this display HiDPi [y/N] "
+printf "::  Is this display HiDPi [y/N] "
 read -r REPLY
 if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Nn]$"; then
 	hidpi=false
 elif echo "$REPLY" | grep -qvwE "^[Yy]$"; then
-	echo ::    Invalid && exit 1;
+	echo ::  Invalid && exit 1;
 fi
 
 # copy files in
@@ -120,7 +120,7 @@ git add .
 git commit -am "!! Install point !!"
 
 # prompt for changes to system
-printf "::    Do you want to edit the current system? [y/N] "
+printf "::  Do you want to edit the current system? [y/N] "
 read -r REPLY
 if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Nn]$"; then
 	exit 0;
