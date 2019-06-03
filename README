@@ -5,6 +5,16 @@ Based on the voidrice dotfiles by Luke Smith (lukesmith.xyz) available from git.
 
 User will be asked if deploying to a HiDPi screen, it is worth noting that this causes issues with multimonitor displays and thus is not enabled by default.
 
+Install
+-------
+
+To get the lastest changes just run
+	$ sh change
+
+To install/update
+	$ cd "voidrice"
+	$ rsync -a . ~
+
 Notes
 -----
 
