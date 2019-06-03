@@ -83,6 +83,7 @@ else
 	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 	# void to arch changes
 	sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
+	patch -p0 < ../patches/pulseaudio.patch
 fi
 
 # xprofile
