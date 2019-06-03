@@ -37,8 +37,8 @@ fi
 # copy files in
 cp ../bin/* .local/bin/
 cp ../.Xdefaults .
-cp ../wall.png .config/
 cp ~/.config/newsboat/urls .config/newsboat/
+[ -f ../wall.png ] && cp ../wall.png .config/
 
 # perform hidpi changes
 if $hidpi ; then
