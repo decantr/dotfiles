@@ -25,7 +25,6 @@ Update
 ------
 
 When you want to update simply check for changed files in $HOME with
-
 	$ git status -s --untracked-files=no
 	$ git diff
 
