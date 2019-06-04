@@ -45,7 +45,7 @@ cp ~/.config/newsboat/urls .config/newsboat/
 [ -f ../wall.png ] && cp ../wall.png .config/
 
 # remove bloat
-rm README LICENSE
+rm README.md LICENSE
 
 # perform hidpi changes
 if $hidpi ; then
