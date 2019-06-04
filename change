@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # boomer to zoomer
 #
@@ -28,7 +28,7 @@ fi
 git reset -q --hard
 git checkout -q origin/$branch 1> /dev/null
 echo "::  Updating"
-git pull -q --progress &> /dev/null
+git pull -q --progress 2> /dev/null
 
 printf "::  Is this display HiDPi [y/N] "
 read -r REPLY
