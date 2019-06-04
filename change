@@ -78,12 +78,10 @@ if [ -d .config/i3 ]; then
 	sed -i 's/15/5/' .config/i3/config
 	sed -i 's/15/0/' .config/i3/config
 	# changes that only need to be made on arch
-	sed -i "s/-kejpt/-kept/" .local/bin/tools/compiler
 	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
 	sed -i 's/-variant altgr-intl //' .xprofile
 else
 	# script changes
-	sed -i "s/-kejpt/-kept/" .local/bin/compiler
 	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 	# void to arch changes
 	sed -i "s/surf/surf -z 2/" .profile
@@ -95,7 +93,6 @@ fi
 sed -i 's/xcompmgr/#xcompmgr/' .xprofile
 sed -i 's/setxkbmap/setxkbmap -layout gb/' .xprofile
 sed -i '/unclutter/a xrdb ~/.Xdefaults &' .xprofile
-sed -i '/dwmbar/i mpd &' .xprofile
 
 # vimrc
 sed -i "/goyo.vim/a Plug 'junegunn\/limelight.vim'" .config/nvim/init.vim
