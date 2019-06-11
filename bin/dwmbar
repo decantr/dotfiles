@@ -3,11 +3,10 @@
 status() { \
 
 	# get current mpd track filename or artist - title if possible.
-	( mpc &> /dev/null ) &&
-	printf " %s |" "$(mpc -f "[[%artist% - ]%title%]|[%file%]" 2>/dev/null | grep -v "volume:" | head -n 1)"
+	printf "[ %s ] |" "$(mpc -f "[[%artist% - ]%title%]|[%file%]" 2>/dev/null | grep -v "volume:" | head -n 1)"
 
 	# wifi quality percentage and  icon if ethernet is connected.
-	printf " %s%s " \
+	printf "%s%s " \
 		"$(grep "^\s*w" /proc/net/wireless | awk '{ print "", int($3 * 100 / 70) "%" }')" \
 		"$(sed "s/down//;s/up/ /" /sys/class/net/e*/operstate)"
 
@@ -29,7 +28,7 @@ status() { \
 
 	# show unread mail if mutt-wizard is installed.
 	command -v mw >/dev/null 2>&1 &&
-		printf "|  : %s " "$(du -a ~/.local/share/mail/*/INBOX/new/* 2>/dev/null | wc -l)"
+		printf "|  %s " "$(du -a ~/.local/share/mail/*/INBOX/new/* 2>/dev/null | wc -l)"
 
 	printf "| %s" "$(date '+%b %d %H:%M')"
 }
