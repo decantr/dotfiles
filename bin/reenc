@@ -1,5 +1,12 @@
 #!/bin/sh
-if [ "$2" = "" ]; then out=out.mp4;
-else out="$2"; fi
-ffmpeg -y -v -8 -i "$1" -an "$out"
-echo "From: $(du -bsh $1 | cut -f 1) to $(du -bsh $out | cut -f 1)"
+
+[ "$1" = "" ] && { echo "::  Please choose a file" && exit 1; }
+[ -f "$1" ] || { echo "::  File $1 not found" && exit 1; }
+out="out.mp4"
+[ "$2" = "" ] || out="$2"
+
+echo "Encoding $1 to $out"
+
+echo "::  $(basename $1) size : $(du -bsh "$1" | cut -f 1)"
+ffmpeg -y -v 0 -i "$1" -an "$out"
+echo "::  $(basename $out) size : $(du -bsh "$out" | cut -f 1)"
