@@ -3,6 +3,7 @@
 status() { \
 
 	# get current mpd track filename or artist - title if possible.
+	( mpc > /dev/null ) &&
 	printf "[ %s ] |" "$(mpc -f "[[%artist% - ]%title%]|[%file%]" 2>/dev/null | grep -v "volume:" | head -n 1)"
 
 	# wifi quality percentage and  icon if ethernet is connected.
