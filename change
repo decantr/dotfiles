@@ -84,7 +84,7 @@ else
 	# script changes
 	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 	# void to arch changes
-	sed -i "s/surf/surf -z 2/" .profile
+	sed -i "s/lmao/& -z 2/" .profile
 	sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
 	patch -sp0 < ../patches/pulseaudio.patch
 fi
