@@ -31,7 +31,7 @@ status() { \
 	command -v mw >/dev/null 2>&1 &&
 		printf "|  : %s " "$(du -a ~/.local/share/mail/*/INBOX/new/* 2>/dev/null | wc -l)"
 
-	printf "| %s" "$(date '+%Y %b %d (%a) %I:%M%p')"
+	printf "| %s" "$(date '+%b %d %H:%M')"
 }
 
 while :; do
