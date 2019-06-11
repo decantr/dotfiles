@@ -11,16 +11,21 @@ status() { \
 		"$(grep "^\s*w" /proc/net/wireless | awk '{ print "", int($3 * 100 / 70) "%" }')" \
 		"$(sed "s/down//;s/up/ /" /sys/class/net/e*/operstate)"
 
-	printf "| %s%% " "$(cat /sys/class/power_supply/BAT0/capacity)"
+	if [ -f /sys/class/power_supply/BAT0/capacity ]; then
+		printf "| "
 
-	# will show all batteries with approximate icon for remaining power.
-	case "$(cat /sys/class/power_supply/BAT0/capacity)" in
-		100|9[0-9])	printf "" ;;
-		8[0-9]|7[0-9])	printf "" ;;
-		6[0-9]|5[0-9])	printf "" ;;
-		4[0-9]|3[0-9])	printf "" ;;
-		*)		printf "" ;;
-	esac; printf " "
+		# will show all batteries with approximate icon for remaining power.
+		case "$(cat /sys/class/power_supply/BAT0/capacity)" in
+			100|9[0-9])	printf "" ;;
+			8[0-9]|7[0-9])	printf "" ;;
+			6[0-9]|5[0-9])	printf "" ;;
+			4[0-9]|3[0-9])	printf "" ;;
+			*)		printf "" ;;
+		esac;
+
+		# print percentage
+		printf " %s%% " "$(cat /sys/class/power_supply/BAT0/capacity)"
+	fi
 
 	# show unread mail if mutt-wizard is installed.
 	command -v mw >/dev/null 2>&1 &&
