@@ -1,6 +1,9 @@
 #!/bin/sh
-# From https://gist.github.com/LukeSmithxyz/ffd3f2ca1deac65423c2f32930294b65
-# 	by Luke Smith
+#
+# tool to generate the convert the output of `getbib` to a `refer` format.
+#
+# original source : https://gist.github.com/LukeSmithxyz/ffd3f2ca1deac65423c2f32930294b65
+# original author : luke smith ( lukesmith.xyz )
 
 echo
 sed "

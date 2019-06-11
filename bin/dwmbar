@@ -1,4 +1,9 @@
 #!/bin/sh
+#
+# tool to generate the "status bar" of dwm
+#
+# original author : luke smith ( lukesmith.xyz )
+# original source : https://github.com/LukeSmithxyz/voidrice/blob/voiddwm/.local/bin/dwmbar
 
 status() { \
 
