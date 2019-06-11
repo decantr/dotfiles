@@ -6,6 +6,24 @@ status() { \
 	( mpc > /dev/null ) &&
 	printf "[ %s ] |" "$(mpc -f "[[%artist% - ]%title%]|[%file%]" 2>/dev/null | grep -v "volume:" | head -n 1)"
 
+	# Get the volume of ALSA's master volume output or the level from
+	# pulse and show the level show an icon if or not muted.
+	if command -v amixer; then
+		amixer get Master | grep -o "[0-9]*%\|\[on\]\|\[off\]" | \
+			sed "s/\[on\]//;s/\[off\]//" | head -n 3 | tail -n 2 | tr '\n' ' '
+	else
+		if [ $(pulsemixer --get-mute) = 1 ]; then
+			printf "  |"
+		else
+			vol="$(pulsemixer --get-volume | awk '{print $1}')"
+			case "$vol" in
+	 			0|1[0-9]|2[0-9]) printf "  %s%% |" "$vol";;
+				100|9[0-9]|8[0-9]|7[0-9]) printf "  %s%% |" "$vol";;
+				*) printf "  %s%% |" "$vol";;
+			esac;
+		fi
+	fi
+
 	# wifi quality percentage and  icon if ethernet is connected.
 	printf "%s%s " \
 		"$(grep "^\s*w" /proc/net/wireless | awk '{ print "", int($3 * 100 / 70) "%" }')" \
