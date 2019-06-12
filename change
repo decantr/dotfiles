@@ -57,7 +57,7 @@ fi
 # keybinds
 sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
 
-
+patch -f -sp0 < ../patches/dmenurecord.patch
 # aliases
 aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	ytwatch='mpv --really-quiet -ytdl-format=18/best[height=480]/22/135' \\
@@ -89,7 +89,7 @@ else
 	# void to arch changes
 	sed -i "s/lmao/& -z 2/" .profile
 	sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
-	patch -sp0 < ../patches/pulseaudio.patch
+	patch -f -sp0 < ../patches/pulseaudio.patch
 fi
 
 # xprofile
