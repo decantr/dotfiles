@@ -8,7 +8,7 @@
 -	dmenurecord {,kill}
 +super + F11
 +	dmenurecord
-+suoer + Delete
++super + Delete
 +	dmenurecord kill
 
  # Pause audio
