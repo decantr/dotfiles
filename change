@@ -52,6 +52,8 @@ if $hidpi ; then
 	sed -i '/dunst/a xrandr --output eDP-1 --dpi 192' .xprofile
 	sed -i 's/350x5-0+24/700-0+48/' .config/dunst/dunstrc
 	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
+else
+	sed -i '/unclutter/a xrandr --output DP-0 --mode 2560x1440 --rate 144' .xprofile
 fi
 
 # keybinds
