@@ -56,7 +56,7 @@ fi
 
 # keybinds
 sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
-sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
+
 
 # aliases
 aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
@@ -78,10 +78,13 @@ if [ -d .config/i3 ]; then
 	sed -i 's/15/5/' .config/i3/config
 	sed -i 's/15/0/' .config/i3/config
 	# changes that only need to be made on arch
-	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
 	sed -i 's/-variant altgr-intl //' .xprofile
+	# tree dependant changes
+	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
+	sed -i "s/transmission-remote-cli/tremc/" .local/bin/i3cmds/torwrap
 else
-	# script changes
+	# tree dependant changes
+	sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
 	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 	# void to arch changes
 	sed -i "s/lmao/& -z 2/" .profile
