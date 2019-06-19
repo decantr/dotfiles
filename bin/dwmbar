@@ -66,10 +66,6 @@ update() { \
 	# command easily avoids it.
 	xsetroot -name "$(status | tr '\n' ' ')" &
     wait
-
-	# Check to see if new weather report is needed.
-	testweather &
-    wait
 }
 
 
