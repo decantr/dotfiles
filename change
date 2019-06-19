@@ -57,9 +57,6 @@ else
 	sed -i '/unclutter/a xrandr --output DP-0 --mode 2560x1440 --rate 144' .xprofile
 fi
 
-# keybinds
-sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
-
 # aliases
 aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	ytwatch='mpv --really-quiet -ytdl-format=18/best[height=480]/22/135' \\
@@ -90,8 +87,9 @@ else
 	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 	# void to arch changes
 	sed -i "s/lmao/& -z 2/" .profile
-	sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
 	patch -f -sp0 < ../patches/pulseaudio.patch
+	sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
+	sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
 fi
 
 # xprofile
