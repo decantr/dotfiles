@@ -43,7 +43,7 @@
 +	lmc mute
  XF86Audio{Raise,Lower}Volume
 -	amixer sset Master 5%{+,-}; refbar
-+	lmc {up, down} 15; refbar
++	lmc {up, down} 15
  XF86Audio{Next,Prev}
 -	mpc {next,prev}
 +	lmc {next,prev}
