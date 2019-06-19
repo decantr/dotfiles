@@ -100,6 +100,7 @@ sed -i '/notify-send/d' .xprofile
 
 # vimrc
 sed -i "/goyo.vim/a Plug 'junegunn\/limelight.vim'" .config/nvim/init.vim
+sed -i "/limelight/a Plug 'andymass\/vim-matchup'" .config/nvim/init.vim
 sed -i 's/en_us/en_gb/' .config/nvim/init.vim
 echo '
 set tabstop=2
