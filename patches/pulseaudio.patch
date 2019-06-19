@@ -3,9 +3,12 @@
 @@ -77,39 +77,39 @@
 
  # Pause audio
- super + {_,shift +} p
--	mpc {toggle,pause}
-+	lmc {toggle,pause}
+ super + p
+-	mpc toggle
++	lmc toggle
+ super + shift + p
+-	mpc pause; pauseallmpv
++	lmc pause
  # Changes to next/previous tracks
  super + {comma,period}
 -	mpc {prev,next}
