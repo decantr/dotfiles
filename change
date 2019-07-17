@@ -87,6 +87,7 @@ else
 	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 	# void to arch changes
 	sed -i "s/lmao/& -z 2/" .profile
+	sed -i "s/lf/vifm/" .profile
 	patch -f -sp0 < ../patches/pulseaudio.patch
 	sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
 	sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
