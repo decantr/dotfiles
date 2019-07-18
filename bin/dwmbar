@@ -49,6 +49,9 @@ status() { \
 		printf " %s%% " "$(cat /sys/class/power_supply/BAT0/capacity)"
 	fi
 
+	# get news items
+	printf "|  %s " "$(newsboat -x print-unread | cut -d ' ' -f 1)"
+
 	# show unread mail if mutt-wizard is installed.
 	command -v mw >/dev/null 2>&1 &&
 		printf "|  %s " "$(du -a ~/.local/share/mail/*/INBOX/new/* 2>/dev/null | wc -l)"
