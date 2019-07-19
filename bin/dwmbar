@@ -12,8 +12,8 @@ trap 'update' 5
 status() { \
 
 	# get current mpd track filename or artist - title if possible.
-	( mpc > /dev/null ) &&
-	printf "[ %s ] |" "$(mpc -f "[[%artist% - ]%title%]|[%file%]" 2>/dev/null | grep -v "volume:" | head -n 1)"
+	#( mpc > /dev/null ) &&
+	#printf "[ %s ] |" "$(mpc -f "[[%artist% - ]%title%]|[%file%]" 2>/dev/null | grep -v "volume:" | head -n 1)"
 
 	# Get the volume of ALSA's master volume output or the level from
 	# pulse and show the level show an icon if or not muted.
