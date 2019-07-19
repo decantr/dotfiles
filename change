@@ -141,6 +141,7 @@ gh="git --work-tree=$HOME --git-dir=$HOME/.local/share/homegit"
 ch=$($gh status -s --untracked-files=no)
 if [ "$ch" != "" ]; then
 	# prompt to show
+	$gh status -s --untracked-files=no
 	printf "::  Do you want view changes to files? [y/N] "
 	read -r REPLY
 	if echo "$REPLY" | grep -qwE "^[Yy]$"; then
