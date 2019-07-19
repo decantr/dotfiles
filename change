@@ -68,6 +68,7 @@ aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	ident='echo \$(curl -s ident.me)' \\
 	p='sudo pacman' \\
 	SS='sudo systemctl' \\
+	bat='cat /sys/class/power_supply/BAT0/capacity' \\
 	"
 echo "$aliases" >> .config/aliasrc
 
