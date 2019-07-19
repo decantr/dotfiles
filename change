@@ -140,7 +140,8 @@ git commit -qam "!! Install point !!"
 printf "::  Do you want to edit the current system? [y/N] "
 read -r REPLY
 if echo "$REPLY" | grep -qwE "^[Yy]$"; then
-	rsync -a . ~
+	rsync -a --exclude '.git' . ~
+	cp -r .git ~/.local/share/homegit
 fi
 
 # prompt for changes to system
