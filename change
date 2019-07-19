@@ -94,6 +94,9 @@ else
 	sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
 fi
 
+# profile
+sed -i 's/mpd/pgrep mpd >\/dev\/null || mpd/' .profile
+
 # xprofile
 sed -i 's/xcompmgr/#xcompmgr/' .xprofile
 sed -i 's/setxkbmap/setxkbmap -layout gb/' .xprofile
