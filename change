@@ -106,11 +106,14 @@ sed -i '/LARBSWELCOME/d' .xprofile
 # vimrc
 sed -i "/goyo.vim/a Plug 'junegunn\/limelight.vim'" .config/nvim/init.vim
 sed -i "/limelight/a Plug 'andymass\/vim-matchup'" .config/nvim/init.vim
-sed -i 's/en_us/en_gb/' .config/nvim/init.vim
+sed -i "/limelight/a Plug "morhetz\/gurvbox"" .config/nvim/init.vim
+sed -i "s/en_us/en_gb/" .config/nvim/init.vim
+sed -i "1,/set bg=light/s/light/dark/" .config/nvim/init.vim
+sed -i "s/set bg=light//g" .config/nvim/init.vim
+sed -i "/clipboard/a colorscheme gruvbox" .config/nvim/init.vim
+sed -i "/clipboard/a set tabstop=2" .config/nvim/init.vim
+sed -i "/clipboard/a set shiftwidth=2" .config/nvim/init.vim
 echo '
-set tabstop=2
-set shiftwidth=2
-
 """ groff
 	" Word Count
 	autocmd FileType groff map <leader>w :w !watchwc <c-r>%<CR>
