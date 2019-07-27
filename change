@@ -58,6 +58,7 @@ else
 fi
 
 # aliases
+echo "vf() { fzf | xargs -r -I % \$EDITOR % ;}" >> .config/aliasrc
 aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	ytwatch='mpv --really-quiet -ytdl-format=18/best[height=480]/22/135' \\
 	ytlisten='mpv --really-quiet -ytdl-format=171/250/bestaudio' \\
