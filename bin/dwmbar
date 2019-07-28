@@ -17,6 +17,17 @@ status() { \
 
 	# Get the volume of ALSA's master volume output or the level from
 	# pulse and show the level show an icon if or not muted.
+#	printf " %s |" "$(amixer get Master |
+#		grep -o "[0-9]*%\|\[on\]\|\[off\]" |
+		# strip undeeded output
+#		tr '\n' ' ' |
+		# first expression replaces all with mute icon
+		# second replaces the "on" with the volume icon
+#		sed -e '/off/c' -e 's/\[on\]//'|
+		# swap them roudn so the "icon" is before the volume
+#		awk '{ print $2 " " $1 }')"
+
+	# use pulsemixer to find out audio information
 	if [ $(pulsemixer --get-mute) = 1 ]; then
 		printf "  |"
 	else
