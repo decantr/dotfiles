@@ -1,0 +1,67 @@
+--- ../dwm-b/dwm.c	2019-07-28 19:27:14.694272820 +0100
++++ dwm.c	2019-07-10 06:27:28.407301798 +0100
+@@ -783,6 +783,8 @@
+ void
+ focus(Client *c)
+ {
++	XWindowChanges wc;
++
+ 	if (!c || !ISVISIBLE(c))
+ 		for (c = selmon->stack; c && !ISVISIBLE(c); c = c->snext);
+ 	if (selmon->sel && selmon->sel != c)
+@@ -796,6 +798,12 @@
+ 		attachstack(c);
+ 		grabbuttons(c, 1);
+ 		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
++		if (!c->isfloating)
++		{
++			wc.sibling=selmon->barwin;
++			wc.stack_mode=Below;
++			XConfigureWindow(dpy, c->win, CWSibling | CWStackMode, &wc);
++		}
+ 		setfocus(c);
+ 	} else {
+ 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
+@@ -1112,7 +1120,7 @@
+ 	if (n > 0) /* override layout symbol */
+ 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
+ 	for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
+-		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, 0);
++		resize(c, m->wx - c->bw, m->wy, m->ww, m->wh, False);
+ }
+ 
+ void
+@@ -1282,6 +1290,13 @@
+ 	c->oldw = c->w; c->w = wc.width = w;
+ 	c->oldh = c->h; c->h = wc.height = h;
+ 	wc.border_width = c->bw;
++	if (((nexttiled(c->mon->clients) == c && !nexttiled(c->next))
++	    || &monocle == c->mon->lt[c->mon->sellt]->arrange)
++	    && !c->isfullscreen && !c->isfloating) {
++	        c->w = wc.width += c->bw * 2;
++	        c->h = wc.height += c->bw * 2;
++	        wc.border_width = 0;
++	}
+ 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
+ 	configure(c);
+ 	XSync(dpy, False);
+@@ -1687,12 +1702,15 @@
+ 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+ 		if (i < m->nmaster) {
+ 			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
+-			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
+-			my += HEIGHT(c);
++			if (n == 1)
++				resize(c, m->wx - c->bw, m->wy, m->ww, m->wh, False);
++			else
++				resize(c, m->wx - c->bw, m->wy + my, mw - c->bw, h - c->bw, False);
++			my += HEIGHT(c) - c->bw;
+ 		} else {
+ 			h = (m->wh - ty) / (n - i);
+-			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
+-			ty += HEIGHT(c);
++			resize(c, m->wx + mw - c->bw, m->wy + ty, m->ww - mw, h - c->bw, False);
++			ty += HEIGHT(c) - c->bw;
+ 		}
+ }
+ 
