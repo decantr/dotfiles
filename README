@@ -17,18 +17,15 @@ Install
 To get the lastest changes just run
 	$ sh change
 
-To install/update
-	$ cd "voidrice"
-	$ rsync -a . ~
-
 Update
 ------
 
-When you want to update simply check for changed files in $HOME with
+When you want to update it is advised to check for changed files in $HOME with
 	$ git status -s --untracked-files=no
 	$ git diff
 
-Once you have backed up changes, simply follow the same steps to Install
+Once you have backed up changes, simply run the `change` file again.
+You will be prompted about changed files before any changes are made.
 
 Notes
 -----
