@@ -21,8 +21,8 @@ Update
 ------
 
 When you want to update it is advised to check for changed files in $HOME with
-	$ git status -s --untracked-files=no
-	$ git diff
+	$ git --git-dir=~/.local/share/homegit status -s --untracked-files=no
+	$ git --git-dir=~/.local/share/homegit diff
 
 Once you have backed up changes, simply run the `change` file again.
 You will be prompted about changed files before any changes are made.
