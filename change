@@ -132,6 +132,9 @@ echo '
 """ Limelight
 	let g:limelight_conceal_ctermfg = "darkgray"
 	map <leader>l :Limelight!!<CR>
+
+""" README rice
+autocmd VimEnter * if @% == 'README' | set ft=markdown | endif
 ' >> .config/nvim/init.vim
 
 git add .
