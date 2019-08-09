@@ -137,7 +137,7 @@ echo '
 	map <leader>l :Limelight!!<CR>
 
 """ README rice
-autocmd VimEnter * if @% == 'README' | set ft=markdown | endif
+	autocmd BufReadPost README set filetype=markdown
 ' >> .config/nvim/init.vim
 
 git add .
