@@ -161,7 +161,8 @@ printf "::  Do you want to deploy these changes to the home folder? [y/N] "
 read -r REPLY
 if echo "$REPLY" | grep -qwE "^[Yy]$"; then
 	rsync -a --exclude '.git' . ~
-	cp -r .git ~/.local/share/homegit
+	rm -rf ~/.local/share/homegit && mkdir -p ~/.local/share/homegit
+	cp -r .git/* ~/.local/share/homegit
 fi
 
 # prompt for changes to system
