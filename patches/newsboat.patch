@@ -11,5 +11,3 @@
 +macro v set browser "setsid nohup mpv -ytdl-format='bestvideo[vcodec*=avc1][height=720]+bestaudio'"; open-in-browser ; set browser linkhandler
  macro w set browser "w3m"; open-in-browser ; set browser linkhandler
  macro p set browser "dmenuhandler"; open-in-browser ; set browser linkhandler
--macro c set browser "xsel -b <<<" ; open-in-browser ; set browser linkandler
-+macro c set browser "xsel -b <<<" ; open-in-browser ; set browser linkhandler
