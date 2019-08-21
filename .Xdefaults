@@ -1,5 +1,5 @@
 !! Set a default font and font size as below:
-st.font: Monospace-18
+st.font: Terminus (TTF):style=regular:size=18
 
 ! st.termname: st-256color
 st.borderpx: 15
