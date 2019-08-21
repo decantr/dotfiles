@@ -94,6 +94,7 @@ else
 	sed -i "s/lf/vifm/" .profile
 	patch -f -sp0 < ../patches/pulseaudio.patch
 	patch -f -sp0 < ../patches/newsboat.patch
+	patch -f -sp0 < ../patches/keybinds.patch
 	sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
 	sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
 fi
