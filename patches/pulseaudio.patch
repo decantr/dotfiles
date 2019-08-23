@@ -46,10 +46,11 @@
 +	lmc {up, down} 15
  XF86Audio{Next,Prev}
 -	mpc {next,prev}
-+	lmc {next,prev}
- XF86Audio{Pause,Play,Stop}
+-XF86Audio{Pause,Play,Stop}
 -	mpc {pause,play,stop}
-+	lmc {pause,play,stop}
++	lmc {next,prev}
++XF86AudioPlay
++	lmc toggle
  XF86Audio{Rewind,Forward}
 -	mpc seek {-,+}10
 +	lmc {back, forward} 10
