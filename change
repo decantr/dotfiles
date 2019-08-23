@@ -105,6 +105,7 @@ sed -i 's/mpd/pgrep mpd >\/dev\/null || mpd/' .profile
 # xprofile
 sed -i 's/xcompmgr/#xcompmgr/' .xprofile
 sed -i 's/setxkbmap/setxkbmap -layout gb/' .xprofile
+sed -i 's/caps:super/caps:escape_shifted_capslock/' .xprofile
 sed -i '/unclutter/a xrdb ~/.Xdefaults &' .xprofile
 sed -i '/LARBSWELCOME/d' .xprofile
 
