@@ -99,6 +99,9 @@ else
 	sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
 fi
 
+# keybinds
+sed -i 's/td-toggle/$TERMINAL -e nctelegram/' .config/sxhkd/sxhkdrc
+
 # profile
 sed -i 's/mpd/pgrep mpd >\/dev\/null || mpd/' .profile
 
