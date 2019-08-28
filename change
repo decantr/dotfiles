@@ -61,7 +61,7 @@ fi
 sed -i '/yt=/d' .config/aliasrc
 echo "vf() { fzf | xargs -r -I % \$EDITOR % ;}" >> .config/aliasrc
 aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
-	yt=\"youtube-dl --add-metadata -i -f 'bestvideo[vcodec*=avc1][height=720]/22+bestaudio' -o '%(upload_date)s-%(title)s.%(ext)s'\" \\
+	yt=\"youtube-dl --add-metadata -i -f 'bestvideo[vcodec*=avc1][height=720]+bestaudio/22' -o '%(upload_date)s-%(title)s.%(ext)s'\" \\
 	ytwatch='mpv --really-quiet -ytdl-format=18/best[height=480]/22/135' \\
 	ytlisten='mpv --really-quiet -ytdl-format=171/250/bestaudio' \\
 	steam='steam -no-browser -silent' \\
