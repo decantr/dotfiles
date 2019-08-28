@@ -157,7 +157,8 @@ ch=$($gh status -s --untracked-files=no)
 if [ "$ch" != "" ]; then
 	# prompt to show
 	$gh status -s --untracked-files=no
-	printf "::  Do you want view changes to files? [y/N] "
+	printf "::  NOTE: + represents YOUR changes which will be overwritten\n"
+	printf "::  Do you want view local changes? [y/N] "
 	read -r REPLY
 	if echo "$REPLY" | grep -qwE "^[Yy]$"; then
 		$gh diff
