@@ -149,7 +149,7 @@ git add .
 git commit -qam "!! Install point !!"
 
 # print out unstaged changes
-gh="git --work-tree=$HOME --git-dir=$HOME/.local/share/homegit"
+gh="git --work-tree=$HOME --git-dir=.git"
 ch=$($gh status -s --untracked-files=no)
 if [ "$ch" != "" ]; then
 	# prompt to show
