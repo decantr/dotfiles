@@ -21,11 +21,12 @@ status() { \
 		grep -o "[0-9]*%\|\[on\]\|\[off\]" |
 		# strip undeeded output
 		tr '\n' ' ' |
-		# first expression replaces all with mute icon
+		# first expression replaces entire line with mute icon if "off" is found
 		# second replaces the "on" with the volume icon
-		sed -e '/off/c' -e 's/\[on\]//'|
-		# swap them roudn so the "icon" is before the volume
-		awk '{ print $2 " " $1 }')"
+		sed -e '/off/c' -e 's/\[on\]//' |
+		# put the icon before the volume, pass to xargs to remove leading space
+		awk '{print $2 " " $1}' | xargs
+	)"
 
 	# wifi quality percentage and  icon if ethernet is connected.
 	printf "%s%s " \
