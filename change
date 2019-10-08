@@ -116,9 +116,20 @@ sed -i '/unclutter/a xrdb ~/.Xdefaults &' .xprofile
 sed -i '/LARBSWELCOME/d' .xprofile
 
 # vimrc
-sed -i "/goyo.vim/a Plug 'junegunn\/limelight.vim'" .config/nvim/init.vim
-sed -i "/limelight/a Plug 'andymass\/vim-matchup'" .config/nvim/init.vim
-sed -i "/limelight/a Plug 'morhetz\/gruvbox'" .config/nvim/init.vim
+sed -i "/call plug#end()/i\n\
+Plug '/usr/bin/fzf'\n\
+Plug 'OmniSharp/omnisharp-vim'\n\
+Plug 'airblade/vim-gitgutter'\n\
+Plug 'dense-analysis/ale'\n\
+Plug 'junegunn/fzf.vim'\n\
+Plug 'luochen1990/rainbow'\n\
+Plug 'qpkorr/vim-bufkill'\n\
+Plug 'sheerun/vim-polyglot'\n\
+Plug 'morhetz/gruvbox'\n\
+Plug 'andymass/vim-matchup'\n\
+Plug 'junegunn/limelight.vim'
+" .config/nvim/init.vim
+
 sed -i "s/en_us/en_gb/" .config/nvim/init.vim
 sed -i "1,/set bg=light/s/=light/=dark/" .config/nvim/init.vim
 sed -i "s/set bg=light//g" .config/nvim/init.vim
@@ -146,6 +157,8 @@ echo '
 
 """ README rice
 	autocmd BufReadPost README set filetype=markdown
+
+
 ' >> .config/nvim/init.vim
 
 git add .
