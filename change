@@ -138,7 +138,7 @@ sed -i "s/set bg=light//g" .config/nvim/init.vim
 sed -i "/clipboard=/a colorscheme gruvbox" .config/nvim/init.vim
 sed -i "/clipboard=/a set tabstop=2" .config/nvim/init.vim
 sed -i "/clipboard=/a set shiftwidth=2" .config/nvim/init.vim
-sed -i "/filetype=tex/a autocmd BufRead,BufNewFile *.blade.php set filetype=html/" .config/nvim/init.vim
+sed -i "/filetype=tex/a 	autocmd BufRead,BufNewFile \*.blade.php set filetype=html" .config/nvim/init.vim
 
 echo '
 " Navigating with guides
