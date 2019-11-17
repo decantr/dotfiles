@@ -200,7 +200,7 @@ nmap ; :Buffers<CR>
 nmap <Leader>r :Tags<CR>
 nmap <Leader>t :Files<CR>
 nmap <Leader>a :Rg!<CR>
-let $FZF_DEFAULT_COMMAND = \"rg --files --follow -g \"!{.git,node_modules}/*\" 2>/dev/null\"
+let $FZF_DEFAULT_COMMAND = "rg --files --follow -g \"!{.git,node_modules}/*\" 2>/dev/null\"
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
   \   "rg --column --line-number --no-heading --color=always --smart-case -g \"!{*.lock,*-lock.json}\" ".shellescape(<q-args>), 1,
@@ -217,8 +217,8 @@ augroup VimDiff
 augroup END
 
 " ALE
-let g:ale_sign_warning = \"▲\"
-let g:ale_sign_error = \"✗\"
+let g:ale_sign_warning = "▲"
+let g:ale_sign_error = "✗"
 highlight link ALEWarningSign String
 highlight link ALEErrorSign Title
 nmap ]w :ALENextWrap<CR>
