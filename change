@@ -74,6 +74,7 @@ aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	bat='cat /sys/class/power_supply/BAT0/capacity' \\
 	songplay=\"mpv --no-audio-dispaly\" \\
 	ccat=\"highlight --out-format=ansi\" \\
+	history=\"history 1\" \\
 	"
 echo "$aliases" >> .config/aliasrc
 
