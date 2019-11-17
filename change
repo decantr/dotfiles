@@ -92,7 +92,7 @@ else
 	sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
 	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 	# void to arch changes
-	sed -i "s/tabbed.*/\$TERMINAL -e lynx\"/" .profile
+	sed -i "s/tabbed.*/\$TERMINAL -e w3m\"/" .profile
 	sed -i "s/lf/vifm/" .profile
 	patch -f -sp0 < ../patches/pulseaudio.patch
 	patch -f -sp0 < ../patches/newsboat.patch
