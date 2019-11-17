@@ -119,6 +119,7 @@ sed -i '/LARBSWELCOME/d' .xprofile
 
 # vimrc
 sed -i "/call plug#end()/i\n\
+\" My Additions
 Plug '/usr/bin/fzf'\n\
 Plug 'OmniSharp/omnisharp-vim'\n\
 Plug 'airblade/vim-gitgutter'\n\
