@@ -203,11 +203,18 @@ nmap <Leader>a :Rg!<CR>
 let $FZF_DEFAULT_COMMAND = 'rg --files --follow -g "!{.git,node_modules}/*" 2>/dev/null'
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case -g "!{*.lock,*-lock.json}" '.shellescape(<q-args>), 1,
+  \   "rg --column --line-number --no-heading --color=always --smart-case -g \"!{*.lock,*-lock.json}\" ".shellescape(<q-args>), 1,
   \   <bang>0 ? fzf#vim#with_preview('up:40%')
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
 
+nmap <leader>g :GitGutterToggle<CR>
+nmap ]g :GitGutterNextHunk<CR>
+nmap [g :GitGutterPrevHunk<CR>
+augroup VimDiff
+  autocmd!
+  autocmd VimEnter,FilterWritePre * if &diff | GitGutterDisable | endif
+augroup END
 
 ' >> .config/nvim/init.vim
 
