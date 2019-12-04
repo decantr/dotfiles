@@ -229,6 +229,14 @@ augroup VimDiff
   autocmd!
   autocmd VimEnter,FilterWritePre * if &diff | ALEDisable | endif
 augroup END
+
+let g:ale_fixers = {
+\	"javascript": ["prettier"],
+\	"html": ["prettier"],
+\	"xml": ["xmllint"],
+\	"sql": ["sqlformat"],
+\	"php": ["phpcs"],
+\}
 ' >> .config/nvim/init.vim
 
 git add .
