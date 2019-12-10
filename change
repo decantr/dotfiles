@@ -14,22 +14,22 @@ else
 	cd voidrice || exit 1
 fi
 
+git clean -dxfq
+git reset -q --hard
+git checkout -q master 1> /dev/null
+echo "::  Updating"
+git pull -q --progress 2> /dev/null
+
 printf "::  Use \"i3\" or \"dwm\" [i/D]: "
 read -r REPLY
 if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Dd]$"; then
-	echo "::  Setting up dwm"
-	branch=voiddwm
+       echo "::  Setting up dwm"
+       wm=dwm
 elif echo "$REPLY" | grep -qwE "^[Ii]$"; then
-	echo "::  Setting up i3"
-	branch=archi3
+       echo "::  Setting up i3"
+       wm=i3
 else echo "::  Invalid" && exit 1
 fi
-
-git clean -dxfq
-git reset -q --hard
-git checkout -q origin/$branch 1> /dev/null
-echo "::  Updating"
-git pull -q --progress origin $branch 2> /dev/null
 
 printf "::  Is this display HiDPi [y/N] "
 read -r REPLY
@@ -42,8 +42,10 @@ fi
 # copy files in
 cp ../bin/* .local/bin/
 cp ../.Xdefaults .
-cp ~/.config/newsboat/urls .config/newsboat/
-[ -f ../wall.png ] && cp ../wall.png .config/
+echo "::  Backing up newsboat urls"
+cp ~/.config/newsboat/urls ..
+cp ../urls .config/newsboat/
+#[ -f ../wall.png ] && cp ../wall.png .config/
 
 # remove bloat
 rm README.md LICENSE
@@ -78,29 +80,27 @@ aliases="alias ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	"
 echo "$aliases" >> .config/aliasrc
 
-# repo specific changes
-if [ -d .config/i3 ]; then
-	# i3 changes
-	sed -i 's/15/5/' .config/i3/config
-	sed -i 's/15/0/' .config/i3/config
-	# changes that only need to be made on arch
-	sed -i 's/-variant altgr-intl //' .xprofile
-	# tree dependant changes
-	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
-	sed -i "s/transmission-remote-cli/tremc/" .local/bin/i3cmds/torwrap
-else
-	# tree dependant changes
-	sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
-	sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
-	# void to arch changes
-	sed -i "s/tabbed.*/\$TERMINAL -e w3m\"/" .profile
-	sed -i "s/lf/vifm/" .profile
-	patch -f -sp0 < ../patches/pulseaudio.patch
-	patch -f -sp0 < ../patches/newsboat.patch
-	patch -f -sp0 < ../patches/keybinds.patch
-	sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
-	sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
-fi
+# set dwm specific changes
+[ -d .local/share/larbs/ ] || mkdir -p .local/share/larbs
+echo "$wm" > .local/share/larbs/wm
+
+# i3 changes
+sed -i 's/15/5/' .config/i3/config
+sed -i 's/15/0/' .config/i3/config
+# tree dependant changes
+sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
+sed -i "s/transmission-remote-cli/tremc/" .local/bin/i3cmds/torwrap
+# tree dependant changes
+sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
+sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
+# void to arch changes
+#sed -i "s/tabbed.*/\$TERMINAL -e w3m\"/" .profile
+sed -i "s/lf/vifm/" .profile
+patch -f -sp0 < ../patches/pulseaudio.patch
+patch -f -sp0 < ../patches/newsboat.patch
+patch -f -sp0 < ../patches/keybinds.patch
+sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
+sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
 
 # ncmpcpp
 sed -i '/^#user_/ {s/^.//;s/classic/alternative/}' .config/ncmpcpp/config
@@ -112,9 +112,11 @@ sed -i 's/td-toggle/$TERMINAL -e nctelegram/' .config/sxhkd/sxhkdrc
 sed -i 's/mpd/pgrep mpd >\/dev\/null || mpd/' .profile
 
 # xprofile
-sed -i 's/xcompmgr/#xcompmgr/' .xprofile
-sed -i 's/setxkbmap/setxkbmap -layout gb/' .xprofile
-sed -i 's/caps:super/caps:escape_shifted_capslock/' .xprofile
+#sed -i 's/xcompmgr/#xcompmgr/' .xprofile
+sed -i '{
+	s/caps:super/caps:escape_shifted_capslock/;
+	s/setxkbmap/setxkbmap -layout gb/;
+}' .local/bin/tools/remaps
 sed -i '/unclutter/a xrdb ~/.Xdefaults &' .xprofile
 sed -i '/LARBSWELCOME/d' .xprofile
 
@@ -134,12 +136,11 @@ Plug 'junegunn/limelight.vim'
 " .config/nvim/init.vim
 
 sed -i "s/en_us/en_gb/" .config/nvim/init.vim
-sed -i "1,/set bg=light/s/=light/=dark/" .config/nvim/init.vim
-sed -i "s/set bg=light//g" .config/nvim/init.vim
-sed -i "/clipboard=/a colorscheme gruvbox" .config/nvim/init.vim
+#sed -i "1,/set bg=light/s/=light/=dark/" .config/nvim/init.vim
+#sed -i "s/set bg=light//g" .config/nvim/init.vim
+#sed -i "/clipboard=/a colorscheme gruvbox" .config/nvim/init.vim
 sed -i "/clipboard=/a set tabstop=2" .config/nvim/init.vim
 sed -i "/clipboard=/a set shiftwidth=2" .config/nvim/init.vim
-sed -i "/filetype=tex/a 	autocmd BufRead,BufNewFile \*.blade.php set filetype=html" .config/nvim/init.vim
 
 echo '
 " Navigating with guides
