@@ -15,8 +15,7 @@ else
 fi
 
 git clean -dxfq
-git reset -q --hard
-git checkout -q master 1> /dev/null
+git reset -q --hard origin/master
 echo "::  Updating"
 git pull -q --progress 2> /dev/null
 
