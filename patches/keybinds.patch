@@ -1,11 +1,9 @@
---- .config/sxhkd/sxhkdrc	2019-08-21 19:03:52.220728624 +0100
-+++ .config/sxhkd/sxhkdrc	2019-08-15 20:17:11.177244430 +0100
-@@ -162,5 +162,8 @@
+--- .config/sxhkd/sxhkdrc	2019-12-10 09:42:01.364420792 +0000
++++ .config/sxhkd/sxhkdrc	2019-12-10 09:45:34.984435528 +0000
+@@ -163,3 +163,6 @@
  # Mount a USB drive or Android device
  super + {F9,F10}
  	{dmenumount,dmenuumount}
 +# Search with Duckduckgo
 +super + F11
 +	ducksearch
- super + F12
- 	$TERMINAL -e sudo -A nmtui
