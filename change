@@ -90,8 +90,8 @@ sed -i 's/15/5/' .config/i3/config
 sed -i 's/15/0/' .config/i3/config
 sed -i '/Welcome to LARBS/d' .config/i3/config
 # tree dependant changes
-sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
-sed -i "s/transmission-remote-cli/tremc/" .local/bin/i3cmds/torwrap
+sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
+sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
 # tree dependant changes
 sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
 sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
@@ -118,7 +118,7 @@ sed -i 's/mpd/pgrep mpd >\/dev\/null || mpd/' .profile
 sed -i '{
 	s/caps:super/caps:escape_shifted_capslock/;
 	s/setxkbmap/setxkbmap -layout gb/;
-}' .local/bin/tools/remaps
+}' .local/bin/remaps
 sed -i '/unclutter/a xrdb ~/.Xdefaults &' .xprofile
 
 # vimrc
