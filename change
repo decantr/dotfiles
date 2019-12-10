@@ -88,6 +88,7 @@ echo "$wm" > .local/share/larbs/wm
 # i3 changes
 sed -i 's/15/5/' .config/i3/config
 sed -i 's/15/0/' .config/i3/config
+sed -i '/Welcome to LARBS/d' .config/i3/config
 # tree dependant changes
 sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/i3cmds/maimpick
 sed -i "s/transmission-remote-cli/tremc/" .local/bin/i3cmds/torwrap
@@ -119,7 +120,6 @@ sed -i '{
 	s/setxkbmap/setxkbmap -layout gb/;
 }' .local/bin/tools/remaps
 sed -i '/unclutter/a xrdb ~/.Xdefaults &' .xprofile
-sed -i '/LARBSWELCOME/d' .xprofile
 
 # vimrc
 sed -i "/call plug#end()/i\
