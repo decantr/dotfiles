@@ -1,0 +1,23 @@
+#!/bin/sh
+# script to wrap and handle updating of youtube-dl
+
+url_bin="https://yt-dl.org/downloads/latest/youtube-dl"
+url_md5="https://yt-dl.org/downloads/latest/MD5SUMS"
+sum="/tmp/ytdlmd5"
+
+if ! find "$sum" -mtime +1 -print 2> /dev/null; then
+	printf "::  checking ytdl version\n"
+	newsum=$(curl -sL "$url_md5" | head -n 1 | cut -d ' ' -f 1)
+	if ! [ -f "$sum" ] || ! grep -q "$newsum" < $sum; then
+		printf "::  ytdl out of date, updating\n"
+
+		sudo curl -sL $url_bin -o /usr/local/bin/youtube-dl
+		sudo chmod a+rx /usr/local/bin/youtube-dl
+
+		echo "$newsum" > "$sum"
+	fi
+fi
+
+[ -z "$1" ] && { printf "::  no URL provided\n"; exit 1; }
+
+youtube-dl "$1"
