@@ -1,23 +1,28 @@
 !! Set a default font and font size as below:
-st.font: Terminus (TTF):style=regular:size=18
+st.font: Inconsolata:style=regular:size=18
 
 ! st.termname: st-256color
 st.borderpx: 15
+st.tabspaces: 2
 
-/* !! tomorrow */
-*.color0: 	#1d1f21
-*.color1: 	#cc6666
-*.color2: 	#b5bd68
-*.color3: 	#f0c674
-*.color4: 	#81a2be
-*.color5: 	#b294bb
-*.color6: 	#8abeb7
-*.color7: 	#c5c8c6
-*.color8: 	#969896
-*.color9: 	#de935f
-*.color10:	#282a2e
-*.color11:	#373b41
-*.color12:	#b4b7b4
-*.color13:	#e0e0e0
-*.color14:	#a3685a
-*.color15:	#ffffff
+! seoul256 (dark) theme adapted for st
+! append the content of this file to your .Xresources
+! st.background: #3a3a3a
+st.background: #121212
+st.foreground: #d0d0d0
+st.color0: #4e4e4e
+st.color1: #d68787
+st.color2: #5f865f
+st.color3: #d8af5f
+st.color4: #85add4
+st.color5: #d7afaf
+st.color6: #87afaf
+st.color7: #d0d0d0
+st.color8: #626262
+st.color9: #d75f87
+st.color10: #87af87
+st.color11: #ffd787
+st.color12: #add4fb
+st.color13: #ffafaf
+st.color14: #87d7d7
+st.color15: #e4e4e4
