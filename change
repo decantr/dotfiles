@@ -58,6 +58,8 @@ else
 	sed -i '/unclutter/a xrandr --output DP-0 --mode 2560x1440 --rate 144' .xprofile
 fi
 
+echo "export _JAVA_AWT_WM_NONREPARENTING=1" >> .profile
+
 # aliases
 sed -i '/yt=/d' .config/aliasrc
 #echo "vf() { fzf | xargs -r -I % \$EDITOR % ;}" >> .config/aliasrc
@@ -78,8 +80,11 @@ alias \
 	songplay=\"mpv --no-audio-dispaly\" \\
 	ccat=\"highlight --out-format=ansi\" \\
 	history=\"history 1\" \\
-	"
+	dc=\"docker-compose\" \\
+	dcr=\"docker-compose run --rm\" \\
+"
 echo "$aliases" >> .config/aliasrc
+sed -i '/command -v nvim/d' .config/aliasrc
 
 # set dwm specific changes
 [ -d .local/share/larbs/ ] || mkdir -p .local/share/larbs
@@ -122,29 +127,38 @@ sed -i '{
 	s/caps:super/caps:escape_shifted_capslock/;
 	s/setxkbmap/setxkbmap -layout gb/;
 }' .local/bin/remaps
-sed -i '/unclutter/a xrdb ~/.Xdefaults &' .xprofile
+sed -i '{
+	/unclutter/a xrdb ~/.Xdefaults &
+  /xrandr/a sxhkd -m 1 &           # Bind keys with sxhkd
+' .xprofile
 
 # vimrc
 sed -i "/call plug#end()/i\
 \" My Additions\n\
 Plug '/usr/bin/fzf'\n\
 Plug 'airblade/vim-gitgutter'\n\
+Plug 'andymass/vim-matchup'\n\
 Plug 'dense-analysis/ale'\n\
 Plug 'junegunn/fzf.vim'\n\
-Plug 'luochen1990/rainbow'\n\
+Plug 'junegunn/limelight.vim'\n\
+Plug 'junegunn/rainbow_parentheses.vim'\n\
+Plug 'junegunn/vim-easy-align'\n\
+Plug 'junegunn/seoul256.vim'\n\
 Plug 'qpkorr/vim-bufkill'\n\
 Plug 'sheerun/vim-polyglot'\n\
-Plug 'morhetz/gruvbox'\n\
-Plug 'andymass/vim-matchup'\n\
-Plug 'junegunn/limelight.vim'
-" .config/nvim/init.vim
+Plug 'vim-vdebug/vdebug'\n\
+Plug 'tpope/vim-fugitive'\n\
+Plug 'phpactor/phpactor', { 'for': 'php', 'do': 'composer install' }\n\
+Plug 'phpstan/vim-phpstan'\n\
 
-sed -i "s/en_us/en_gb/" .config/nvim/init.vim
-#sed -i "1,/set bg=light/s/=light/=dark/" .config/nvim/init.vim
-#sed -i "s/set bg=light//g" .config/nvim/init.vim
-#sed -i "/clipboard=/a colorscheme gruvbox" .config/nvim/init.vim
-sed -i "/clipboard=/a set tabstop=2" .config/nvim/init.vim
-sed -i "/clipboard=/a set shiftwidth=2" .config/nvim/init.vim
+" .vimrc
+
+sed -i "s/en_us/en_gb/" .vimrc
+sed -i "/clipboard=/a
+let g:seoul256_background = 233
+colo seoul256" .vimrc
+sed -i "/clipboard=/a set tabstop=2" .vimrc
+sed -i "/clipboard=/a set shiftwidth=2" .vimrc
 
 echo '
 " Navigating with guides
@@ -243,6 +257,16 @@ let g:ale_fixers = {
 \	"php": ["phpcs"],
 \}
 ' >> .config/nvim/init.vim
+
+sed -i "s/monitor = ${env:MONITOR:LVDS-1}/monitor = ${env:MONITOR:eDP-1}/" .config/polybar/config
+echo "# Fix Gnome Apps Slow  Start due to failing services
+# Add this when you include flatpak in your system
+dbus-update-activation-environment --systemd DBUS_SESSION_BUS_ADDRESS DISPLAY
+XAUTHORITY
+
+sudo sh etc/X11/xinit/xinitrc.d/50-systemd-user.sh & # keychain" >> .xprofile
+
+# END OF CONFIG
 
 git add .
 git commit -qam "!! Install point !!"
