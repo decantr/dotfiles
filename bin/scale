@@ -1,7 +1,20 @@
 #!/bin/sh
 
 case "$1" in
-	b*) env GDK_SCALE=2 "$2" ;;
-	s*) env GDK_SCALE=1 "$2" ;;
-	*) echo "invalid" ;;
+	b*) PRE="env GDK_SCALE=2 " ;;
+	s*) PRE="env GDK_SCALE=1 " ;;
+	*) echo "invalid" && exit ;;
 esac
+
+shift
+
+case "$1" in
+	c) CMD=chromium ;;
+	f) CMD=firefox ;;
+	r) CMD=rider ;;
+	*) CMD="$1" ;;
+esac
+
+shift
+
+setsid $PRE "$CMD" "$@"
