@@ -83,7 +83,6 @@ alias \
 	dcr=\"docker-compose run --rm\" \\
 "
 echo "$aliases" >> .config/aliasrc
-sed -i '/command -v nvim/d' .config/aliasrc
 
 # set dwm specific changes
 [ -d .local/share/larbs/ ] || mkdir -p .local/share/larbs
