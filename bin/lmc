@@ -35,7 +35,8 @@ case "$1" in
 	up) up ;;
 	down) down ;;
 	play) $CMD play ;;
-	n*) $CMD next ;;
+	pause) $CMD pause ;;
+	next) $CMD next ;;
 	prev) $CMD prev ;;
 	f*) $CMD seek +"$NUM" ;;
 	b*) $CMD seek -"$NUM" ;;
