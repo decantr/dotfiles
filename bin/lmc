@@ -62,5 +62,4 @@ i.e. \`lmc r\` for \`lmc restart\`.
 EOF
 esac
 
-pgrep dwm > /dev/null && refbar
-pgrep i3 > /dev/null && pkill -RTMIN+10 i3blocks
+pkill -RTMIN+10 "${STATUSBAR:?}" &
