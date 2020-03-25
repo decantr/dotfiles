@@ -102,7 +102,8 @@ sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 # void to arch changes
 #sed -i "s/tabbed.*/\$TERMINAL -e w3m\"/" .profile
 sed -i "s/lf/vifm/" .profile
-patch -f -sp0 < ../patches/pulseaudio.patch
+patch -f -sp0 < ../patches/lmc-player.patch
+patch -f -sp0 < ../patches/lmc-volume.patch
 patch -f -sp0 < ../patches/newsboat.patch
 patch -f -sp0 < ../patches/keybinds.patch
 sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc

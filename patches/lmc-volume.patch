@@ -1,0 +1,35 @@
+--- .config/sxhkd/sxhkdrc.o	2020-03-25 19:59:09.568224940 +0000
++++ .config/sxhkd/sxhkdrc	2020-03-25 20:01:36.196683431 +0000
+@@ -25,7 +25,7 @@
+ super + v
+ 	$TERMINAL -e nvim -c VimwikiIndex
+ super + shift + a
+-	$TERMINAL -e alsamixer; pkill -RTMIN+10 $STATUSBAR
++	$TERMINAL -e lmc mixer
+ super + shift + c
+ 	mpv --no-osc --no-input-default-bindings --input-conf=/dev/null --title='mpvfloat' /dev/video0
+ super + shift + e
+@@ -93,18 +93,18 @@
+ 	lmc seek -{10,120}
+ # Increase volume
+ super + {equal,plus}
+-	amixer sset Master {5,15}%+; pkill -RTMIN+10 $STATUSBAR
++	lmc up {5,15}
+ # Decrease volume
+ super {_,shift +} + minus
+-	amixer sset Master {5,15}%-; pkill -RTMIN+10 $STATUSBAR
++	lmc down {5,15}
+ super + shift + m
+-	amixer sset Master toggle; pkill -RTMIN+10 $STATUSBAR
++	lmc toggle
+ 
+ # Audiokeys
+ XF86AudioMute
+-	amixer sset Master toggle; pkill -RTMIN+10 $STATUSBAR
++	lmc toggle
+ XF86Audio{Raise,Lower}Volume
+-	amixer sset Master 5%{+,-}; pkill -RTMIN+10 $STATUSBAR
++	lmc {up,down} 5
+ XF86Audio{Next,Prev}
+ 	lmc {next,prev}
+ XF86Audio{Pause,Play,Stop}
