@@ -109,6 +109,7 @@ patch -f -sp0 < ../patches/newsboat.patch
 patch -f -sp0 < ../patches/keybinds.patch
 sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
 sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
+printf "\nF2\n\tflick\n" >> .config/sxhkd/sxhkdrc
 
 # ranger
 sed -i "/set draw_borders/a set draw_borders separators/" .config/ranger/rc.conf

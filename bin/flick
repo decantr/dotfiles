@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# this script will cause a double click with "random" delay
+#  between them.
+
+xdotool click --repeat 2 --delay "1$(shuf -i1-4 -n1)$(shuf -i0-9 -n1)" 1
