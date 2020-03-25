@@ -152,15 +152,15 @@ Plug 'vim-vdebug/vdebug'\n\
 Plug 'tpope/vim-fugitive'\n\
 Plug 'phpactor/phpactor', { 'for': 'php', 'do': 'composer install' }\n\
 Plug 'phpstan/vim-phpstan'\n\
-
 " .vimrc
 
-sed -i "s/en_us/en_gb/" .vimrc
-sed -i "/clipboard=/a
-let g:seoul256_background = 233
-colo seoul256" .vimrc
-sed -i "/clipboard=/a set tabstop=2" .vimrc
-sed -i "/clipboard=/a set shiftwidth=2" .vimrc
+sed -i "{
+	/vimling/d
+	s/en_us/en_gb/
+	/clipboard/a set tabstop=2
+	/clipboard/a set shiftwidth=2
+	/clipboard/a let g:seoul256_background = 233\ncolo seoul256
+}" .vimrc
 
 echo '
 " Navigating with guides
