@@ -126,13 +126,13 @@ sed -i 's/mpd/pgrep mpd >\/dev\/null || mpd/' .profile
 # xprofile
 #sed -i 's/xcompmgr/#xcompmgr/' .xprofile
 sed -i '{
-	s/caps:super/caps:escape_shifted_capslock/;
-	s/setxkbmap/setxkbmap -layout gb/;
+	s/caps:super/caps:escape_shifted_capslock/
+	s/setxkbmap/setxkbmap -layout gb/
 }' .local/bin/remaps
 sed -i '{
-	/unclutter/a xrdb ~/.Xdefaults &
+	/unclutter/a xrdb ~\/.Xdefaults &
   /xrandr/a sxhkd -m 1 &           # Bind keys with sxhkd
-' .xprofile
+}' .xprofile
 
 # vimrc
 sed -i "/call plug#end()/i\
