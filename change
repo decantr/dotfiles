@@ -100,8 +100,11 @@ sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
 sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
 sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 # void to arch changes
-#sed -i "s/tabbed.*/\$TERMINAL -e w3m\"/" .profile
-sed -i "s/lf/vifm/" .profile
+# PERSONAL
+sed -i "{
+s/lf/vifm/
+s/brave/qutebrowser/
+}" .profile
 patch -f -sp0 < ../patches/lmc-player.patch
 patch -f -sp0 < ../patches/lmc-volume.patch
 patch -f -sp0 < ../patches/newsboat.patch
