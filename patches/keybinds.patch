@@ -1,9 +1,14 @@
 --- .config/sxhkd/sxhkdrc	2019-12-10 09:42:01.364420792 +0000
 +++ .config/sxhkd/sxhkdrc	2019-12-10 09:45:34.984435528 +0000
-@@ -163,3 +163,6 @@
+@@ -161,8 +161,9 @@
  # Mount a USB drive or Android device
  super + {F9,F10}
  	{dmenumount,dmenuumount}
+-
+-
 +# Search with Duckduckgo
 +super + F11
-+	ducksearch
++ ducksearch
+
+ # close and kill
+ super + {_,shift + }q
