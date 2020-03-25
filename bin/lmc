@@ -1,9 +1,10 @@
 #!/bin/sh
 #
-# A general audio interface for LARBS.
+# A general audio interface
 #
-# original author : luke smith ( lukesmith.xyz )
-# original source : github.com/LukeSmithxyz/voidrice/blob/archi3/.local/bin/tools/lmc
+# this extends on the frame work layed out by luke smith ( lukesmith.xyz ) in
+#  github.com/LukeSmithxyz/voidrice/blob/archi3/.local/bin/tools/lmc
+#  and brings in the new changes from the new version.
 
 [ -z "$2" ] && num="2" || num="$2"
 
