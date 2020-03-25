@@ -8,17 +8,15 @@
 
 if [ -d voidrice ] ; then
 	cd voidrice || exit 1
+	echo "::  Updating"
+	git clean -dxfq
+	git fetch -q --progress
+	git reset -q --hard origin/master
 else
 	git clone https://github.com/LukeSmithxyz/voidrice.git 1> /dev/null &&
 		echo "::  Cloned repo"
 	cd voidrice || exit 1
 fi
-
-
-echo "::  Updating"
-git clean -dxfq
-git fetch -q --progress
-git reset -q --hard origin/master
 
 printf "::  Use \"i3\" or \"dwm\" [i/D]: "
 read -r REPLY
