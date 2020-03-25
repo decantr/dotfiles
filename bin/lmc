@@ -8,19 +8,37 @@
 
 NUM="${2:-5}"
 
+if command -v pulseaudio 1> /dev/null ; then
+	toggle() { pulsemixer --toggle-mute ;}
+	mute() { pulsemixer --mute ;}
+	up() { pulsemixer --change-volume +"$NUM" ;}
+	down() { pulsemixer --change-volume -"$NUM" ;}
+else
+	toggle() { amixer sset Master toggle ;}
+	mute() { amixer sset Master mute ;}
+	up() { amixer sset Master "$NUM"%+ ;}
+	down() { amixer sset Master "$NUM"%- ;}
+fi
+
+CMD=playerctl
+if command -v playerctl 1> /dev/null ; then
+  toggle() { playerctl play-pause ;}
+else
+	CMD=mpc
+  toggle() { mpv toggle ;}
+fi
+
 case "$1" in
-	u*) pulsemixer --change-volume +"$num" ;;
-	d*) pulsemixer --change-volume -"$num" ;;
-	m*) pulsemixer --toggle-mute ;;
-	truemute) pulsemixer --mute ;;
-	play) mpc play ;;
-	n*) mpc next ;;
-	prev) mpc prev ;;
-	t*) mpc toggle ;;
-	p*) mpc pause ; pauseallmpv ;;
-	f*) mpc seek +"$num" ;;
-	b*) mpc seek -"$num" ;;
-	r*) mpc seek 0% ;;
+	toggle) toggle ;;
+	mute) mute ;;
+	up) up ;;
+	down) down ;;
+	play) $CMD play ;;
+	n*) $CMD next ;;
+	prev) $CMD prev ;;
+	f*) $CMD seek +"$NUM" ;;
+	b*) $CMD seek -"$NUM" ;;
+	r*) $CMD seek 0% ;;
 	*) cat << EOF
 lmc: cli music interface for mpd and pulse for those with divine intellect too
 grand to remember the mpc/pamixer commands.
