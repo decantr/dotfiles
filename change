@@ -14,10 +14,11 @@ else
 	cd voidrice || exit 1
 fi
 
-git clean -dxfq
-git reset -q --hard origin/master
+
 echo "::  Updating"
-git pull -q --progress 2> /dev/null
+git clean -dxfq
+git fetch -q --progress
+git reset -q --hard origin/master
 
 printf "::  Use \"i3\" or \"dwm\" [i/D]: "
 read -r REPLY
