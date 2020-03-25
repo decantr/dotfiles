@@ -25,7 +25,7 @@ if command -v playerctl 1> /dev/null ; then
   toggle() { playerctl play-pause ;}
 else
 	CMD=mpc
-  toggle() { mpv toggle ;}
+  toggle() { mpc toggle ;}
 fi
 
 case "$1" in
