@@ -9,12 +9,12 @@
 NUM="${2:-5}"
 
 if command -v pulseaudio 1> /dev/null ; then
-	toggle() { pulsemixer --toggle-mute ;}
+	mtoggle() { pulsemixer --toggle-mute ;}
 	mute() { pulsemixer --mute ;}
 	up() { pulsemixer --change-volume +"$NUM" ;}
 	down() { pulsemixer --change-volume -"$NUM" ;}
 else
-	toggle() { amixer sset Master toggle ;}
+	mtoggle() { amixer sset Master toggle ;}
 	mute() { amixer sset Master mute ;}
 	up() { amixer sset Master "$NUM"%+ ;}
 	down() { amixer sset Master "$NUM"%- ;}
@@ -22,14 +22,15 @@ fi
 
 CMD=playerctl
 if command -v playerctl 1> /dev/null ; then
-  toggle() { playerctl play-pause ;}
+  ptoggle() { playerctl play-pause ;}
 else
 	CMD=mpc
-  toggle() { mpc toggle ;}
+  ptoggle() { mpc toggle ;}
 fi
 
 case "$1" in
-	toggle) toggle ;;
+	toggle) mtoggle ;;
+	play-pause) ptoggle ;;
 	mute) mute ;;
 	up) up ;;
 	down) down ;;
