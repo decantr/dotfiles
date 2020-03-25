@@ -256,7 +256,7 @@ let g:ale_fixers = {
 \	"html": ["prettier"],
 \	"xml": ["xmllint"],
 \	"sql": ["sqlformat"],
-\	"php": ["phpcs"],
+\	"php": ["phpstan"],
 \}
 ' >> .config/nvim/init.vim
 
