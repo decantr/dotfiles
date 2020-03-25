@@ -6,7 +6,7 @@
 #  github.com/LukeSmithxyz/voidrice/blob/archi3/.local/bin/tools/lmc
 #  and brings in the new changes from the new version.
 
-[ -z "$2" ] && num="2" || num="$2"
+NUM="${2:-5}"
 
 case "$1" in
 	u*) pulsemixer --change-volume +"$num" ;;
