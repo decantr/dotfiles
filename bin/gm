@@ -1,0 +1,7 @@
+#!/bin/sh
+
+branch="$(g branch | grep '*' | cut -f 2 -d ' ')"
+git checkout "$1"
+git pull
+git checkout "$branch"
+git merge --no-ff "$1"
