@@ -1,20 +1,23 @@
 #!/bin/sh
 
 case "$1" in
-	b*) PRE="env GDK_SCALE=2 " ;;
-	s*) PRE="env GDK_SCALE=1 " ;;
+	b*) SIZE="2" ;;
+	s*) SIZE="1" ;;
 	*) echo "invalid" && exit ;;
 esac
-
 shift
 
 case "$1" in
 	c) CMD=chromium ;;
 	f) CMD=firefox ;;
+	q) CMD=qutebrowser ;;
 	r) CMD=rider ;;
+	p) CMD=phpstorm ;;
 	*) CMD="$1" ;;
 esac
-
 shift
 
-setsid $PRE "$CMD" "$@"
+export GDK_SCALE=$SIZE
+export _JAVA_AWT_WM_NONREPARENTING=1;
+
+setsid "$CMD" "$@"
