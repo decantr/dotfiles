@@ -1,0 +1,30 @@
+[user]
+	email = EMAIL
+	name = NAME
+	signingkey = KEY
+[alias]
+	a = add
+	ai = add -i
+	b = branch
+	c = commit -S
+	ca = commit -S -a
+	cam = ca -m
+	cd = checkout
+	cm = c -m
+	cp = cherry-pick
+	d = diff
+	dc = diff --cached
+	l = !git --no-pager log --oneline -n 5
+	lg = !git --no-pager log --oneline -n 5 --graph
+	ll = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	m = merge
+	p = push
+	r = reset
+	s = status -s --untracked-files=no --ignore-submodules=dirty
+	sa = status -s
+	sh = show
+	st = stash
+	sth = stash show
+	stm = stash push -m
+[commit]
+	gpgsign = true
