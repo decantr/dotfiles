@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+PATH="/usr/local/bin:$PATH"
+dir="$(git rev-parse --show-toplevel)"
+
+ctags \
+	--recurse --tag-relative --PHP-kinds=+cfiv \
+ 	--exclude=.git,composer.phar,*.js,*.vim,node_modules,vendor \
+ 	--langmap=php:.engine.inc.module.theme.install.php \
+ 	-f"$dir/tags" --languages=-javascript,sql
