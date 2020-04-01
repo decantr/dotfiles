@@ -274,7 +274,7 @@ map <leader>m :!generate-tags<CR>
 ' >> .config/nvim/init.vim
 
 mkdir -p .config/git
-sed "s/NAME/$NAME/s/EMAIL/$EMAIL/s/KEY/$KEY/" < ../gitconfig > .config/git/config
+sed "s/NAME/$NAME/;s/EMAIL/$EMAIL/;s/KEY/$KEY/" < ../gitconfig > .config/git/config
 
 # END OF CONFIG
 
