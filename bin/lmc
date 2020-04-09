@@ -31,8 +31,9 @@ else
 fi
 
 case "$1" in
-	toggle) mtoggle ;;
+	mute-toggle) mtoggle ;;
 	play-pause) ptoggle ;;
+	toggle) ptoggle ;;
 	mute) mute ;;
 	up) up ;;
 	down) down ;;
@@ -52,11 +53,10 @@ Allowed options:
   up NUM	Increase volume (2 secs default)
   down NUM	Decrease volume (2 secs default)
   mute		Toggle mute
-  truemute	Mute
   next		Next track
   prev		Previous track
   toggle	Toggle pause
-  truepause	Pause
+  pause	Pause
   foward NUM	Seek foward in song (2 secs default)
   back NUM	Seek back in song (2 secs default)
   restart	Restart current song
