@@ -265,7 +265,7 @@ let g:ale_fixers = {
 \	"php": ["phpstan"],
 \}
 
-let g:vdebug_options = {'break_on_open': 0}
+let g:vdebug_options = {"break_on_open": 0}
 
 " filetypes
 au FileType php,blade setl sw=4 ts=4 et
