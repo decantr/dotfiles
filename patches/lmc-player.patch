@@ -36,10 +36,10 @@
 +	lmc seek -{10,120}
  # Increase volume
  super + {equal,plus}
- 	amixer sset Master {5,15}%+; pkill -RTMIN+10 $STATUSBAR
+ 	amixer sset Master {5,15}%+; pkill -RTMIN+10 blocks
 @@ -106,11 +106,11 @@
  XF86Audio{Raise,Lower}Volume
- 	amixer sset Master 5%{+,-}; pkill -RTMIN+10 $STATUSBAR
+ 	amixer sset Master 5%{+,-}; pkill -RTMIN+10 blocks
  XF86Audio{Next,Prev}
 -	mpc {next,prev}
 +	lmc {next,prev}
