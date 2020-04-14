@@ -159,9 +159,9 @@ sed -i "{
 	/vimling/d
 	/goyo_width/d
 	s/en_us/en_gb/
-	/clipboard/a set ts = 2
-	/clipboard/a set sw = 2
-	/clipboard/a set tw = 80
+	/clipboard/a set ts=2
+	/clipboard/a set sw=2
+	/clipboard/a set tw=80
 	/clipboard/a set noexpandtab
 	/clipboard/a set nowrap
 	/clipboard/a let g:goyo_width = 84
