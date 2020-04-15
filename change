@@ -282,6 +282,8 @@ map <leader>m :!generate-tags<CR>
 mkdir -p .config/git
 sed "s/NAME/$NAME/;s/EMAIL/$EMAIL/;s/KEY/$KEY/" < ../gitconfig > .config/git/config
 
+sed ",syntax-highlighting,i source ~/.local/src/fzf.git/fzf.zsh," -i .config/zsh/.zshrc
+
 # END OF CONFIG
 
 git add .
