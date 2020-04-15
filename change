@@ -6,6 +6,8 @@
 # files from github.com/lukesmithxyz/voidrice
 #
 
+[ -f .env ] && . ./.env
+
 if [ -d voidrice ] ; then
 	cd voidrice || exit 1
 	echo "::  Updating"
