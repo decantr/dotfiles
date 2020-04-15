@@ -225,8 +225,8 @@ echo '
 	autocmd BufReadPost README set filetype=markdown
 
 " FZF (replaces Ctrl-P, FuzzyFinder and Command-T)
-set rtp+=/usr/local/opt/fzf
-set rtp+=~/.fzf
+set rtp+=/usr/bin/fzf
+set rtp+=~/.local/src/fzf.git
 nmap ; :Buffers<CR>
 nmap <Leader>r :Tags<CR>
 nmap <Leader>t :Files<CR>
