@@ -284,6 +284,8 @@ sed "s/NAME/$NAME/;s/EMAIL/$EMAIL/;s/KEY/$KEY/" < ../gitconfig > .config/git/con
 
 sed -i "/be last/i source ~\/.local\/src\/fzf.git\/.fzf.zsh\n" .config/zsh/.zshrc
 
+echo "super + F12
+	passmenu" >> .config/sxhkd/sxhkdrc
 # END OF CONFIG
 
 git add .
