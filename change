@@ -282,7 +282,7 @@ map <leader>m :!generate-tags<CR>
 mkdir -p .config/git
 sed "s/NAME/$NAME/;s/EMAIL/$EMAIL/;s/KEY/$KEY/" < ../gitconfig > .config/git/config
 
-sed -i "/last/i source ~\/.local\/src\/fzf.git\/fzf.zsh\n" .config/zsh/.zshrc
+sed -i "/be last/i source ~\/.local\/src\/fzf.git\/.fzf.zsh\n" .config/zsh/.zshrc
 
 # END OF CONFIG
 
