@@ -48,18 +48,18 @@ cp ../urls .config/newsboat/
 #[ -f ../wall.png ] && cp ../wall.png .config/
 
 # remove bloat
-rm README.md LICENSE
+rm README.md LICENSE .profile .xprofile
 
 # perform hidpi changes
 if $hidpi ; then
-	sed -i '/dunst/a xrandr --output eDP-1 --dpi 192' .xprofile
+	sed -i '/dunst/a xrandr --output eDP-1 --dpi 192' .zprofile
 	sed -i 's/350x5-0+24/700-0+48/' .config/dunst/dunstrc
-	sed -i '3s/^/export GDK_SCALE=2\n/' .profile
+	sed -i '3s/^/export GDK_SCALE=2\n/' .zprofile
 else
-	sed -i '/unclutter/a xrandr --output DP-0 --mode 2560x1440 --rate 144' .xprofile
+	sed -i '/unclutter/a xrandr --output DP-0 --mode 2560x1440 --rate 144' .zprofile
 fi
 
-echo "export _JAVA_AWT_WM_NONREPARENTING=1" >> .profile
+echo "export _JAVA_AWT_WM_NONREPARENTING=1" >> .zprofile
 
 # aliases
 sed -i '/yt=/d' .config/aliasrc
@@ -105,7 +105,7 @@ sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 sed -i "{
 s/lf/vifm/
 s/brave/qutebrowser/
-}" .profile
+}" .zprofile
 patch -f -sp0 < ../patches/lmc-player.patch
 patch -f -sp0 < ../patches/lmc-volume.patch
 patch -f -sp0 < ../patches/newsboat.patch
@@ -124,10 +124,10 @@ sed -i '/^#user_/ {s/^.//;s/classic/alternative/}' .config/ncmpcpp/config
 sed -i 's/td-toggle/$TERMINAL -e nctelegram/' .config/sxhkd/sxhkdrc
 
 # profile
-sed -i 's/mpd/pgrep mpd >\/dev\/null || mpd/' .profile
+sed -i 's/mpd/pgrep mpd >\/dev\/null || mpd/' .zprofile
 
 # xprofile
-#sed -i 's/xcompmgr/#xcompmgr/' .xprofile
+#sed -i 's/xcompmgr/#xcompmgr/' .zprofile
 sed -i '{
 	s/caps:super/caps:escape_shifted_capslock/
 	s/setxkbmap/setxkbmap -layout gb/
@@ -135,7 +135,7 @@ sed -i '{
 sed -i '{
 	/unclutter/a xrdb ~\/.Xdefaults &
   /xrandr/a sxhkd -m 1 &           # Bind keys with sxhkd
-}' .xprofile
+}' .zprofile
 
 # vimrc
 sed -i "/call plug#end()/i\
@@ -329,4 +329,3 @@ sudo cp -n ../xorg.conf.d/* /etc/X11/xorg.conf.d/
 ( grep -q "FONT" /etc/vconsole.conf ) ||
 	sudo sh -c 'echo "FONT=ter-116n" >> /etc/vconsole.conf'
 $hidpi && sudo sed -i 's/ter-116n/ter-132n/' /etc/vconsole.conf
-
