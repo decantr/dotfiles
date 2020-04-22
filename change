@@ -125,7 +125,7 @@ sed -i "
 s/-A zzz/systemctl suspend/
 s/wpa_cli/sudo -A nmtui/
 s/td-toggle/$TERMINAL -e nctelegram/
-\$a\nF2\n\tflick\n\nsuper + F12\n\tpassmenu\n
+\$a F2\n\tflick\n\nsuper + F12\n\tpassmenu\n
 " .config/sxhkd/sxhkdrc
 
 # ranger
