@@ -67,4 +67,4 @@ i.e. \`lmc r\` for \`lmc restart\`.
 EOF
 esac
 
-pkill -RTMIN+10 "${STATUSBAR:?}" &
+pkill -RTMIN+10 dwmblocks &
