@@ -1,19 +1,19 @@
 #!/bin/sh
 
-disp="$( xrandr | grep "\bconnected\b" | grep -v "eDP-1\b" | cut -f 1 -d " ")"
+OUT="--output eDP-1 --dpi 196"
+DISP="$( xrandr | grep "\bconnected\b" | grep -v "eDP-1\b" | cut -f 1 -d " ")"
 
-if [ -n "$disp" ]
+if [ -n "$DISP" ]
 then
-	export GDK_SCALE=1
-
-	xrandr \
+	SCALE=1
+	OUT="\
 		--output eDP-1 --dpi 196 --off \
-		--output "$disp"  --dpi 96  --primary --mode 2560x1440 --rotate normal \
-		2>/dev/null
-else
-	export GDK_SCALE=2
-
-	xrandr \
-		--output eDP-1 --dpi 196 \
-		2>/dev/null
+		--output \"$DISP\"  --dpi 96  --primary --mode 2560x1440 --rotate normal \
+		"
 fi
+
+export GDK_SCALE=${SCALE:-2}
+
+xrandr "$OUT" 2>/dev/null
+
+setbg
