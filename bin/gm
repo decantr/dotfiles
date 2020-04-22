@@ -1,6 +1,6 @@
 #!/bin/sh
 
-branch="$(g branch | grep '*' | cut -f 2 -d ' ')"
+branch="$(git branch | grep '*' | cut -f 2 -d ' ')"
 git checkout "$1"
 git pull
 git checkout "$branch"
