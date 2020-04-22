@@ -41,7 +41,7 @@ fi
 
 # copy files in
 cp ../bin/* .local/bin/
-cp ../.Xdefaults .
+cp ../Xresources .config
 echo "::  Backing up newsboat urls"
 cp ~/.config/newsboat/urls ..
 cp ../urls .config/newsboat/
