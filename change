@@ -156,12 +156,15 @@ Plug 'qpkorr/vim-bufkill'\n\
 Plug 'sheerun/vim-polyglot'\n\
 Plug 'vim-vdebug/vdebug'\n\
 Plug 'tpope/vim-fugitive'\n\
+Plug 'tpope/vim-vinegar'\n\
 Plug 'phpactor/phpactor', { 'for': 'php', 'do': 'composer install' }\n\
 Plug 'phpstan/vim-phpstan'\n\
 " .config/nvim/init.vim
 
 sed -i "{
 	/vimling/d
+	/nerdtree/d
+	/Nerd tree/,+10d
 	/goyo_width/d
 	s/en_us/en_gb/
 	/clipboard/a set ts=2
@@ -276,10 +279,14 @@ let g:ale_fixers = {
 let g:vdebug_options = {"break_on_open": 0}
 
 " filetypes
-au FileType php,blade setl sw=4 ts=4 et
+au FileType php,blade setl sw=4 ts=4 tw=80 et
+au FileType blade setl tw=120
 
 " tag generate
 map <leader>m :!generate-tags<CR>
+
+" explore netrw
+nmap <leader>n :Explore<CR>
 ' >> .config/nvim/init.vim
 
 mkdir -p .config/git
