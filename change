@@ -101,7 +101,8 @@ sed -i "
 
 # default display settings
 sed -i "
-/unclutter/a xrandr --output $OUT
+	/mpd/i xrandr --output $OUT &
+	/mpd/i sxhkd -m 1 &
 " .config/xprofile
 
 # i3 changes
