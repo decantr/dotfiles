@@ -92,8 +92,8 @@ echo "$wm" > .local/share/larbs/wm
 # PERSONAL
 # global exports
 sed -i "
+	/MOZ_USE_XINPUT2/a export _JAVA_AWT_WM_NONREPARENTING=1
 	/MOZ_USE_XINPUT2/a export GDK_SCALE=$SCALE
-	/GDK_SCALE/a export _JAVA_AWT_WM_NONREPARENTING=1
 	s/^#xrdb/xrdb/
 	s/lf/vifm/
 	s/brave/qutebrowser/
