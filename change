@@ -95,7 +95,6 @@ sed -i "
 	/MOZ_USE_XINPUT2/a export _JAVA_AWT_WM_NONREPARENTING=1
 	/MOZ_USE_XINPUT2/a export GDK_SCALE=$SCALE
 	s/^#xrdb/xrdb/
-	s/lf/vifm/
 	s/brave/qutebrowser/
 	s/mpd/pgrep mpd >\/dev\/null || mpd/
 " .zprofile
