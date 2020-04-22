@@ -1,0 +1,13 @@
+--- .local/bin/displayselect	2020-04-22 18:59:08.485794990 +0100
++++ .local/bin/displayselect	2020-04-22 23:13:35.746490731 +0100
+@@ -73,8 +73,9 @@
+ 	{ onescreen "$screens"; postrun; notify-send "💻 Only one screen detected." "Using it in its optimal settings...";  exit ;}
+
+ # Get user choice including multi-monitor and manual selection:
+-chosen=$(printf "%s\\nmulti-monitor\\nmanual selection" "$screens" | dmenu -i -p "Select display arangement:") &&
++chosen=$(printf "auto\\n%s\\nmulti-monitor\\nmanual selection" "$screens" | dmenu -i -p "Select display arangement:") &&
+ case "$chosen" in
++	"auto") displayset ;;
+ 	"manual selection") arandr ; exit ;;
+ 	"multi-monitor") multimon ;;
+ 	*) onescreen "$chosen" ;;

@@ -120,6 +120,7 @@ patch -f -sp0 < ../patches/lmc-player.patch
 patch -f -sp0 < ../patches/lmc-volume.patch
 patch -f -sp0 < ../patches/newsboat.patch
 patch -f -sp0 < ../patches/keybinds.patch
+patch -f -sp0 < ../patches/displayselect.patch
 
 # keybinds & program binds
 sed -i "
