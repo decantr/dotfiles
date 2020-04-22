@@ -50,16 +50,15 @@ cp ../urls .config/newsboat/
 # remove bloat
 rm README.md LICENSE .profile .xprofile
 
+SCALE=1
+OUT="DP-0 --mode 2560x1440 --rate 144"
+
 # perform hidpi changes
 if $hidpi ; then
-	sed -i '/dunst/a xrandr --output eDP-1 --dpi 192' .zprofile
+	SCALE=2
+	OUT="eDP-1 --dpi 192"
 	sed -i 's/350x5-0+24/700-0+48/' .config/dunst/dunstrc
-	sed -i '3s/^/export GDK_SCALE=2\n/' .zprofile
-else
-	sed -i '/unclutter/a xrandr --output DP-0 --mode 2560x1440 --rate 144' .zprofile
 fi
-
-echo "export _JAVA_AWT_WM_NONREPARENTING=1" >> .zprofile
 
 # aliases
 sed -i '/yt=/d' .config/aliasrc
@@ -90,29 +89,45 @@ echo "$aliases" >> .config/aliasrc
 [ -d .local/share/larbs/ ] || mkdir -p .local/share/larbs
 echo "$wm" > .local/share/larbs/wm
 
-# i3 changes
-sed -i 's/15/5/' .config/i3/config
-sed -i 's/15/0/' .config/i3/config
-sed -i '/Welcome to LARBS/d' .config/i3/config
-# tree dependant changes
-sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
-sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
-# tree dependant changes
-sed -i "s/transmission-remote-cli/tremc/" .local/bin/torwrap
-sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
-# void to arch changes
 # PERSONAL
-sed -i "{
-s/lf/vifm/
-s/brave/qutebrowser/
-}" .zprofile
+# global exports
+sed -i "
+	/MOZ_USE_XINPUT2/a export GDK_SCALE=$SCALE
+	/GDK_SCALE/a export _JAVA_AWT_WM_NONREPARENTING=1
+	s/^#xrdb/xrdb/
+	s/lf/vifm/
+	s/brave/qutebrowser/
+	s/mpd/pgrep mpd >\/dev\/null || mpd/
+" .zprofile
+
+# default display settings
+sed -i "
+/unclutter/a xrandr --output $OUT
+" .config/xprofile
+
+# i3 changes
+sed -i '
+s/15/5/
+s/15/0/
+/Welcome to LARBS/d
+' .config/i3/config
+
+# fix screenshot location
+sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
+
+# void to arch changes
 patch -f -sp0 < ../patches/lmc-player.patch
 patch -f -sp0 < ../patches/lmc-volume.patch
 patch -f -sp0 < ../patches/newsboat.patch
 patch -f -sp0 < ../patches/keybinds.patch
-sed -i "s/-A zzz/systemctl suspend/" .config/sxhkd/sxhkdrc
-sed -i "s/wpa_cli/sudo -A nmtui/" .config/sxhkd/sxhkdrc
-printf "\nF2\n\tflick\n" >> .config/sxhkd/sxhkdrc
+
+# keybinds & program binds
+sed -i "
+s/-A zzz/systemctl suspend/
+s/wpa_cli/sudo -A nmtui/
+s/td-toggle/$TERMINAL -e nctelegram/
+\$a\nF2\n\tflick\n\nsuper + F12\n\tpassmenu\n
+" .config/sxhkd/sxhkdrc
 
 # ranger
 sed -i "/set draw_borders/a set draw_borders separators/" .config/ranger/rc.conf
@@ -120,22 +135,10 @@ sed -i "/set draw_borders/a set draw_borders separators/" .config/ranger/rc.conf
 # ncmpcpp
 sed -i '/^#user_/ {s/^.//;s/classic/alternative/}' .config/ncmpcpp/config
 
-# keybinds
-sed -i 's/td-toggle/$TERMINAL -e nctelegram/' .config/sxhkd/sxhkdrc
-
-# profile
-sed -i 's/mpd/pgrep mpd >\/dev\/null || mpd/' .zprofile
-
-# xprofile
-#sed -i 's/xcompmgr/#xcompmgr/' .zprofile
 sed -i '{
 	s/caps:super/caps:escape_shifted_capslock/
 	s/setxkbmap/setxkbmap -layout gb/
 }' .local/bin/remaps
-sed -i '{
-	/unclutter/a xrdb ~\/.Xdefaults &
-  /xrandr/a sxhkd -m 1 &           # Bind keys with sxhkd
-}' .zprofile
 
 # vimrc
 sed -i "/call plug#end()/i\
