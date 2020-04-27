@@ -41,11 +41,13 @@ rm README.md LICENSE .profile .xprofile
 
 SCALE=1
 OUT="DP-0 --mode 2560x1440 --rate 144"
+COLOR="red"
 
 # perform hidpi changes
 if $hidpi ; then
 	SCALE=2
 	OUT="eDP-1 --dpi 192"
+	COLOR="blue"
 	sed -i 's/350x5-0+24/700-0+48/' .config/dunst/dunstrc
 fi
 
@@ -281,10 +283,10 @@ mkdir -p .config/git
 sed "s/NAME/$NAME/;s/EMAIL/$EMAIL/;s/KEY/$KEY/" < ../gitconfig > .config/git/config
 
 # include fzf and change ps1
-sed -i '
+sed -i "
 /be last/i source ~\/.local\/src\/fzf.git\/.fzf.zsh\n
-s/PS1=.*/PS1="%B%{$fg[blue]%}%c %{$reset_color%}$%b "/
-' .config/zsh/.zshrc
+s/PS1=.*/PS1=\"%B%{\$fg[$COLOR]%}%c %{\$reset_color%}>%b \"/
+" .config/zsh/.zshrc
 
 echo "super + F12
 	passmenu" >> .config/sxhkd/sxhkdrc
