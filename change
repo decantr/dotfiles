@@ -20,17 +20,6 @@ else
 	cd voidrice || exit 1
 fi
 
-printf "::  Use \"i3\" or \"dwm\" [i/D]: "
-read -r REPLY
-if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Dd]$"; then
-       echo "::  Setting up dwm"
-       wm=dwm
-elif echo "$REPLY" | grep -qwE "^[Ii]$"; then
-       echo "::  Setting up i3"
-       wm=i3
-else echo "::  Invalid" && exit 1
-fi
-
 printf "::  Is this display HiDPi [y/N] "
 read -r REPLY
 if [ "$REPLY" = "" ] || echo "$REPLY" | grep -qwE "^[Nn]$"; then
@@ -84,10 +73,6 @@ alias \
 	dcr=\"docker-compose run --rm\" \\
 "
 echo "$aliases" >> .config/aliasrc
-
-# set dwm specific changes
-[ -d .local/share/larbs/ ] || mkdir -p .local/share/larbs
-echo "$wm" > .local/share/larbs/wm
 
 # PERSONAL
 # global exports
