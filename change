@@ -279,6 +279,24 @@ map <leader>m :!generate-tags<CR>
 
 " explore netrw
 nmap <leader>n :Explore<CR>
+
+set directory=$HOME/.cache/vim/swap/
+
+nmap <leader>g :GitGutterToggle<CR>
+nmap ]g :GitGutterNextHunk<CR>
+nmap [g :GitGutterPrevHunk<CR>
+
+" Set hyphens as part of the word when working on CSS files
+au! FileType css,scss setl iskeyword+=-
+
+" Y yanks from cursor to the end of the line
+map Y y$
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 ' >> .config/nvim/init.vim
 
 mkdir -p .config/git
