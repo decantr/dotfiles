@@ -140,7 +140,6 @@ Plug 'junegunn/vim-easy-align'\n\
 Plug 'junegunn/seoul256.vim'\n\
 Plug 'qpkorr/vim-bufkill'\n\
 Plug 'sheerun/vim-polyglot'\n\
-Plug 'vim-vdebug/vdebug'\n\
 Plug 'tpope/vim-fugitive'\n\
 Plug 'tpope/vim-vinegar'\n\
 Plug 'phpactor/phpactor', { 'for': 'php', 'do': 'composer install' }\n\
@@ -159,6 +158,7 @@ sed -i "{
 	/ToggleProse/d
 	s/en_us/en_gb/
 	s/set number relativenumber/set nu/
+	s/set bg=light//
 	/clipboard/a set ts=2
 	/clipboard/a set sw=2
 	/clipboard/a set tw=80
@@ -166,11 +166,12 @@ sed -i "{
 	/clipboard/a set nowrap
 	/clipboard/a let g:goyo_width = 84
 	/clipboard/a let g:seoul256_background = 233\ncolo seoul256
+	/clipboard/a \" set directory=$HOME\/.cache\/vim\/swap\/
 }" .config/nvim/init.vim
 
 echo '
 " disable the background colour
-autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
+au ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
 set termguicolors
 
 " Navigating with guides
@@ -222,7 +223,7 @@ set termguicolors
 	inoremap ,gref <Enter>%K <Enter>%O <++><Enter>%D <++><Enter>%I <++><Enter>%A <++><Enter>%T <++><Enter><Esc>6kA
 
 """ mail
-       autocmd FileType mail inoremap ,d Hi ,<Enter><Enter><++><Enter><Enter>Cheers,<Enter>Shaw Eastwood.<Enter><Enter><Esc>gg$i
+	autocmd FileType mail inoremap ,d Hi ,<Enter><Enter><++><Enter><Enter>Cheers,<Enter>Shaw Eastwood.<Enter><Enter><Esc>gg$i
 
 """ Limelight
 	let g:limelight_conceal_ctermfg = "darkgray"
@@ -231,78 +232,36 @@ set termguicolors
 """ README rice
 	autocmd BufReadPost README set filetype=markdown
 
-" FZF (replaces Ctrl-P, FuzzyFinder and Command-T)
-set rtp+=/usr/bin/fzf
-set rtp+=~/.local/src/fzf.git
-nmap ; :Buffers<CR>
-nmap <Leader>r :Tags<CR>
-nmap <Leader>t :Files<CR>
-nmap <Leader>a :Rg!<CR>
-let $FZF_DEFAULT_COMMAND = "rg --files --follow -g \"!{.git,node_modules}/*\" 2>/dev/null"
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   "rg --column --line-number --no-heading --color=always --smart-case -g \"!{*.lock,*-lock.json}\" ".shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview(\"up:40%\")
-  \           : fzf#vim#with_preview(\"right:50%:hidden\", \"?\"),
-  \   <bang>0)
+" FZF
+	nmap <Leader>r :Tags<CR>
+	nmap <Leader>t :Files<CR>
+	nmap <Leader>a :Buffers<CR>
 
-nmap <leader>g :GitGutterToggle<CR>
-nmap ]g :GitGutterNextHunk<CR>
-nmap [g :GitGutterPrevHunk<CR>
-augroup VimDiff
-  autocmd!
-  autocmd VimEnter,FilterWritePre * if &diff | GitGutterDisable | endif
-augroup END
+" Git Gutter
+	nmap ]g :GitGutterNextHunk<CR>
+	nmap [g :GitGutterPrevHunk<CR>
+	augroup VimDiff
+	  autocmd!
+	  autocmd VimEnter,FilterWritePre * if &diff | GitGutterDisable | ALEDisable | endif
+	augroup END
 
 " ALE
-let g:ale_sign_warning = "▲"
-let g:ale_sign_error = "✗"
-highlight link ALEWarningSign String
-highlight link ALEErrorSign Title
-nmap ]w :ALENextWrap<CR>
-nmap [w :ALEPreviousWrap<CR>
-nmap <Leader>F <Plug>(ale_fix)
-augroup VimDiff
-  autocmd!
-  autocmd VimEnter,FilterWritePre * if &diff | ALEDisable | endif
-augroup END
+	let g:ale_sign_warning = "?"
+	let g:ale_sign_error = "!"
+	nmap ]w :ALENextWrap<CR>
+	nmap [w :ALEPreviousWrap<CR>
 
-let g:ale_fixers = {
-\	"javascript": ["prettier"],
-\	"html": ["prettier"],
-\	"xml": ["xmllint"],
-\	"sql": ["sqlformat"],
-\	"php": ["phpstan"],
-\}
+" PHPStan
+	let g:ale_fixers = {
+	\	"javascript": ["prettier"],
+	\	"html": ["prettier"],
+	\	"xml": ["xmllint"],
+	\	"sql": ["sqlformat"],
+	\	"php": ["phpstan"],
+	\}
 
-let g:vdebug_options = {"break_on_open": 0}
-
-" filetypes
-au FileType php,blade setl sw=4 ts=4 et
-au FileType blade setl tw=120
-
-" tag generate
-map <leader>m :!generate-tags<CR>
-
-" explore netrw
-nmap <leader>n :Explore<CR>
-
-set directory=$HOME/.cache/vim/swap/
-
-nmap <leader>g :GitGutterToggle<CR>
-nmap ]g :GitGutterNextHunk<CR>
-nmap [g :GitGutterPrevHunk<CR>
-
-" Set hyphens as part of the word when working on CSS files
-au! FileType css,scss setl iskeyword+=-
-
-" Y yanks from cursor to the end of the line
-map Y y$
-
-" Start interactive EasyAlign in visual mode (e.g. vipga)
+" interactive EasyAlign in visual mode (e.g. vipga) for a motion/text object (e.g. gaip)
 xmap ga <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 ' >> .config/nvim/init.vim
 
