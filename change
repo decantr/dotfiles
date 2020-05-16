@@ -88,7 +88,6 @@ sed -i "
 # default display settings
 sed -i "
 	s/^#xrdb/xrdb/
-	/unclutter/a sxhkd -m 1 &
 	/unclutter/a xrandr --output $OUT &
 " .config/xprofile
 
@@ -315,9 +314,6 @@ sed -i "
 /be last/i source ~\/.local\/src\/fzf.git\/.fzf.zsh\n
 s/PS1=.*/PS1=\"%B%{\$fg[$COLOR]%}%c %{\$reset_color%}>%b \"/
 " .config/zsh/.zshrc
-
-echo "super + F12
-	passmenu" >> .config/sxhkd/sxhkdrc
 
 sed -i "
 /<family>Noto Sans Mono<\/family>/i <family>Mononoki<\/family>
