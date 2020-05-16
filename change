@@ -173,6 +173,10 @@ echo '
 " disable the background colour
 au ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
 set termguicolors
+augroup rainbow
+  au!
+  au FileType * RainbowParentheses
+augroup END
 
 " Navigating with guides
 	inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
