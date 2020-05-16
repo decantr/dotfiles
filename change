@@ -105,7 +105,6 @@ sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 # void to arch changes
 patch -f -sp0 < ../patches/lmc-player.patch
 patch -f -sp0 < ../patches/lmc-volume.patch
-patch -f -sp0 < ../patches/newsboat.patch
 patch -f -sp0 < ../patches/keybinds.patch
 patch -f -sp0 < ../patches/displayselect.patch
 
