@@ -155,6 +155,9 @@ sed -i "{
 	/sxhkd-vim/d
 	/Nerd tree/,+10d
 	/goyo_width/d
+	/ToggleDeadKeys/d
+	/ToggleIPA/d
+	/ToggleProse/d
 	s/en_us/en_gb/
 	/clipboard/a set ts=2
 	/clipboard/a set sw=2
