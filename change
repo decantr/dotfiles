@@ -170,6 +170,10 @@ sed -i "{
 }" .config/nvim/init.vim
 
 echo '
+" disable the background colour
+autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
+set termguicolors
+
 " Navigating with guides
 	inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
 	vnoremap <leader><leader> <Esc>/<++><Enter>"_c4l
