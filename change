@@ -218,6 +218,9 @@ echo '
 """ Refer
 	inoremap ,gref <Enter>%K <Enter>%O <++><Enter>%D <++><Enter>%I <++><Enter>%A <++><Enter>%T <++><Enter><Esc>6kA
 
+""" mail
+       autocmd FileType mail inoremap ,d Hi ,<Enter><Enter><++><Enter><Enter>Cheers,<Enter>Shaw Eastwood.<Enter><Enter><Esc>gg$i
+
 """ Limelight
 	let g:limelight_conceal_ctermfg = "darkgray"
 	map <leader>l :Limelight!!<CR>
