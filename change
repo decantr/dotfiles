@@ -292,6 +292,10 @@ s/PS1=.*/PS1=\"%B%{\$fg[$COLOR]%}%c %{\$reset_color%}>%b \"/
 
 echo "super + F12
 	passmenu" >> .config/sxhkd/sxhkdrc
+
+sed -i "
+/<family>Noto Sans Mono<\/family>/i <family>Mononoki<\/family>
+" .config/fontconfig/fonts.conf
 # END OF CONFIG
 
 git add .
