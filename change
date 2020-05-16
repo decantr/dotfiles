@@ -164,14 +164,13 @@ sed -i "{
 	/clipboard/a set tw=80
 	/clipboard/a set noexpandtab
 	/clipboard/a set nowrap
+	/clipboard/a au ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
 	/clipboard/a let g:goyo_width = 84
 	/clipboard/a let g:seoul256_background = 233\ncolo seoul256
 	/clipboard/a \" set directory=$HOME\/.cache\/vim\/swap\/
 }" .config/nvim/init.vim
 
 echo '
-" disable the background colour
-au ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
 set termguicolors
 augroup rainbow
   au!
