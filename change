@@ -223,6 +223,13 @@ augroup END
 	autocmd FileType groff inoremap ,gli <Enter>.RS<Enter>.RS<Enter>.IP \[bu]<Enter>.RE<Enter>.RE<Esc>2kA<Enter>
 	autocmd FileType groff inoremap ,gcode <Enter>.CW<Enter>.TS<Enter>box centre;<Enter>l.<Enter>.SM<Enter>$<Enter>.TE<Enter>.R<Enter>.REF "<++>"<Enter><++><Esc>4kA
 
+" PHP
+	au FileType php,blade setl sw=4 ts=4 et
+	au FileType blade setl tw=120
+
+" Set hyphens as part of the word when working on CSS files
+	au! FileType css,scss setl iskeyword+=-
+
 """ Refer
 	inoremap ,gref <Enter>%K <Enter>%O <++><Enter>%D <++><Enter>%I <++><Enter>%A <++><Enter>%T <++><Enter><Esc>6kA
 
