@@ -159,7 +159,7 @@ sed -i "{
 	/ToggleIPA/d
 	/ToggleProse/d
 	s/en_us/en_gb/
-	s/set number relativenumber/set nu
+	s/set number relativenumber/set nu/
 	/clipboard/a set ts=2
 	/clipboard/a set sw=2
 	/clipboard/a set tw=80
