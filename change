@@ -81,6 +81,8 @@ echo "$aliases" >> .config/aliasrc
 sed -i "
 	/MOZ_USE_XINPUT2/a export _JAVA_AWT_WM_NONREPARENTING=1
 	/MOZ_USE_XINPUT2/a export GDK_SCALE=$SCALE
+	/ PATH/a export PATH=\"$HOME/.local/node_modules/bin:\$PATH\"
+	/ANSIBLE/a export npm_config_prefix=\"~/.local/node_modules/\"
 	s/brave/qutebrowser/
 	s/mpd/pgrep mpd >\/dev\/null || mpd/
 " .zprofile
