@@ -37,7 +37,7 @@ cp ../urls .config/newsboat/
 [ -f ../wall.png ] && cp ../wall.png .config/
 
 # remove bloat
-rm README.md LICENSE .profile .xprofile
+rm README.md LICENSE FUNDING.yml .profile .xprofile
 
 SCALE=1
 OUT="DP-0 --mode 2560x1440 --rate 144"
