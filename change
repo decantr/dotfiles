@@ -210,6 +210,7 @@ augroup END
 	autocmd FileType html inoremap ,di <div><Enter><Enter></div><Enter><++><esc>2kcc
 	autocmd FileType html inoremap &<space> &amp;<space>
 	autocmd FileType html inoremap ,m <code></code><Space><++><Esc>FcT>i
+	autocmd FileType html inoremap ,cb <esc>o<code><pre><enter></pre></code><enter><++><esc>kO
 	autocmd FileType html inoremap ,ac }<Esc>O  <++><Esc>O. {<Esc>F.a
 	autocmd FileType css  inoremap ,ac }<Esc>O  <++><Esc>O. {<Esc>F.a
 
