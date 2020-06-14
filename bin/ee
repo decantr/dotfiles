@@ -1,0 +1,13 @@
+#!/bin/sh
+# open the arguement passed in your editor
+
+[ -n "$1" ] || { printf "::  no program given"; exit 1; }
+file=$(which "$1" 2>/dev/null)
+
+if [ -n "$file" ];
+then
+	$EDITOR "$(which "$1")"
+else
+	printf "::  program doesn't exist\n"
+	exit 1
+fi
