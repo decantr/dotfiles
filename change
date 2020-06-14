@@ -34,7 +34,7 @@ cp ../Xresources .config
 echo "::  Backing up newsboat urls"
 cp ~/.config/newsboat/urls ..
 cp ../urls .config/newsboat/
-[ -f ../wall.png ] && cp ../wall.png .config/
+[ -f ../wall.png ] && cp ../wall.png .local/share/bg
 
 # remove bloat
 rm README.md LICENSE FUNDING.yml .profile
