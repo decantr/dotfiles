@@ -18,14 +18,17 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
 Plug 'vimwiki/vimwiki'
+Plug 'neoclide/coc.nvim'
+Plug 'junegunn/seoul256.vim'
 call plug#end()
 
 " settings
 set bg=light
+set clipboard=unnamed
 set clipboard+=unnamedplus
 set ts=2
 set sw=2
-set tw=80
+set tw=79
 set noet
 set nowrap
 set nu
@@ -34,7 +37,6 @@ set ruler
 set cc=80
 set scrolloff=3
 set sidescroll=3
-set autoindent
 set magic
 set t_Co=256
 set laststatus=0
@@ -45,9 +47,11 @@ set backupdir=~/.cache/vim/backup
 set directory=~/.cache/vim
 set nofoldenable
 set lazyredraw
+set signcolumn=number
 let g:goyo_width = 84
 let mapleader =","
-
+let g:seoul256_background = 233
+colo seoul256
 highlight clear SignColumn
 
 " rebinds
@@ -96,6 +100,16 @@ augroup END
 inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
 vnoremap <leader><leader> <Esc>/<++><Enter>"_c4l
 map <leader><leader> <Esc>/<++><Enter>"_c4l
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" snippets
 
 """HTML
 autocmd FileType html inoremap ,b <b></b><Space><++><Esc>FbT>i
