@@ -19,7 +19,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
 Plug 'vimwiki/vimwiki'
 Plug 'neoclide/coc.nvim'
-Plug 'junegunn/seoul256.vim'
+Plug 'lifepillar/vim-gruvbox8'
 call plug#end()
 
 " settings
@@ -50,8 +50,8 @@ set lazyredraw
 set signcolumn=number
 let g:goyo_width = 84
 let mapleader =","
-let g:seoul256_background = 233
-colo seoul256
+au ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
+colo gruvbox8_hard
 highlight clear SignColumn
 
 " rebinds
