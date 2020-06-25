@@ -1,0 +1,64 @@
+#!/bin/sh
+
+# dbrep
+# replace the specified in the .env file with the one provided database
+# if two arguements are passed, multihost is assumed
+
+# assign values passed
+DB_DATABASE_FROM="$1"
+DB_HOST_FROM="$2"
+ENV="$(git rev-parse --show-toplevel)/.env"
+
+# if locations not passed throw an error and exit
+[ -f "$ENV" ] || { printf "::  err: no env file found\n"; exit 1; }
+[ -n "$DB_DATABASE_FROM" ] || { printf "::  err: no input database\n"; exit 1;
+}
+
+# read .env
+. "$ENV"
+
+# if we did not specify the host, set it to samehost
+if [ -n "$DB_HOST_FROM" ]
+then
+	printf "::  enter username: "
+	read -r DB_USERNAME_FROM
+	printf "::  enter password: "
+	read -r DB_PASSWORD_FROM
+else
+	DB_HOST_FROM="$DB_HOST"
+	DB_USERNAME_FROM="$DB_USERNAME"
+	DB_PASSWORD_FROM="$DB_PASSWORD"
+fi
+
+printf "\
+::  this tool will overwrite the following database
+::	\033[1m\033[41m%s\033[0m on %s
+::  with this database:
+::	\033[1m\033[32m%s\033[0m on %s
+" "$DB_DATABASE" "$DB_HOST" "$DB_DATABASE_FROM" "$DB_HOST_FROM"
+
+printf "::  is this correct? [y/N]: "
+read -r REPLY
+[ "$REPLY" = "${REPLY#[Yy]}" ] && exit 1
+printf "::  running\033[0m\n"
+
+# docker run
+# TODO : use uri
+# TODO : handle local docker (will be localhost)
+docker run --rm -it mysql:5.7 bash -c '
+	mysqldump \
+		-u"'"$DB_USERNAME_FROM"'" \
+		-p"'"$DB_PASSWORD_FROM"'" \
+		-h"'"$DB_HOST_FROM"'" \
+		--set-gtid-purged=off \
+		"'"$DB_DATABASE_FROM"'" \
+		1>/dev/null	| \
+	mysql \
+		-u"'"$DB_USERNAME"'" \
+		-p"'"$DB_PASSWORD"'" \
+		-h"'"$DB_HOST"'" \
+		"'"$DB_DATABASE"'" \
+		1>/dev/null
+'
+
+printf ":: done\n"
