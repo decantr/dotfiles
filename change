@@ -295,6 +295,7 @@ sed -i "
 sed -i "
 s/-then-hibernate//
 s/hibernate/suspend/
+s/sudo -A systemctl suspend/slock systemctl suspend -i/
 " .local/bin/sysact
 # END OF CONFIG
 
