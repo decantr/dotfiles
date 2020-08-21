@@ -153,6 +153,7 @@ autocmd FileType groff inoremap ,gcode <Enter>.CW<Enter>.TS<Enter>box centre;<En
 " PHP
 au FileType php,blade setl sw=4 ts=4 et
 au FileType blade setl tw=120
+au FileType html setl tw=0
 
 " mail
 au FileType mail inoremap ,d Hi ,<Enter><Enter><++><Enter><Enter>Cheers,<Enter>Shaw Eastwood.<Enter><Enter><Esc>gg$i
