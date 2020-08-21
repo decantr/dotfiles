@@ -46,6 +46,7 @@ set backupdir=~/.cache/vim/backup
 set directory=~/.cache/vim
 set nofoldenable
 set signcolumn=number
+set completeopt=menuone,noinsert,noselect
 let g:goyo_width = 84
 let mapleader =","
 au ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
