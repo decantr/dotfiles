@@ -37,7 +37,6 @@ set ruler
 set cc=80
 set scrolloff=3
 set sidescroll=3
-set magic
 set t_Co=256
 set laststatus=0
 set mouse=a
@@ -46,7 +45,6 @@ set showmatch
 set backupdir=~/.cache/vim/backup
 set directory=~/.cache/vim
 set nofoldenable
-set lazyredraw
 set signcolumn=number
 let g:goyo_width = 84
 let mapleader =","
