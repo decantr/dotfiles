@@ -365,7 +365,7 @@ else
 fi
 
 patch -f -sp0 < ../../patches/dwm-configh.patch
-$hidpi && sed -i "/font-awesome/s/15/20/g" config.h
+$hidpi && sed -i "/font-awesome/s/15/18/g" config.h
 
 make
 sudo make install
@@ -385,7 +385,7 @@ else
 fi
 
 patch -f -sp0 < ../../patches/dmenu-configh.patch
-$hidpi && sed -i "/font-awesome/s/15/20/g" config.h
+$hidpi && sed -i "/font-awesome/s/15/18/g" config.h
 
 make
 sudo make install
