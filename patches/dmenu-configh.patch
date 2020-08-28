@@ -6,7 +6,7 @@
  static const char *fonts[] = {
 -	"monospace:size=10",
 -	"JoyPixels:pixelsize=8:antialias=true:autohint=true"
-+	"terminus (ttf):size=15",
++	"mononoki:size=15",
 +	"font-awesome:pixelsize=15:antialias=true:autohint=true"
  };
  static const unsigned int bgalpha = 0xe0;

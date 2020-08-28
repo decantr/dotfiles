@@ -14,8 +14,8 @@
  static const int topbar             = 1;        /* 0 means bottom bar */
 -static const char *fonts[]          = { "monospace:size=10", "JoyPixels:pixelsize=10:antialias=true:autohint=true"  };
 -static char dmenufont[]             = "monospace:size=10";
-+static const char *fonts[]          = { "terminus (ttf):size=15", "font-awesome:pixelsize=15:antialias=true:autohint=true"  };
-+static char dmenufont[]             = "terminus (ttf):size=15";
++static const char *fonts[]          = { "mononoki:size=15", "font-awesome:pixelsize=15:antialias=true:autohint=true"  };
++static char dmenufont[]             = "mononoki:size=15";
  static char normbgcolor[]           = "#222222";
  static char normbordercolor[]       = "#444444";
  static char normfgcolor[]           = "#bbbbbb";
