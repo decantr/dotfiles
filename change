@@ -76,6 +76,13 @@ alias \
 	history=\"history 1\" \\
 	dc=\"docker-compose\" \\
 	dcr=\"docker-compose run --rm\" \\
+	p1a=\"php71 artisan\" \\
+	p1at=\"php71 artisan tinker\" \\
+	p2a=\"php72 artisan\" \\
+	p2at=\"php72 artisan tinker\" \\
+	p2atx=\"php72 -dxdebug.remote_autostart=1 artisan tinker\" \\
+	p3a=\"php73 artisan\" \\
+	p3at=\"php73 artisan tinker\" \\
 "
 echo "$aliases" >> .config/aliasrc
 
