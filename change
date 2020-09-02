@@ -52,7 +52,10 @@ if $hidpi ; then
 fi
 
 # aliases
-sed -i '/yt=/d' .config/aliasrc
+sed -i "
+/yt=/d
+/vim=\"nvim\"/ s/^/# /
+" .config/aliasrc
 #echo "vf() { fzf | xargs -r -I % \$EDITOR % ;}" >> .config/aliasrc
 aliases="# My aliases
 alias \
