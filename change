@@ -93,6 +93,7 @@ sed -i "
 	/ PATH/a export PATH=\"$HOME/.local/node_modules/bin:\$PATH\"
 	/ANSIBLE/a export npm_config_prefix=\"~/.local/node_modules/\"
 	s/brave/qutebrowser/
+	s/nvim/vim/
 	s/mpd/pgrep mpd >\/dev\/null || mpd/
 " .zprofile
 
