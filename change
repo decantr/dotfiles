@@ -307,6 +307,11 @@ s/-then-hibernate//
 s/hibernate/suspend/
 s/sudo -A systemctl suspend/slock systemctl suspend -i/
 " .local/bin/sysact
+
+# Mime configs
+echo "
+x-scheme-handler/msteams=teams.desktop
+" >> .config/mimeapps.list
 # END OF CONFIG
 
 git add .
