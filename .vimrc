@@ -11,6 +11,7 @@ Plug 'junegunn/limelight.vim'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'phpstan/vim-phpstan'
+Plug 'preservim/nerdtree'
 Plug 'qpkorr/vim-bufkill'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
@@ -20,24 +21,18 @@ Plug 'tpope/vim-vinegar'
 Plug 'vimwiki/vimwiki'
 Plug 'neoclide/coc.nvim'
 Plug 'lifepillar/vim-gruvbox8'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 call plug#end()
 
 " settings
-set bg=light
-set clipboard=unnamed
-set clipboard+=unnamedplus
+set clipboard=unnamedplus
 set ts=2
 set sw=2
-set tw=79
+set tw=80
 set noet
 set nowrap
 set nu
 set splitbelow splitright
-set ruler
-set cc=80
-set scrolloff=3
-set sidescroll=3
-set t_Co=256
 set laststatus=0
 set mouse=a
 set incsearch
@@ -46,11 +41,16 @@ set backupdir=~/.cache/vim/backup
 set directory=~/.cache/vim
 set nofoldenable
 set signcolumn=number
-set completeopt=menuone,noinsert,noselect
 let g:goyo_width = 84
+let g:limelight_conceal_ctermfg = "red"
+let g:limelight_conceal_guifg = "white"
+let g:mkdp_browser = "q"
 let mapleader =","
-au ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
-colo gruvbox8_hard
+au ColorScheme * hi Normal ctermbg=NONE guibg=NONE
+au ColorScheme * hi SignColumn cterm=NONE guibg=NONE
+au ColorScheme * hi VertSplit ctermbg=NONE guibg=NONE
+set fillchars+=vert:│
+colo gruvbox8_soft
 highlight clear SignColumn
 
 " rebinds
@@ -83,7 +83,7 @@ map <leader>c :w! \| !compiler <c-r>%<CR>
 map <leader>p :!opout <c-r>%<CR><CR>
 
 " enable Goyo by default for mutt writting
-autocmd BufRead,BufNewFile /tmp/neomutt* :Goyo |
+autocmd BufRead,BufNewFile /tmp/neomutt* :Goyo
 autocmd BufRead,BufNewFile /tmp/neomutt* map ZZ :Goyo\|x!<CR>
 autocmd BufRead,BufNewFile /tmp/neomutt* map ZQ :Goyo\|q!<CR>
 
@@ -184,9 +184,9 @@ nmap [w :ALEPreviousWrap<CR>
 
 let g:ale_fixers = {
 \	"javascript": ["prettier"],
-\	"html": ["prettier"],
-\	"xml": ["xmllint"],
-\	"sql": ["sqlformat"],
-\	"php": ["phpstan"],
-\ "sh" : ["shellcheck"],
+\	"html":       ["prettier"],
+\	"xml":        ["xmllint"],
+\	"sql":        ["sqlformat"],
+\	"php":        ["phpstan"],
+\ "sh":         ["shellcheck"],
 \}
