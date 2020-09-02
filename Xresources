@@ -1,6 +1,6 @@
 !! Set a default font and font size as below:
 st.font: mononoki:style=regular:size=15
-st.fontalt0: font-awesome:pixelsize=140:antialias=true:autohint=true
+st.fontalt0: font-awesome:pixelsize=25:antialias=true:autohint=true
 
 ! st.termname: st-256color
 st.borderpx: 15
