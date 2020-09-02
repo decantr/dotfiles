@@ -57,7 +57,7 @@ sed -i "
 /vim=\"nvim\"/ s/^/# /
 " .config/aliasrc
 #echo "vf() { fzf | xargs -r -I % \$EDITOR % ;}" >> .config/aliasrc
-aliases="# My aliases
+echo "# My aliases
 alias \
 	ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
 	yt=\"youtube-dl --add-metadata -i -f 'bestvideo[vcodec*=avc1][height=720]+bestaudio/22' -o '%(upload_date)s-%(title)s.%(ext)s'\" \\
@@ -83,8 +83,7 @@ alias \
 	p2atx=\"php72 -dxdebug.remote_autostart=1 artisan tinker\" \\
 	p3a=\"php73 artisan\" \\
 	p3at=\"php73 artisan tinker\" \\
-"
-echo "$aliases" >> .config/aliasrc
+" >> .config/aliasrc
 
 # PERSONAL
 # global exports
