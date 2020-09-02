@@ -42,23 +42,19 @@ read -r REPLY
 [ "$REPLY" = "${REPLY#[Yy]}" ] && exit 1
 printf "::  running\033[0m\n"
 
-# docker run
+# dump and insert
 # TODO : use uri
-# TODO : handle local docker (will be localhost)
-docker run --rm -it mysql:5.7 bash -c '
-	mysqldump \
-		-u"'"$DB_USERNAME_FROM"'" \
-		-p"'"$DB_PASSWORD_FROM"'" \
-		-h"'"$DB_HOST_FROM"'" \
-		--set-gtid-purged=off \
-		"'"$DB_DATABASE_FROM"'" \
-		1>/dev/null	| \
-	mysql \
-		-u"'"$DB_USERNAME"'" \
-		-p"'"$DB_PASSWORD"'" \
-		-h"'"$DB_HOST"'" \
-		"'"$DB_DATABASE"'" \
-		1>/dev/null
-'
+mysqldump \
+	-u"$DB_USERNAME_FROM" \
+	-p"$DB_PASSWORD_FROM" \
+	-h"$DB_HOST_FROM" \
+	"$DB_DATABASE_FROM" \
+	1>/dev/null	| \
+mysql \
+	-u"$DB_USERNAME" \
+	-p"$DB_PASSWORD" \
+	-h"$DB_HOST" \
+	"$DB_DATABASE" \
+	1>/dev/null
 
 printf ":: done\n"
