@@ -300,7 +300,7 @@ s/PS1=.*/PS1=\"%B%{\$fg[$COLOR]%}%c %{\$reset_color%}>%b \"/
 
 sed -i "
 /<family>Noto Sans Mono<\/family>/i <family>Mononoki<\/family>
-/Joy Pixels/Font Awesome/g
+s/Joy Pixels/Font Awesome/g
 " .config/fontconfig/fonts.conf
 
 sed -i "
