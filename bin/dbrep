@@ -57,4 +57,4 @@ mysql \
 	"$DB_DATABASE" \
 	1>/dev/null
 
-printf ":: done\n"
+printf "::  done\n"
