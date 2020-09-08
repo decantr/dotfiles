@@ -4,8 +4,8 @@ My Dotfiles
 Based on the voidrice dotfiles by Luke Smith (lukesmith.xyz) available
  from git.lukesmith.xyz/dotfiles
 
-User will be asked if deploying to a HiDPi screen, it is worth noting that this
- causes issues with multimonitor displays and thus is not enabled by default.
+If HiDPi mode is chosen, a number of changes are set, including larger font
+ sizes wherever possible including vconsole and higher xrandr dpi.
 
 The script creates a commit to the git repo that you should copy over to your
  $HOME folder ( with the command below ). This will allow you to run
@@ -20,12 +20,10 @@ To get the lastest changes just run
 Update
 ------
 
-When you want to update it is advised to check for changed files in $HOME with
-	$ git --git-dir=~/.local/share/homegit status -s --untracked-files=no
-	$ git --git-dir=~/.local/share/homegit diff
-
-Once you have backed up changes, simply run the `change` file again.
-You will be prompted about changed files before any changes are made.
+When running the install command, you will be prompted to view any changes that
+ have been made to files.
+You can then view all the new modifications about to be made, and any overwrites
+ to temporary edits made.
 
 Notes
 -----
@@ -33,4 +31,3 @@ Notes
 to compile groff with images
 	$ refer -PS -e $INPUT.ms | groff -me -ms -kept -T ps | ps2pdf - $OUTPUT.pdf
 note the removal of the '-j' flag, this causes a hang with many .PSPIC elements
-
