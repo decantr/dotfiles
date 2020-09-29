@@ -54,6 +54,9 @@ fi
 # aliases
 sed -i "
 /yt=/d
+/cp=/d
+/mv=/d
+/rm=/d
 /vim=\"nvim\"/ s/^/# /
 " .config/aliasrc
 #echo "vf() { fzf | xargs -r -I % \$EDITOR % ;}" >> .config/aliasrc
