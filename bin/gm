@@ -4,4 +4,4 @@ branch="$(git branch | grep '*' | cut -f 2 -d ' ')"
 git checkout "$1"
 git pull
 git checkout "$branch"
-git merge --no-ff "$1"
+git merge --no-ff -m "merge branch $1 into $branch" "$1"
