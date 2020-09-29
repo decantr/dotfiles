@@ -151,6 +151,7 @@ autocmd FileType groff inoremap ,gli <Enter>.RS<Enter>.RS<Enter>.IP \[bu]<Enter>
 autocmd FileType groff inoremap ,gcode <Enter>.CW<Enter>.TS<Enter>box centre;<Enter>l.<Enter>.SM<Enter>$<Enter>.TE<Enter>.R<Enter>.REF "<++>"<Enter><++><Esc>4kA
 
 " PHP
+au BufRead,BufNewFile *.blade.php setl ft=blade
 au FileType php,blade setl sw=4 ts=4 et
 au FileType blade setl tw=120
 au FileType html setl tw=0
