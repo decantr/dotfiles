@@ -104,6 +104,7 @@ sed -i "
 sed -i "
 	s/^#xrdb/xrdb/
 	s/xcompmgr/picom/
+	/picom/ s/^/# /
 	/unclutter/a xrandr --output $OUT &
 " .xprofile
 
