@@ -41,6 +41,7 @@ set backupdir=~/.cache/vim/backup
 set directory=~/.cache/vim
 set nofoldenable
 set signcolumn=number
+set bg=dark
 let g:goyo_width = 84
 let g:limelight_conceal_ctermfg = "red"
 let g:limelight_conceal_guifg = "white"
@@ -49,6 +50,8 @@ let mapleader =","
 au ColorScheme * hi Normal ctermbg=NONE guibg=NONE
 au ColorScheme * hi SignColumn cterm=NONE guibg=NONE
 au ColorScheme * hi VertSplit ctermbg=NONE guibg=NONE
+au ColorScheme * hi ALEErrorSign ctermbg=NONE guibg=NONE
+au ColorScheme * hi ALEWarningSign ctermbg=NONE guibg=NONE
 set fillchars+=vert:│
 colo gruvbox8_soft
 highlight clear SignColumn
