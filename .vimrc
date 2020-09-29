@@ -61,6 +61,7 @@ highlight clear SignColumn
 nmap <Leader>r :Tags<CR>
 nmap <Leader>t :Files<CR>
 nmap <Leader>a :Buffers<CR>
+nmap <Leader>n :NERDTreeToggle<CR>
 
 " Goyo plugin makes text more readable when writing prose:
 map <leader>f :Goyo \| highlight clear SignColumn \| set linebreak<CR>
