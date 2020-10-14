@@ -146,6 +146,7 @@ sed -i '{
 
 # vimrc
 echo "so ~/.vimrc" > .config/nvim/init.vim
+cp ../.vimrc .
 
 mkdir -p .config/git
 sed "s/NAME/$NAME/;s/EMAIL/$EMAIL/;s/KEY/$KEY/" < ../gitconfig > .config/git/config
@@ -174,6 +175,7 @@ x-scheme-handler/msteams=teams.desktop
 # END OF CONFIG
 
 git add .
+git add .vimrc
 git commit -qam "!! Install point !!"
 
 # print out unstaged changes
