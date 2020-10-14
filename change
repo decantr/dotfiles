@@ -40,7 +40,7 @@ cp ../urls .config/newsboat/
 rm README.md LICENSE FUNDING.yml .profile
 
 SCALE=1
-OUT="DP-0 --mode 2560x1440 --rate 144"
+OUT="DP-1 --mode 2560x1440 --rate 144"
 COLOR="red"
 
 # perform hidpi changes
