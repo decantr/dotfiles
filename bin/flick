@@ -1,7 +1,11 @@
 #!/bin/sh
 #
 # this script will cause a double click with "random" delay
-#  between them.
+#  between them or simply press F2
 
-pgrep java > /dev/null && \
+if pgrep java > /dev/null
+then
  xdotool click --repeat 2 --delay "1$(shuf -i1-4 -n1)$(shuf -i0-9 -n1)" 1
+else
+	xdotool key F2
+fi
