@@ -6,6 +6,13 @@
 # files from github.com/lukesmithxyz/voidrice
 #
 
+# TODO : remove rsync dep
+if ! command -v rsync >/dev/null
+then
+	printf "::  error must have rsync installed"
+	exit 1
+fi
+
 [ -f .env ] && . ./.env
 
 if [ -d voidrice ] ; then
