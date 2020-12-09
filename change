@@ -73,7 +73,6 @@ alias \
 	yt=\"youtube-dl --add-metadata -i -f 'bestvideo[vcodec*=avc1][height=720]+bestaudio/22' -o '%(upload_date)s-%(title)s.%(ext)s'\" \\
 	ytwatch='mpv --really-quiet -ytdl-format=18/best[height=480]/22/135' \\
 	ytlisten='mpv --really-quiet -ytdl-format=171/250/bestaudio' \\
-	steam='steam -no-browser -silent' \\
 	wgon='sudo wg-quick up wg0 && notify-send \"Wireguard Activated\"' \\
 	wgoff='sudo wg-quick down wg0 && notify-send \"Wireguard Deactivated\"' \\
 	song='youtube-dl -i -f bestaudio -x --audio-format=mp3 --audio-quality 0 --embed-thumbnail -o \"~/Downloads/music/%(uploader)s - %(title)s.%(ext)s\"' \\
