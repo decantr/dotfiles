@@ -66,23 +66,18 @@ sed -i "
 /rm=/d
 /vim=\"nvim\"/ s/^/# /
 " .config/shell/aliasrc
-#echo "vf() { fzf | xargs -r -I % \$EDITOR % ;}" >> .config/aliasrc
+
 echo "# My aliases
-alias \
-	ytsquint='mpv --really-quiet -ytdl-format=43/worst' \\
-	yt=\"youtube-dl --add-metadata -i -f 'bestvideo[vcodec*=avc1][height=720]+bestaudio/22' -o '%(upload_date)s-%(title)s.%(ext)s'\" \\
-	ytwatch='mpv --really-quiet -ytdl-format=18/best[height=480]/22/135' \\
-	ytlisten='mpv --really-quiet -ytdl-format=171/250/bestaudio' \\
+alias \\
 	wgon='sudo wg-quick up wg0 && notify-send \"Wireguard Activated\"' \\
 	wgoff='sudo wg-quick down wg0 && notify-send \"Wireguard Deactivated\"' \\
-	song='youtube-dl -i -f bestaudio -x --audio-format=mp3 --audio-quality 0 --embed-thumbnail -o \"~/Downloads/music/%(uploader)s - %(title)s.%(ext)s\"' \\
-	ident='echo \$(curl -s ident.me)' \\
 	p='sudo pacman' \\
 	SS='sudo systemctl' \\
 	bat='cat /sys/class/power_supply/BAT0/capacity' \\
-	songplay=\"mpv --no-audio-dispaly\" \\
-	ccat=\"highlight --out-format=ansi\" \\
-	history=\"history 1\" \\
+	history=\"history 1\"
+
+# dev
+alias \\
 	dc=\"docker-compose\" \\
 	dcr=\"docker-compose run --rm\" \\
 	p1a=\"php71 artisan\" \\
