@@ -200,11 +200,18 @@ sudo cp -n ../xorg.conf.d/* /etc/X11/xorg.conf.d/
 # vconsole changes
 [ -f /etc/vconsole.conf ] || sudo touch /etc/vconsole.conf
 # add personal keymaps to uk template
-#  this map may be gzipped will need to keep an eye out
-[ -f /usr/local/share/kbd/keymaps/personal.map ] ||
-	printf "keycode   1 = Caps_Lock\nkeycode  58 = Escape\n" | \
-	cat /usr/share/kbd/keymaps/i386/qwerty/uk.map - | \
-	sudo tee /usr/local/share/kbd/keymaps/personal.map
+#  this map may be gzipped which is accounted for
+if [ -f /usr/local/share/kbd/keymaps/personal.map ]
+then
+	uk="$( cat /usr/share/kbd/keymaps/i386/qwerty/uk.map )"
+
+	[ -f /usr/share/kbd/keymaps/i386/qwerty/uk.map ] && \
+		uk="$( gunzip -c /usr/share/kbd/keymaps/i386/qwerty/uk.map.gz )"
+
+	sudo mkdir -p /usr/local/share/kbd/keymaps
+	printf "%s\nkeycode   1 = Caps_Lock\nkeycode  58 = Escape\n" "$uk" | \
+		sudo tee /usr/local/share/kbd/keymaps/personal.map > /dev/null
+fi
 
 ( grep -q "KEYMAP" /etc/vconsole.conf ) ||
 	sudo sh -c 'echo "KEYMAP=/usr/local/share/kbd/keymaps/personal.map" >> /etc/vconsole.conf'
