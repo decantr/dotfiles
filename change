@@ -41,6 +41,7 @@ cp ../Xresources .config
 echo "::  Backing up newsboat urls"
 cp ~/.config/newsboat/urls ..
 cp ../urls .config/newsboat/
+rm .local/share/bg
 [ -f ../wall.png ] && cp ../wall.png .local/share/bg
 
 # remove bloat
