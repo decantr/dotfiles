@@ -108,6 +108,7 @@ sed -i "
 	s/brave/qutebrowser/
 	s/nvim/vim/
 	s/mpd/pgrep mpd >\/dev\/null || mpd/
+	/BROWSER/a export READER=\"zathura\"
 " .zprofile
 
 # default display settings
