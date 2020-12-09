@@ -64,6 +64,7 @@ sed -i "
 /cp=/d
 /mv=/d
 /rm=/d
+/xbps/d
 /vim=\"nvim\"/ s/^/# /
 " .config/shell/aliasrc
 
