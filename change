@@ -48,7 +48,7 @@ rm .local/share/bg
 rm README.md LICENSE FUNDING.yml
 
 SCALE=1
-OUT="DP-1 --mode 2560x1440 --rate 144"
+OUT="DP-1 --rate 144 --size 2560x1440 --pos 2560x0 --rotate normal --output HDMI-1 --primary --size 2560x1440 --pos 0x0  --rotate normal"
 COLOR="red"
 
 # perform hidpi changes
