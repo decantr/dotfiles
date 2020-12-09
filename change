@@ -58,6 +58,11 @@ if $hidpi ; then
 	sed -i 's/350x5-0+24/700-0+48/' .config/dunst/dunstrc
 fi
 
+# install composer1
+command -v composer1 >/dev/null || \
+ sudo curl -L "https://getcomposer.org/composer-1.phar" -o "/usr/bin/composer1" && \
+ sudo chmod +x "/usr/bin/composer1"
+
 # aliases
 sed -i "
 /yt=/d
@@ -79,11 +84,14 @@ alias \\
 alias \\
 	dc=\"docker-compose\" \\
 	dcr=\"docker-compose run --rm\" \\
+	pa=\"php artisan\" \\
+	pat=\"php artisan tinker\" \\
 	p1a=\"php71 artisan\" \\
 	p1at=\"php71 artisan tinker\" \\
 	p2a=\"php72 artisan\" \\
 	p2at=\"php72 artisan tinker\" \\
 	p2atx=\"php72 -dxdebug.remote_autostart=1 artisan tinker\" \\
+	p2c=\"php72 \$(which composer1)\" \\
 	p3a=\"php73 artisan\" \\
 	p3at=\"php73 artisan tinker\" \\
 " >> .config/shell/aliasrc
