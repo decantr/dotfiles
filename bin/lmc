@@ -41,6 +41,7 @@ case "$1" in
 	pause) $CMD pause; pauseallmpv ;;
 	next) $CMD next ;;
 	prev) $CMD prev ;;
+	seek) $CMD "$NUM" ;;
 	f*) $CMD seek +"$NUM" ;;
 	b*) $CMD seek -"$NUM" ;;
 	r*) $CMD seek 0% ;;
