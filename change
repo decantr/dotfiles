@@ -72,8 +72,6 @@ echo "# My aliases
 alias \\
 	wgon='sudo wg-quick up wg0 && notify-send \"Wireguard Activated\"' \\
 	wgoff='sudo wg-quick down wg0 && notify-send \"Wireguard Deactivated\"' \\
-	p='sudo pacman' \\
-	SS='sudo systemctl' \\
 	bat='cat /sys/class/power_supply/BAT0/capacity' \\
 	history=\"history 1\"
 
