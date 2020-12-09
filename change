@@ -44,7 +44,7 @@ cp ../urls .config/newsboat/
 [ -f ../wall.png ] && cp ../wall.png .local/share/bg
 
 # remove bloat
-rm README.md LICENSE FUNDING.yml .profile
+rm README.md LICENSE FUNDING.yml
 
 SCALE=1
 OUT="DP-1 --mode 2560x1440 --rate 144"
@@ -65,7 +65,7 @@ sed -i "
 /mv=/d
 /rm=/d
 /vim=\"nvim\"/ s/^/# /
-" .config/aliasrc
+" .config/shell/aliasrc
 #echo "vf() { fzf | xargs -r -I % \$EDITOR % ;}" >> .config/aliasrc
 echo "# My aliases
 alias \
@@ -93,7 +93,7 @@ alias \
 	p2atx=\"php72 -dxdebug.remote_autostart=1 artisan tinker\" \\
 	p3a=\"php73 artisan\" \\
 	p3at=\"php73 artisan tinker\" \\
-" >> .config/aliasrc
+" >> .config/shell/aliasrc
 
 # PERSONAL
 # global exports
@@ -115,32 +115,11 @@ sed -i "
 	/unclutter/a xrandr --output $OUT &
 " .xprofile
 
-# i3 changes
-sed -i '
-s/15/5/
-s/15/0/
-/Welcome to LARBS/d
-' .config/i3/config
-
 # fix screenshot location
 sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
 
-# void to arch changes
-patch -f -sp0 < ../patches/lmc-player.patch
-patch -f -sp0 < ../patches/lmc-volume.patch
-patch -f -sp0 < ../patches/keybinds.patch
+# patches
 patch -f -sp0 < ../patches/displayselect.patch
-
-# keybinds & program binds
-sed -i "
-s/-A zzz/systemctl suspend/
-s/wpa_cli/sudo -A nmtui/
-s/td-toggle/$TERMINAL -e nctelegram/
-\$a F2\n\tflick\n\nsuper + F12\n\tpassmenu\n
-" .config/sxhkd/sxhkdrc
-
-# ranger
-sed -i "/set draw_borders/a set draw_borders separators/" .config/ranger/rc.conf
 
 # ncmpcpp
 sed -i '/^#user_/ {s/^.//;s/classic/alternative/}' .config/ncmpcpp/config
