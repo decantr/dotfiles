@@ -24,6 +24,10 @@ Plug 'lifepillar/vim-gruvbox8'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 call plug#end()
 
+" vim only settings
+if !has('nvim')
+	set signcolumn=number
+endif
 " settings
 set clipboard=unnamedplus
 set ts=2
@@ -40,7 +44,6 @@ set showmatch
 set backupdir=~/.cache/vim/backup
 set directory=~/.cache/vim
 set nofoldenable
-set signcolumn=number
 set bg=dark
 let g:goyo_width = 84
 let g:limelight_conceal_ctermfg = "red"
@@ -186,12 +189,34 @@ let g:ale_sign_warning = "#"
 let g:ale_sign_error = "!"
 nmap ]w :ALENextWrap<CR>
 nmap [w :ALEPreviousWrap<CR>
+"
+" call ale#linter#Define('php', {
+" \   'name': 'intelephense',
+" \   'lsp': 'stdio',
+" \   'executable': 'intelephense',
+" \   'command': '%e --stdio',
+" \   'project_root': function('ale_linters#php#langserver#GetProjectRoot')
+" \ })
+
+" ALE general config
+let g:ale_completion_enabled = 1
+let g:ale_completion_delay = 100
+let g:ale_completion_autoimport = 1
+
+" ALE linters config
+" let g:ale_linters_explicit = 1
+"let g:ale_linters = {
+"\ }
+
+set omnifunc=ale#completion#OmniFunc
+
+vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 
 let g:ale_fixers = {
 \	"javascript": ["prettier"],
 \	"html":       ["prettier"],
 \	"xml":        ["xmllint"],
 \	"sql":        ["sqlformat"],
-\	"php":        ["phpstan"],
-\ "sh":         ["shellcheck"],
+\	"php":        ["phpstan", "intelephense"],
+\	"sh":         ["shfmt"],
 \}
