@@ -75,9 +75,10 @@ sed -i "
 
 echo "# My aliases
 alias \\
-	wgon='sudo wg-quick up wg0 && notify-send \"Wireguard Activated\"' \\
-	wgoff='sudo wg-quick down wg0 && notify-send \"Wireguard Deactivated\"' \\
-	bat='cat /sys/class/power_supply/BAT0/capacity' \\
+	wgon=\"sudo wg-quick up wg0 && notify-send Wireguard Activated\" \\
+	wgoff=\"sudo wg-quick down wg0 && notify-send Wireguard Deactivated\" \\
+	bat=\"cat /sys/class/power_supply/BAT0/capacity\" \\
+	SS=\"sudo systemctl\" \\
 	history=\"history 1\"
 
 # dev
