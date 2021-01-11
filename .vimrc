@@ -20,7 +20,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
 Plug 'vimwiki/vimwiki'
 Plug 'neoclide/coc.nvim'
-Plug 'lifepillar/vim-gruvbox8'
+Plug 'gruvbox-community/gruvbox'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 call plug#end()
 
@@ -52,7 +52,7 @@ au ColorScheme * hi VertSplit ctermbg=NONE guibg=NONE
 au ColorScheme * hi ALEErrorSign ctermbg=NONE guibg=NONE
 au ColorScheme * hi ALEWarningSign ctermbg=NONE guibg=NONE
 set fillchars+=vert:│
-colo gruvbox8_soft
+colo gruvbox
 highlight clear SignColumn
 
 " rebinds
