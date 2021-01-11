@@ -22,9 +22,14 @@ else
 	mixer() { alsamixer ;}
 fi
 
-CMD=playerctl
 if command -v playerctl 1> /dev/null ; then
-  ptoggle() { playerctl play-pause ;}
+	if pidof spotify 1> /dev/null
+	then
+		CMD="playerctl -p spotify"
+	else
+		CMD=playerctl
+	fi
+  ptoggle() { $CMD play-pause ;}
 else
 	CMD=mpc
   ptoggle() { mpc toggle ;}
