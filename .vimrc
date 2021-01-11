@@ -24,11 +24,7 @@ Plug 'lifepillar/vim-gruvbox8'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 call plug#end()
 
-" vim only settings
-if !has('nvim')
-	set signcolumn=number
-endif
-" settings
+set signcolumn=number
 set clipboard=unnamedplus
 set ts=2
 set sw=2
