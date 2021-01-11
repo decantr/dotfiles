@@ -243,6 +243,7 @@ else
 fi
 
 patch -f -sp0 < ../../patches/dwm-configh.patch
+sed -i "s/lmc /mpc /g" config.h
 $hidpi && sed -i "/font-awesome/s/15/18/g" config.h
 
 make
