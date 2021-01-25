@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# split a pdf based on pages defined in csv
+
+source_pdf="$1"
+source_csv="$2"
+output_folder="$3"
+
+[ -n "$source_pdf" ] || { printf "::  err: no input pdf\n"; exit 1; }
+[ -n "$source_csv" ] || { printf "::  err: no input csv\n"; exit 1; }
+[ -n "$output_folder" ] || output_folder="split_out"
+
+while IFS=, read -r first last dept
+do
+	# skip empty lines
+	[ -z "$first" ] || \
+		qpdf "$source_pdf" --pages . "$first-$last" -- "$output_folder/$dept.pdf"
+
+done < "$source_csv"
