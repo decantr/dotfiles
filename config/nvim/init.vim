@@ -171,8 +171,8 @@ au FileType html setl tw=0
 " mail
 au FileType mail inoremap ,d Hi ,<Enter><Enter><++><Enter><Enter>Cheers,<Enter>Shaw Eastwood.<Enter><Enter><Esc>gg$i
 
-" Set hyphens as part of the word when working on CSS files
-au! FileType css,scss setl iskeyword+=-
+" Set hyphens as part of the word when working on web files
+au! FileType css,html,scss setl iskeyword+=-
 
 " limelight
 let g:limelight_conceal_ctermfg = "darkgray"
