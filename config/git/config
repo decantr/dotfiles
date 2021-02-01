@@ -1,7 +1,5 @@
-[user]
-	email = EMAIL
-	name = NAME
-	signingkey = KEY
+[core]
+  editor = nvim
 [alias]
 	a = add
 	ai = add -i
@@ -30,3 +28,9 @@
 	gpgsign = true
 [pull]
 	rebase = false
+
+[includeIf "gitdir:~/work/"]
+    path = ~/.config/git/work
+
+[includeIf "gitdir:~/dev/"]
+    path = ~/.config/git/personal

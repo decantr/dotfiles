@@ -142,7 +142,7 @@ sed -i '{
 cp ../config/nvim/init.vim .config/nvim
 
 mkdir -p .config/git
-sed "s/NAME/$NAME/;s/EMAIL/$EMAIL/;s/KEY/$KEY/" < ../gitconfig > .config/git/config
+cp ../config/git/config .config/git/config
 
 # include fzf and change ps1
 sed -i "
