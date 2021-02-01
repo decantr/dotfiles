@@ -10,7 +10,6 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'junegunn/vim-easy-align'
-Plug 'phpstan/vim-phpstan'
 Plug 'preservim/nerdtree'
 Plug 'qpkorr/vim-bufkill'
 Plug 'sheerun/vim-polyglot'
@@ -44,6 +43,7 @@ set udf
 set bg=dark
 set fillchars+=vert:│
 set scrolloff=8
+set nohls
 let g:goyo_width = 84
 let g:limelight_conceal_ctermfg = "red"
 let g:limelight_conceal_guifg = "white"
@@ -92,9 +92,9 @@ autocmd BufRead,BufNewFile /tmp/neomutt* :Goyo
 autocmd BufRead,BufNewFile /tmp/neomutt* map ZZ :Goyo\|x!<CR>
 autocmd BufRead,BufNewFile /tmp/neomutt* map ZQ :Goyo\|q!<CR>
 
+" delete trailing on f5
+nnoremap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 " automatically deletes all trailing whitespace and newlines on save.
-autocmd BufWritePre * %s/\s\+$//e
-autocmd BufWritepre * %s/\n\+\%$//e
 augroup rainbow
 	au!
 	au FileType * RainbowParentheses
