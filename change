@@ -125,7 +125,7 @@ sed -i "
 " .xprofile
 
 # fix screenshot location
-sed -i "s/pic-/Pictures\/Screenshots\/pic-/" .local/bin/maimpick
+sed -i "s/pic-/pic\/ss\/pic-/" .local/bin/maimpick
 
 # patches
 patch -f -sp0 < ../patches/displayselect.patch
