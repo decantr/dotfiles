@@ -38,9 +38,16 @@ fi
 # copy files in
 cp ../bin/* .local/bin/
 cp ../Xresources .config
+
 echo "::  Backing up newsboat urls"
-cp ~/.config/newsboat/urls ..
-cp ../urls .config/newsboat/
+cp ~/.config/newsboat/urls.bak ..
+if [ -f ../urls ]
+then
+	cp ../urls .config/newsboat/
+else
+	cp ../urls.bak .config/newsboat/
+fi
+
 rm .local/share/bg
 [ -f ../wall.png ] && cp ../wall.png .local/share/bg
 
