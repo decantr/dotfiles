@@ -18,9 +18,11 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
 Plug 'vimwiki/vimwiki'
-Plug 'neoclide/coc.nvim'
 Plug 'gruvbox-community/gruvbox'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'neovim/nvim-lspconfig'
+Plug 'deoplete-plugins/deoplete-lsp'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 call plug#end()
 
 set signcolumn=number
@@ -49,6 +51,11 @@ let g:limelight_conceal_ctermfg = "red"
 let g:limelight_conceal_guifg = "white"
 let g:mkdp_browser = "q"
 let mapleader =","
+
+let g:deoplete#enable_at_startup = 1
+
+setlocal omnifunc=lsp#complete
+
 au ColorScheme * hi Normal ctermbg=NONE guibg=NONE
 au ColorScheme * hi SignColumn cterm=NONE guibg=NONE
 au ColorScheme * hi VertSplit ctermbg=NONE guibg=NONE
@@ -185,36 +192,66 @@ aug END
 " ale
 let g:ale_sign_warning = "#"
 let g:ale_sign_error = "!"
+let g:ale_fixers = {
+    \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+    \ }
 nmap ]w :ALENextWrap<CR>
 nmap [w :ALEPreviousWrap<CR>
-"
-" call ale#linter#Define('php', {
-" \   'name': 'intelephense',
-" \   'lsp': 'stdio',
-" \   'executable': 'intelephense',
-" \   'command': '%e --stdio',
-" \   'project_root': function('ale_linters#php#langserver#GetProjectRoot')
-" \ })
 
-" ALE general config
-let g:ale_completion_enabled = 1
-let g:ale_completion_delay = 100
-let g:ale_completion_autoimport = 1
+" nvimlsp
 
-" ALE linters config
-" let g:ale_linters_explicit = 1
-"let g:ale_linters = {
-"\ }
+lua << EOF
+local nvim_lsp = require('lspconfig')
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
-set omnifunc=ale#completion#OmniFunc
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
+  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 
-let g:ale_fixers = {
-\	"javascript": ["prettier"],
-\	"html":       ["prettier"],
-\	"xml":        ["xmllint"],
-\	"sql":        ["sqlformat"],
-\	"php":        ["phpstan", "intelephense"],
-\	"sh":         ["shfmt"],
-\}
+  -- Set some keybinds conditional on server capabilities
+  if client.resolved_capabilities.document_formatting then
+    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  elseif client.resolved_capabilities.document_range_formatting then
+    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  end
+
+  -- Set autocommands conditional on server_capabilities
+  if client.resolved_capabilities.document_highlight then
+    vim.api.nvim_exec([[
+      hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
+      hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
+      hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
+      augroup lsp_document_highlight
+        autocmd!
+        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+      augroup END
+    ]], false)
+  end
+end
+
+-- Use a loop to conveniently both setup defined servers
+-- and map buffer local keybindings when the language server attaches
+local servers = { "pyright", "tsserver", "pyls", "intelephense", "angularls" }
+for _, lsp in ipairs(servers) do
+  nvim_lsp[lsp].setup { on_attach = on_attach }
+end
+EOF
