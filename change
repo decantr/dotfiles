@@ -134,8 +134,7 @@ sed -i '{
 }' .local/bin/remaps
 
 # vimrc
-echo "so ~/.vimrc" > .config/nvim/init.vim
-cp ../.vimrc .
+cp ../config/nvim/init.vim .config/nvim
 
 mkdir -p .config/git
 sed "s/NAME/$NAME/;s/EMAIL/$EMAIL/;s/KEY/$KEY/" < ../gitconfig > .config/git/config

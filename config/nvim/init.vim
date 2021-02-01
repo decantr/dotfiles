@@ -1,5 +1,5 @@
 " plugins
-call plug#begin("~/.config/vim/plug")
+call plug#begin("~/.config/nvim/plugged")
 Plug '/usr/bin/fzf'
 Plug 'airblade/vim-gitgutter'
 Plug 'andymass/vim-matchup'
@@ -37,10 +37,13 @@ set laststatus=0
 set mouse=a
 set incsearch
 set showmatch
-set backupdir=~/.cache/vim/backup
-set directory=~/.cache/vim
-set nofoldenable
+set directory=~/.local/share/nvim
+set backupdir=~/.local/share/nvim/backup
+set udir=~/.local/share/nvim/undodir
+set udf
 set bg=dark
+set fillchars+=vert:│
+set scrolloff=8
 let g:goyo_width = 84
 let g:limelight_conceal_ctermfg = "red"
 let g:limelight_conceal_guifg = "white"
@@ -51,7 +54,6 @@ au ColorScheme * hi SignColumn cterm=NONE guibg=NONE
 au ColorScheme * hi VertSplit ctermbg=NONE guibg=NONE
 au ColorScheme * hi ALEErrorSign ctermbg=NONE guibg=NONE
 au ColorScheme * hi ALEWarningSign ctermbg=NONE guibg=NONE
-set fillchars+=vert:│
 colo gruvbox
 highlight clear SignColumn
 
