@@ -55,7 +55,7 @@ rm .local/share/bg
 rm README.md LICENSE FUNDING.yml
 
 SCALE=1
-OUT="DP-1 --rate 144 --size 2560x1440 --pos 2560x0 --rotate normal --output HDMI-1 --primary --size 2560x1440 --pos 0x0  --rotate normal"
+OUT="DP-0 --size 2560x1440 --rate 144 --dpi 196"
 COLOR="red"
 
 # perform hidpi changes
@@ -122,7 +122,7 @@ sed -i "
 	s/xcompmgr/picom/
 	/picom/ s/^/# /
 	/unclutter/a xrandr --output $OUT &
-" .xprofile
+" .config/x11/xprofile
 
 # fix screenshot location
 sed -i "s/pic-/pic\/ss\/pic-/" .local/bin/maimpick
