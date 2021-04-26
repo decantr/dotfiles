@@ -3,7 +3,11 @@
 [alias]
 	a = add
 	ai = add -i
+	ap = add -p
 	b = branch
+	bs = branch --show-current
+	cb = branch --show-current
+	bc = branch --show-current
 	c = commit -S
 	ca = commit -S -a
 	cam = ca -m
@@ -15,6 +19,7 @@
 	l = !git --no-pager log --oneline -n 5
 	lg = !git --no-pager log --oneline -n 5 --graph
 	ll = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	la = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 	m = merge
 	p = push
 	r = reset
@@ -28,6 +33,8 @@
 	gpgsign = true
 [pull]
 	rebase = false
+[init]
+	defaultBranch = master
 
 [includeIf "gitdir:~/work/"]
     path = ~/.config/git/work
