@@ -151,6 +151,7 @@ cp ../config/git/config .config/git/config
 sed -i "
 /be last/i source ~\/.local\/src\/fzf.git\/.fzf.zsh\n
 s/PS1=.*/PS1=\"%B%{\$fg[$COLOR]%}%c %{\$reset_color%}>%b \"/
+s/HISTFILE=~/.cache/zsh/history/+HISTFILE=~/.local/share/zsh/history/
 " .config/zsh/.zshrc
 
 sed -i "
