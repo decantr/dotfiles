@@ -137,6 +137,9 @@ sed -i '{
 	s/setxkbmap/setxkbmap -layout gb/
 }' .local/bin/remaps
 
+# mpv
+echo 'a/D run movetobin "${filename}"' >> .config/mpv/input.conf
+
 # vimrc
 cp ../config/nvim/init.vim .config/nvim
 
