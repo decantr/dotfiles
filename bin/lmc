@@ -73,4 +73,4 @@ i.e. \`lmc r\` for \`lmc restart\`.
 EOF
 esac
 
-pkill -RTMIN+10 dwmblocks &
+# pkill -RTMIN+10 dwmblocks &
