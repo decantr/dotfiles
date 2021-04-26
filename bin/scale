@@ -13,6 +13,8 @@ case "$1" in
 	q) CMD=qutebrowser ;;
 	r) CMD=rider ;;
 	p) CMD=phpstorm ;;
+	t) CMD=transmission-remote-gtk ;;
+	m) CMD=multimc ;;
 	*) CMD="$1" ;;
 esac
 shift
