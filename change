@@ -93,7 +93,8 @@ alias \\
 	dcr=\"docker-compose run --rm\" \\
 	pa=\"php artisan\" \\
 	pat=\"php artisan tinker\" \\
-	patx=\"php -dxdebug.remote_autostart=1 -dxdebug.idekey=PHPSTORM artisan tinker\"
+	patx=\"php -dxdebug.start_with_request=yes artisan tinker\" \\
+	pax=\"php -dxdebug.start_with_request=yes artisan\" \\
 	p1a=\"php71 artisan\" \\
 	p1at=\"php71 artisan tinker\" \\
 	p2a=\"php72 artisan\" \\
