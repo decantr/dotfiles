@@ -156,6 +156,9 @@ s/PS1=.*/PS1=\"%B%{\$fg[$COLOR]%}%c %{\$reset_color%}>%b \"/
 s/HISTFILE=~/.cache/zsh/history/+HISTFILE=~/.local/share/zsh/history/
 " .config/zsh/.zshrc
 
+# change tab length in less (for git diff)
+echo 'export LESS=Rx4' >> .config/zsh/.zshrc
+
 sed -i "
 s/Joy Pixels/Font Awesome/g
 " .config/fontconfig/fonts.conf
