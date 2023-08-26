@@ -143,6 +143,7 @@ sed -i '{
 echo 'a/D run movetobin "${filename}"' >> .config/mpv/input.conf
 
 # vimrc
+cp ../config/vimrc .vimrc # backup vimrc incase no neovim
 cp ../config/nvim/init.vim .config/nvim
 
 mkdir -p .config/git
