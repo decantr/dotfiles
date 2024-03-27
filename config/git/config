@@ -1,5 +1,9 @@
+[user]
+	name =
+	email =
+	signingkey =
 [core]
-  editor = nvim
+  editor = vim
 [alias]
 	a = add
 	ai = add -i
@@ -10,7 +14,9 @@
 	bc = branch --show-current
 	c = commit -S
 	ca = commit -S -a
-	cam = ca -m
+	cam = ca --am
+	came = ca --am --no-edit
+	cme = c --am --no-edit
 	cd = checkout
 	cm = c -m
 	cp = cherry-pick
@@ -20,7 +26,7 @@
 	lg = !git --no-pager log --oneline -n 5 --graph
 	ll = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	la = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-	m = merge
+	m = merge --no-ff
 	p = push
 	r = reset
 	s = status -s --untracked-files=no --ignore-submodules=dirty
@@ -29,15 +35,17 @@
 	st = stash
 	sth = stash show
 	stm = stash push -m
+	t = tag -s
+    forget="!git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D"
+    forgetlist="!git fetch -p && git branch -vv | awk '/: gone]/{print $1}'"
 [commit]
 	gpgsign = true
 [pull]
 	rebase = false
 [init]
 	defaultBranch = master
-
-[includeIf "gitdir:~/work/"]
-    path = ~/.config/git/work
-
-[includeIf "gitdir:~/dev/"]
-    path = ~/.config/git/personal
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
