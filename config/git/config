@@ -26,16 +26,19 @@
 	lg = !git --no-pager log --oneline -n 5 --graph
 	ll = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	la = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-	m = merge --no-ff
+	m = merge
+	m3 = merge --no-ff
 	p = push
 	r = reset
 	s = status -s --untracked-files=no --ignore-submodules=dirty
 	sa = status -s
-	sh = show
+	sh = show --name-only --oneline
 	st = stash
 	sth = stash show
 	stm = stash push -m
 	t = tag -s
+	fixcur  = !git diff --name-only | xargs -I@ vendor/bin/php-cs-fixer fix @
+	fixlast = !git show --pretty="format:" --name-only | xargs -I@ vendor/bin/php-cs-fixer fix @
     forget="!git fetch -p && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D"
     forgetlist="!git fetch -p && git branch -vv | awk '/: gone]/{print $1}'"
 [commit]
