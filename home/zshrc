@@ -1,0 +1,124 @@
+# vim:	noet sw=4 ts=4
+#zmodload zsh/zprof
+
+### herd ======================================================================
+if [[ -d ~/"Library/Application Support/Herd" ]] then
+	# herd php
+	export HERD_PHP_81_INI_SCAN_DIR=~/"Library/Application Support/Herd/config/php/81/"
+	export HERD_PHP_82_INI_SCAN_DIR=~/"Library/Application Support/Herd/config/php/82/"
+	export HERD_PHP_83_INI_SCAN_DIR=~/"Library/Application Support/Herd/config/php/83/"
+	export HERD_PHP_84_INI_SCAN_DIR=~/"Library/Application Support/Herd/config/php/84/"
+	export HERD_PHP_85_INI_SCAN_DIR=~/"Library/Application Support/Herd/config/php/85/"
+	export PATH=~/"Library/Application Support/Herd/bin/":$PATH
+
+	# herd nvm
+	export NVM_DIR=~/"Library/Application Support/Herd/config/nvm"
+
+	node() {
+		unfunction node
+		nvm &> /dev/null
+		node "$@"
+	}
+
+	npm() {
+		unfunction npm
+		nvm &> /dev/null
+		npm "$@"
+	}
+
+	nvm() {
+		unfunction nvm
+
+		[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+		nvm "$@"
+
+		[[ -f "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh" ]] \
+			&& builtin source "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh"
+	}
+fi
+
+### brew ======================================================================
+if type brew &> /dev/null; then
+	export HOMEBREW_NO_ANALYTICS=1
+
+	eval "$(/opt/homebrew/bin/brew shellenv)"
+
+	# brew completions
+	FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+fi
+
+### docker ====================================================================
+if [[ -z ~/".docker/completions" ]] then
+	fpath=(~/.docker/completions $fpath)
+fi
+
+### bun =======================================================================
+if type bun &> /dev/null; then
+	# bun completions
+	[ -s ~/".bun/_bun" ] && source ~/".bun/_bun"
+
+	# path
+	export PATH=~/".bun/bin:$PATH"
+
+	# angular completions
+	#source <(ng completion script)
+fi
+
+### config ====================================================================
+
+# history
+HISTSIZE=10000000
+SAVEHIST=10000000
+setopt hist_ignore_space
+setopt hist_ignore_dups
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+
+# use fzf for history
+if type fzf &> /dev/null; then
+	eval "$(fzf --zsh)"
+fi
+
+# use nvim over vim
+if type nvim &> /dev/null; then
+	export EDITOR="nvim"
+else
+	export EDITOR="vim"
+fi
+
+# alias
+alias \
+	c="composer" \
+	v="$EDITOR" \
+	e="$EDITOR" \
+	g="git" \
+	pa="php artisan" \
+	pat="php artisan --ansi tinker" \
+	fix="make fmt"
+	p="make test" \
+
+
+### functions =================================================================
+function git-cherry-pick-as-is() {
+	local commit=$1
+
+	GIT_COMMITTER_DATE=$(git show -s --format=%aD "$commit") \
+	GIT_COMMITTER_NAME=$(git show -s --format=%aN "$commit") \
+	GIT_COMMITTER_EMAIL=$(git show -s --format=%aE "$commit") \
+	git cherry-pick --keep-redundant-commits --allow-empty --no-edit "$commit"
+}
+
+# TODO - i think this is already loaded?
+# # completions
+# autoload -Uz compinit
+#
+# if [ "$(date +'%j')" != "$(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)" ]; then
+# 	compinit
+# else
+# 	compinit -C
+# fi
+
+# colors
+autoload -U colors && colors
+
+#zprof
