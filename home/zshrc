@@ -94,7 +94,7 @@ alias \
 	g="git" \
 	pa="php artisan" \
 	pat="php artisan --ansi tinker" \
-	fix="make fmt"
+	fix="make fmt" \
 	p="make test" \
 
 
