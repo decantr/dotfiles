@@ -108,15 +108,8 @@ function git-cherry-pick-as-is() {
 	git cherry-pick --keep-redundant-commits --allow-empty --no-edit "$commit"
 }
 
-# TODO - i think this is already loaded?
-# # completions
-# autoload -Uz compinit
-#
-# if [ "$(date +'%j')" != "$(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null)" ]; then
-# 	compinit
-# else
-# 	compinit -C
-# fi
+# autocomplete
+autoload -Uz compinit && compinit
 
 # colors
 autoload -U colors && colors
