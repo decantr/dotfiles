@@ -6,10 +6,18 @@ Acquire::https::Proxy "DIRECT";' | sudo tee /etc/apt/apt.conf.d/20proxy
 
 # Install Apps
 sudo apt update
+
+sudo apt install -y extrepo
+
+sudo extrepo enable mise
+
+sudo apt update
+
 sudo apt install -y \
 	openssh-server \
 	curl \
 	\
+	mise \
 	tmux \
 	vim \
 	fastfetch \
