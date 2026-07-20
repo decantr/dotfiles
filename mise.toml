@@ -3,3 +3,5 @@ dotfiles.root = "~/.local/src/dotfiles"
 
 [dotfiles]
 "~/.config/mise/config.toml" = "mise.toml"
+"~/.bashrc" = { mode = "symlink" }
+"~/.zshrc" = { mode = "symlink" }
