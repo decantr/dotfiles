@@ -1,26 +1,56 @@
-# ~/.bashrc
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# for examples
 #
 
+#### Exports ===================================================================
 export EDITOR="nvim"
 export STEAM_FORCE_DESKTOPUI_SCALING=2
+export PATH="$PATH:$HOME/.local/bin/"
 
-# If not running interactively, don't do anything
+#### Interactive Check =========================================================
 [[ $- != *i* ]] && return
 
-# Use bash-completion, if available, and avoid double-sourcing
-if [[ $PS1 && ! ${BASH_COMPLETION_VERSINFO:-} && -f /usr/share/bash-completion/bash_completion ]]; then
-  . /usr/share/bash-completion/bash_completion
-fi
+#### Options ===================================================================
+HISTCONTROL=ignoreboth
+HISTSIZE=100000
+HISTFILESIZE=200000
+shopt -s histappend
+shopt -s checkwinsize
+shopt -s globstar
 
-eval "$(mise activate bash)"
+#### Shell =====================================================================
+PS1='\[\033[01;32m\]\u\[\033[00m\]@\h:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
+#### Experimintal ==============================================================
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+#### Colors
+test -r ~/.config/dircolors && eval "$(dircolors -b ~/.config/dircolors)"
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
-PS1='[\u@\h \W]\$ '
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
+#### Programs ==================================================================
+if ! shopt -oq posix; then
+	if [ -f /usr/share/bash-completion/bash_completion ]; then
+		. /usr/share/bash-completion/bash_completion
+	elif [ -f /etc/bash_completion ]; then
+		. /etc/bash_completion
+	fi
+fi
+
+if type mise &>/dev/null; then
+	eval "$(mise activate bash)"
+fi
+
+# if [ -f "$HOME/.local/bin/mise" ]; then
+# 	eval "$($HOME/.local/bin/mise activate bash)"
+# fi
+
+#### Aliases ===================================================================
 alias \
-  e="\$EDITOR" \
-  g="git" \
-  p="sudo pacman" \
-  S="systemctl --user " \
-  SS="sudo systemctl"
+	e="\$EDITOR" \
+	g="git" \
+	p="sudo pacman" \
+	S="systemctl --user " \
+	SS="sudo systemctl"
