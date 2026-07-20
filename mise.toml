@@ -7,3 +7,4 @@ dotfiles.root = "~/.local/src/dotfiles"
 "~/.zshrc" = { mode = "symlink" }
 "~/.config/sway/config" = { mode = "symlink" }
 "~/.config/foot/foot.ini" = { mode = "symlink" }
+"~/.config/niri/config.kdl" = { mode = "symlink" }
