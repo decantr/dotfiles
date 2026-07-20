@@ -1,6 +1,5 @@
+# vim:	noet sw=4 ts=4
 # ~/.bashrc: executed by bash(1) for non-login shells.
-# for examples
-#
 
 #### Exports ===================================================================
 export EDITOR="nvim"
