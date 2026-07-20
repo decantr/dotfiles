@@ -8,3 +8,4 @@ dotfiles.root = "~/.local/src/dotfiles"
 "~/.config/sway/config" = { mode = "symlink" }
 "~/.config/foot/foot.ini" = { mode = "symlink" }
 "~/.config/niri/config.kdl" = { mode = "symlink" }
+"~/.config/skhd/skhdrc" = { mode = "symlink" }

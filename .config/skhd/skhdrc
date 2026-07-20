@@ -1,0 +1,6 @@
+.shell "/bin/dash"
+
+# disable hide window hotkey
+cmd - h [
+  * : skhd -k
+]
