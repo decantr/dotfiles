@@ -1,0 +1,50 @@
+include /etc/sway/config
+
+#### Output
+
+output DP-1 {
+	resolution 1920x1080@120HZ
+	scale 2
+}
+
+#### Input
+
+input * {
+	xkb_layout "gb"
+	# how on earth do you get a hash with this??
+	# xkb_variant "mac"
+}
+
+input type:keyboard {
+	repeat_delay 200
+	repeat_rate 50
+}
+
+input type:pointer {
+	accel_profile flat
+	natural_scroll enabled
+}
+
+#### Styling
+
+default_border pixel 2
+
+#### Idle
+
+exec swayidle -w \
+	timeout 1800 'swaymsg "output * power off"' resume 'swaymsg "output * power on"'
+
+#### Bar
+
+# bar {
+# 	position top
+#
+# 	status_command while date +'%a %_d %b %k:%M'; do sleep 15; done
+#
+# 	colors {
+# 		statusline #ffffff
+# 		background #323232
+# 		inactive_workspace #32323200 #32323200 #5c5c5c
+# 	}
+# }
+
