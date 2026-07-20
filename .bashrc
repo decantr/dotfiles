@@ -18,7 +18,11 @@ shopt -s checkwinsize
 shopt -s globstar
 
 #### Shell =====================================================================
-PS1='\[\033[01;32m\]\u\[\033[00m\]@\h:\[\033[01;34m\]\w\[\033[00m\]\$ '
+if [ -f "$HOME/.local/src/dotfiles/custom_ps1.bash" ]; then
+	source "$HOME/.local/src/dotfiles/custom_ps1.bash"
+else
+	PS1='\[\033[01;32m\]\u\[\033[00m\]@\h:\[\033[01;34m\]\w\[\033[00m\]\$ '
+fi
 
 #### Experimintal ==============================================================
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
