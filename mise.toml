@@ -1,0 +1,5 @@
+[settings]
+dotfiles.root = "~/.local/src/dotfiles"
+
+[dotfiles]
+"~/.config/mise/config.toml" = "mise.toml"
