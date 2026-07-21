@@ -37,7 +37,16 @@ if [[ -d ~/"Library/Application Support/Herd" ]] then
 	}
 fi
 
-### brew ======================================================================
+### programs ==================================================================
+if type mise &>/dev/null; then
+	eval "$(mise activate bash)"
+fi
+
+# use fzf for history
+if type fzf &> /dev/null; then
+	eval "$(fzf --zsh)"
+fi
+
 if type brew &> /dev/null; then
 	export HOMEBREW_NO_ANALYTICS=1
 
@@ -47,12 +56,10 @@ if type brew &> /dev/null; then
 	FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 fi
 
-### docker ====================================================================
 if [[ -z ~/".docker/completions" ]] then
 	fpath=(~/.docker/completions $fpath)
 fi
 
-### bun =======================================================================
 if type bun &> /dev/null; then
 	# bun completions
 	[ -s ~/".bun/_bun" ] && source ~/".bun/_bun"
@@ -73,11 +80,6 @@ setopt hist_ignore_space
 setopt hist_ignore_dups
 setopt hist_ignore_all_dups
 setopt hist_save_no_dups
-
-# use fzf for history
-if type fzf &> /dev/null; then
-	eval "$(fzf --zsh)"
-fi
 
 # use nvim over vim
 if type nvim &> /dev/null; then
