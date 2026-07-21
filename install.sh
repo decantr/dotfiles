@@ -5,7 +5,7 @@
 set -e
 
 # Check for Dotfiles repo
-if [ ! -d ~/.local/share/dotfiles ]; then
+if [ ! -d ~/.local/src/dotfiles ]; then
 	echo "!! No dotfiles"
 	exit 1
 fi
