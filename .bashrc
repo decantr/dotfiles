@@ -43,14 +43,5 @@ if type mise &>/dev/null; then
 	eval "$(mise activate bash)"
 fi
 
-# if [ -f "$HOME/.local/bin/mise" ]; then
-# 	eval "$($HOME/.local/bin/mise activate bash)"
-# fi
-
 #### Aliases ===================================================================
-alias \
-	e="\$EDITOR" \
-	g="git" \
-	p="sudo pacman" \
-	S="systemctl --user " \
-	SS="sudo systemctl"
+[ -f ~/.local/src/dotfiles/aliasrc ] && . ~/.local/src/dotfiles/aliasrc

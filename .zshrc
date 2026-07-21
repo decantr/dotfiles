@@ -88,18 +88,6 @@ else
 	export EDITOR="vim"
 fi
 
-# alias
-alias \
-	c="composer" \
-	v="$EDITOR" \
-	e="$EDITOR" \
-	g="git" \
-	pa="php artisan" \
-	pat="php artisan --ansi tinker" \
-	fix="make fmt" \
-	p="make test" \
-
-
 ### functions =================================================================
 function git-cherry-pick-as-is() {
 	local commit=$1
@@ -109,6 +97,9 @@ function git-cherry-pick-as-is() {
 	GIT_COMMITTER_EMAIL=$(git show -s --format=%aE "$commit") \
 	git cherry-pick --keep-redundant-commits --allow-empty --no-edit "$commit"
 }
+
+#### aliases ===================================================================
+[ -f ~/.local/src/dotfiles/aliasrc ] && . ~/.local/src/dotfiles/aliasrc
 
 # autocomplete
 autoload -Uz compinit && compinit

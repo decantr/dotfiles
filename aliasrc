@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Shared
+alias \
+	v="\$EDITOR" \
+	e="\$EDITOR" \
+	g="git"
+
+# Dev
+alias \
+	c="composer" \
+	pa="php artisan" \
+	pat="php artisan --ansi tinker" \
+	fix="make fmt" \
+	pt="make test"
+
+# Linux only
+if type systemctl &>/dev/null; then
+	alias S="systemctl --user"
+	alias SS="sudo systemctl"
+
+	if type pacman &>/dev/null; then
+		alias p="sudo pacman"
+	fi
+fi
+
+# Mac only?
