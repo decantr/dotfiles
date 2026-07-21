@@ -2,7 +2,11 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
 #### Exports ===================================================================
-export EDITOR="nvim"
+if type nvim &>/dev/null; then
+	export EDITOR="nvim"
+else
+	export EDITOR="vim"
+fi
 export STEAM_FORCE_DESKTOPUI_SCALING=2
 export PATH="$PATH:$HOME/.local/bin/"
 
