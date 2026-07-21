@@ -50,6 +50,10 @@ if type mise &>/dev/null; then
 	eval "$(mise activate bash)"
 fi
 
+if type fzf &>/dev/null; then
+	eval "$(fzf --bash)"
+fi
+
 #### Aliases ===================================================================
 [ -f ~/.local/src/dotfiles/aliasrc ] && . ~/.local/src/dotfiles/aliasrc
 
