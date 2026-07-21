@@ -1,0 +1,15 @@
+# Editor configuration, see https://editorconfig.org
+root = true
+
+[*]
+charset = utf-8
+
+# enforce tabs
+indent_size = 4
+indent_style = tab
+smart_tabs = false
+tab_width = 4
+
+# other
+insert_final_newline = false
+trim_trailing_whitespace = true
