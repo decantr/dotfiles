@@ -101,6 +101,9 @@ function git-cherry-pick-as-is() {
 #### aliases ===================================================================
 [ -f ~/.local/src/dotfiles/aliasrc ] && . ~/.local/src/dotfiles/aliasrc
 
+#### device ===================================================================
+[ -f ~/.config/shellrc ] && . ~/.config/shellrc
+
 # autocomplete
 autoload -Uz compinit && compinit
 

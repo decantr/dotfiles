@@ -45,3 +45,6 @@ fi
 
 #### Aliases ===================================================================
 [ -f ~/.local/src/dotfiles/aliasrc ] && . ~/.local/src/dotfiles/aliasrc
+
+#### device ===================================================================
+[ -f ~/.config/shellrc ] && . ~/.config/shellrc
