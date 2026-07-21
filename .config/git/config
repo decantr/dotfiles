@@ -1,7 +1,5 @@
-[user]
-	name =
-	email =
-	signingkey =
+[include]
+	path = ~/.config/git/config.d/extra
 
 [commit]
 	gpgsign = true
