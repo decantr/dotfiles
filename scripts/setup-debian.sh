@@ -1,8 +1,11 @@
 #!/bin/sh
 
 # Install Proxy
-printf 'Acquire::http::Proxy "http://10.0.0.112:3142";
-Acquire::https::Proxy "DIRECT";' | sudo tee /etc/apt/apt.conf.d/20proxy
+if [ ! -f /etc/apt/apt.conf.d/20-localproxy ]; then
+	printf 'Acquire::http::Proxy "http://10.0.0.112:3142";
+Acquire::https::Proxy "DIRECT";' |
+		sudo tee /etc/apt/apt.conf.d/20-localproxy
+fi
 
 # Install Apps
 sudo apt update
