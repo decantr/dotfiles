@@ -39,7 +39,7 @@ fi
 
 ### programs ==================================================================
 if type mise &>/dev/null; then
-	eval "$(mise activate bash)"
+	eval "$(mise activate zsh)"
 fi
 
 # use fzf for history
