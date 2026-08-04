@@ -13,28 +13,6 @@ if [[ -d ~/"Library/Application Support/Herd" ]] then
 
 	# herd nvm
 	export NVM_DIR=~/"Library/Application Support/Herd/config/nvm"
-
-	node() {
-		unfunction node
-		nvm &> /dev/null
-		node "$@"
-	}
-
-	npm() {
-		unfunction npm
-		nvm &> /dev/null
-		npm "$@"
-	}
-
-	nvm() {
-		unfunction nvm
-
-		[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-		nvm "$@"
-
-		[[ -f "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh" ]] \
-			&& builtin source "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh"
-	}
 fi
 
 ### programs ==================================================================
