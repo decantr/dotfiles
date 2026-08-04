@@ -4,7 +4,7 @@ include /etc/sway/config
 
 output DP-1 {
 	resolution 1920x1080@120HZ
-	scale 2
+	scale 1
 }
 
 #### Input
@@ -48,3 +48,7 @@ exec swayidle -w \
 # 	}
 # }
 
+
+#### Keybinds
+bindsym $mod+x exec j4-dmenu-desktop --dmenu=wmenu
+bindsym $mod+shift+p exec swaymsg "output * power off"
