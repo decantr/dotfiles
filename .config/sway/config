@@ -51,4 +51,4 @@ exec swayidle -w \
 
 #### Keybinds
 bindsym $mod+x exec j4-dmenu-desktop --dmenu=wmenu
-bindsym $mod+shift+p exec swaymsg "output * power off"
+bindsym $mod+shift+p exec swaymsg "output DP-1 power toggle"
