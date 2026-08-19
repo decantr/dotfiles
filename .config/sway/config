@@ -50,5 +50,14 @@ exec swayidle -w \
 
 
 #### Keybinds
-bindsym $mod+x exec j4-dmenu-desktop --dmenu=wmenu
+bindsym $mod+shift+d exec j4-dmenu-desktop --dmenu=wmenu
 bindsym $mod+shift+p exec swaymsg "output DP-1 power toggle"
+
+bindsym $mod+End exec /home/decanter/toggle-freeze
+bindsym $mod+Shift+End exec /home/decanter/toggle-freeze --resume-all
+
+# macos copy/paste
+unbindsym $mod+v
+bindsym $mod+c exec wtype -k XF86Copy
+bindsym $mod+x exec wtype -k XF86Cut
+bindsym $mod+v exec wtype -k XF86Paste
