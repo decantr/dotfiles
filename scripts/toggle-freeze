@@ -1,0 +1,170 @@
+#!/usr/bin/env bash
+#
+# suspend/resume the focused window's process tree.
+#
+# Usage:
+#   toggle-freeze	freeze the focused window, or resume it if frozen
+#
+# To resume everything by hand:
+#   pkill -CONT -U $UID
+#
+# Binds niri (~/.config/niri/dms/binds.kdl):
+#   Mod+Pause { spawn "/path/to/toggle-freeze"; }
+# Binds sway (~/.config/sway/config.d/90-toggle-freeze.conf):
+#   bindsym $mod+Pause exec /path/to/toggle-freeze
+
+set -u
+
+# freezing xwayland would freeze every X11 app at once
+XWAYLAND='^(Xwayland|xwayland-satell)$'
+
+# never freeze list
+# names matched against `ps -o comm`, truncated at 15 chars
+BLOCKLIST="^(systemd|niri|sway|dms|qs|quickshell|dbus-daemon|dbus-broker|pipewire|wireplumber|mako)$|$XWAYLAND"
+
+# helpers =====================================================================
+
+notify() {
+	notify-send -a "toggle-freeze" -u "$2" \
+		-h "string:x-canonical-private-synchronous:toggle-freeze" \
+		"Freeze" "$1"
+}
+
+_info() {
+	printf ':: %s : %s\n' "$(date -u '+%F %T')" "$1"
+	notify "$1" low
+}
+
+_error() {
+	printf '!! %s : %s\n' "$(date -u '+%F %T')" "$1" >&2
+	notify "$1" normal
+	exit 1
+}
+
+requireCommands() {
+	local cmd
+	for cmd in "$@"; do
+		command -v "$cmd" >/dev/null || _error "$cmd is required but not installed"
+	done
+}
+
+isXwayland() {
+	[[ $(ps -o comm= -p "$1" 2>/dev/null) =~ $XWAYLAND ]]
+}
+
+# sets pid and name for the focused window
+findFocusedWindow() {
+	local raw real
+
+	if [[ "$compositor" == niri ]]; then
+		raw=$(niri msg --json focused-window 2>/dev/null |
+			jq -er 'select(.pid)
+					| "\(.pid)\t\(first((.app_id, .title, "window")
+									   | select(. != null and . != "")))"')
+	elif [[ "$compositor" == sway ]]; then
+		raw=$(swaymsg -t get_tree 2>/dev/null |
+			jq -er 'first(recurse(.nodes[]?, .floating_nodes[]?)
+						  | select(.focused == true and .pid != null))
+					| "\(.pid)\t\(first((.app_id, .window_properties.class, .name, "window")
+									   | select(. != null and . != "")))"')
+	else
+		_error "Unsupported compositor: $compositor"
+	fi
+
+	[[ -n "$raw" ]] || _error "No focused window"
+	IFS=$'\t' read -r pid name <<<"$raw"
+
+	isXwayland "$pid" || return 0
+
+	# xwayland's pid is only the proxy, so ask X which client owns the window
+	requireCommands xdotool
+	real=$(DISPLAY="${DISPLAY:-:0}" xdotool getactivewindow getwindowpid 2>/dev/null)
+	[[ "$real" =~ ^[0-9]+$ ]] || _error "Could not find the X11 client for $name"
+	pid=$real
+}
+
+# process tree ================================================================
+
+# prints the pid then every descendant, parents before children.
+collectTree() {
+	local kid
+	printf '%s\n' "$1"
+	for kid in $(pgrep -P "$1" 2>/dev/null); do
+		collectTree "$kid"
+	done
+}
+
+# stop each parent before listing its children, so a still-running parent
+# cannot fork a child that escapes the freeze.
+freezeTree() {
+	local kid
+	kill -STOP "$1" 2>/dev/null
+	for kid in $(pgrep -P "$1" 2>/dev/null); do
+		freezeTree "$kid"
+	done
+}
+
+# collect first: a resumed parent can exit and reparent its children away
+# before we ever get to list them.
+resumeTree() {
+	local pids
+	mapfile -t pids < <(collectTree "$1")
+	kill -CONT "${pids[@]}" 2>/dev/null
+}
+
+isFrozen() {
+	[[ $(ps -o state= -p "$1" 2>/dev/null) == T ]]
+}
+
+# check pid against protected list
+isProtected() {
+	local pid=$1 cur name
+
+	name=$(ps -o comm= -p "$pid" 2>/dev/null)
+	[[ "$name" =~ $BLOCKLIST ]] && return 0
+
+	# Any ancestor of this script — freezing one freezes us mid-run, leaving
+	# the tree stopped with nothing left alive to resume it.
+	cur=$$
+	while [[ -n "$cur" && "$cur" != "0" ]]; do
+		[[ "$pid" == "$cur" ]] && return 0
+		cur=$(ps -o ppid= -p "$cur" 2>/dev/null | tr -d ' ')
+	done
+
+	return 1
+}
+
+# main ========================================================================
+
+if [[ -n "${NIRI_SOCKET:-}" ]]; then
+	compositor=niri
+	requireCommands niri
+elif [[ -n "${SWAYSOCK:-}" ]]; then
+	compositor=sway
+	requireCommands swaymsg
+else
+	_error "Unsupported compositor. Only sway & niri"
+fi
+
+requireCommands jq ps pgrep notify-send
+
+findFocusedWindow
+kill -0 "$pid" 2>/dev/null || _error "$name is gone"
+
+if isFrozen "$pid"; then
+	resumeTree "$pid"
+	_info "Resumed $name"
+	exit 0
+fi
+
+if isProtected "$pid"; then
+	_error "Refusing to freeze $name — freezing it would lock the session"
+fi
+
+freezeTree "$pid"
+if ! isFrozen "$pid"; then
+	_error "Could not freeze $name"
+fi
+
+_info "Froze $name"
+exit 0
