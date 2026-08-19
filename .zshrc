@@ -32,6 +32,9 @@ if type brew &> /dev/null; then
 
 	# brew completions
 	FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+	# ungoogled chromium path for node tests
+	export CHROME_BIN=/System/Volumes/Data/Applications/Chromium.app/Contents/MacOS/Chromium
 fi
 
 if [[ -z ~/".docker/completions" ]] then
