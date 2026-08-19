@@ -53,8 +53,8 @@ exec swayidle -w \
 bindsym $mod+shift+d exec j4-dmenu-desktop --dmenu=wmenu
 bindsym $mod+shift+p exec swaymsg "output DP-1 power toggle"
 
-bindsym $mod+End exec /home/decanter/toggle-freeze
-bindsym $mod+Shift+End exec /home/decanter/toggle-freeze --resume-all
+bindsym $mod+End exec ~/.local/src/dotfiles/scripts/toggle-freeze
+bindsym $mod+Shift+End exec ~/.local/src/dotfiles/scripts/toggle-freeze --resume-all
 
 # macos copy/paste
 unbindsym $mod+v
