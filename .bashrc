@@ -89,8 +89,10 @@ fi
 if type fzf &>/dev/null; then
 	eval "$(fzf --bash)"
 fi
+#### functions ================================================================
+[ -f ~/.local/src/dotfiles/functionsrc ] && . ~/.local/src/dotfiles/functionsrc
 
-#### Aliases ===================================================================
+#### aliases ==================================================================
 [ -f ~/.local/src/dotfiles/aliasrc ] && . ~/.local/src/dotfiles/aliasrc
 
 #### device ===================================================================
