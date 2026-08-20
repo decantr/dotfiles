@@ -71,12 +71,14 @@ fi
 
 ### functions =================================================================
 function git-cherry-pick-as-is() {
-	local commit=$1
+	local commit
 
-	GIT_COMMITTER_DATE=$(git show -s --format=%aD "$commit") \
-	GIT_COMMITTER_NAME=$(git show -s --format=%aN "$commit") \
-	GIT_COMMITTER_EMAIL=$(git show -s --format=%aE "$commit") \
-	git cherry-pick --keep-redundant-commits --allow-empty --no-edit "$commit"
+	for commit in "$@"; do
+		GIT_COMMITTER_DATE=$(git show -s --format=%aD "$commit") \
+		GIT_COMMITTER_NAME=$(git show -s --format=%aN "$commit") \
+		GIT_COMMITTER_EMAIL=$(git show -s --format=%aE "$commit") \
+		git cherry-pick --keep-redundant-commits --allow-empty --no-edit "$commit" || return 1
+	done
 }
 
 #### aliases ===================================================================
