@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+#
+# SIGKILL the focused window's process.
+#
+# Kills only the window's own pid, never its ancestors. For games launched
+# through Steam/Proton the focused pid is a wrapper (bwrap/Wine) whose
+# descendant tree reaches shared helpers, so walking the tree would take
+# down Steam and launchers — avoid that and kill just the target.
+#
+# Usage:
+#   kill-focus	kill -9 the focused window (children only with --tree)
+#
+# Binds niri (~/.config/niri/dms/binds.kdl):
+#   Mod+Shift+Q { spawn "/path/to/kill-focus"; }
+
+set -u
+
+notify() {
+	notify-send -a "kill-focus" -u "$2" \
+		-h "string:x-canonical-private-synchronous:kill-focus" \
+		"Kill" "$1"
+}
+
+_info() {
+	printf ':: %s : %s\n' "$(date -u '+%F %T')" "$1"
+	notify "$1" low
+}
+
+_error() {
+	printf '!! %s : %s\n' "$(date -u '+%F %T')" "$1" >&2
+	notify "$1" normal
+	exit 1
+}
+
+requireCommands() {
+	local cmd
+	for cmd in "$@"; do
+		command -v "$cmd" >/dev/null || _error "$cmd is required but not installed"
+	done
+}
+
+# sets pid and name for the focused window
+findFocusedWindow() {
+	local raw
+
+	raw=$(niri msg --json focused-window 2>/dev/null |
+		jq -er 'select(.pid)
+				| "\(.pid)\t\(first((.app_id, .title, "window")
+								   | select(. != null and . != "")))"')
+	[[ -n "$raw" ]] || _error "No focused window"
+	IFS=$'\t' read -r pid name <<<"$raw"
+	[[ "$pid" =~ ^[0-9]+$ ]] || _error "No pid for $name"
+}
+
+uid_is_same() {
+	[[ "$(ps -o uid= -p "$1" 2>/dev/null | tr -d ' ')" == "$(id -u)" ]]
+}
+
+# prints the pid then every descendant, parents before children.
+collectTree() {
+	local kid
+	printf '%s\n' "$1"
+	for kid in $(pgrep -P "$1" 2>/dev/null); do
+		collectTree "$kid"
+	done
+}
+
+main() {
+	local pids tree=0
+
+	requireCommands niri jq ps pgrep notify-send
+
+	while (($#)); do
+		case "$1" in
+			--tree) tree=1 ;;
+			*) _error "unknown option: $1" ;;
+		esac
+		shift
+	done
+
+	findFocusedWindow
+	kill -0 "$pid" 2>/dev/null || _error "$name is gone"
+
+	# never kill processes that are not owned by this user
+	uid_is_same "$pid" || _error "Refusing to kill $name — not owned by you"
+
+	if [[ "${tree:-0}" == 1 ]]; then
+		mapfile -t pids < <(collectTree "$pid")
+	else
+		pids=("$pid")
+	fi
+
+	_info "SIGKILL $name ($pid)"
+	kill -9 "${pids[@]}" 2>/dev/null
+}
+
+main "$@"
