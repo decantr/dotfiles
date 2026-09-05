@@ -39,17 +39,65 @@ requireCommands() {
 	done
 }
 
-# sets pid and name for the focused window
+# sets pid, title and name for the focused window
 findFocusedWindow() {
 	local raw
 
 	raw=$(niri msg --json focused-window 2>/dev/null |
 		jq -er 'select(.pid)
-				| "\(.pid)\t\(first((.app_id, .title, "window")
+				| "\(.pid)\t\(.title // "…")\t\(first((.app_id, .title, "window")
 								   | select(. != null and . != "")))"')
 	[[ -n "$raw" ]] || _error "No focused window"
-	IFS=$'\t' read -r pid name <<<"$raw"
+	IFS=$'\t' read -r pid title name <<<"$raw"
 	[[ "$pid" =~ ^[0-9]+$ ]] || _error "No pid for $name"
+}
+
+commOf() {
+	cat "/proc/$1/comm" 2>/dev/null
+}
+
+# true when pid is the shared XWayland server, not a real window owner
+isXwayland() {
+	[[ "$(commOf "$1")" =~ ^(xwayland|Xwayland) ]]
+}
+
+# true when pid's cmdline is a steam pressure-vessel container root
+isContainer() {
+	tr '\0' ' ' < "/proc/$1/cmdline" 2>/dev/null | grep -qE '/(srt-bwrap|bwrap|pv-adverb)'
+}
+
+# prints the first container ancestor walking up from pid, if any
+findContainerAncestor() {
+	local p=$1
+	while ((p > 1)) && [[ -n "$p" ]]; do
+		isContainer "$p" && { printf '%s\n' "$p"; return 0; }
+		p=$(ps -o ppid= -p "$p" 2>/dev/null | tr -d ' ')
+	done
+	return 1
+}
+
+# true when pid's ancestors include a reaper SteamLaunch (a game launch
+# tree, not the steam client's own sandbox)
+inGameLaunch() {
+	local p=$1
+	while ((p > 1)) && [[ -n "$p" ]]; do
+		tr '\0' ' ' < "/proc/$p/cmdline" 2>/dev/null | grep -q 'reaper.*SteamLaunch' && return 0
+		p=$(ps -o ppid= -p "$p" 2>/dev/null | tr -d ' ')
+	done
+	return 1
+}
+
+# niri reports the XWayland server pid for X11 windows. Resolve the real
+# client pid via _NET_WM_PID so we never SIGKILL the shared X server.
+resolveRealPid() {
+	local esc xid real
+	[[ -z "$title" ]] && return 1
+	esc=$(printf '%s' "$title" | sed 's/[][\.*^$(){}?+|]/\\&/g')
+	xid=$(xdotool search --name "$esc" 2>/dev/null | head -1)
+	[[ -n "$xid" ]] || return 1
+	real=$(xdotool getwindowpid "$xid" 2>/dev/null)
+	[[ "$real" =~ ^[0-9]+$ ]] && { pid="$real"; return 0; }
+	return 1
 }
 
 uid_is_same() {
@@ -68,7 +116,7 @@ collectTree() {
 main() {
 	local pids tree=0
 
-	requireCommands niri jq ps pgrep notify-send
+	requireCommands niri jq ps pgrep notify-send xdotool
 
 	while (($#)); do
 		case "$1" in
@@ -79,12 +127,27 @@ main() {
 	done
 
 	findFocusedWindow
+
+	# X11 windows are owned by the shared XWayland server for niri; SIGKILLing
+	# it takes down every X client (Steam included). Resolve the real pid first.
+	if isXwayland "$pid"; then
+		resolveRealPid || _error "Could not resolve X11 pid for $name"
+	fi
+
 	kill -0 "$pid" 2>/dev/null || _error "$name is gone"
 
 	# never kill processes that are not owned by this user
 	uid_is_same "$pid" || _error "Refusing to kill $name — not owned by you"
 
-	if [[ "${tree:-0}" == 1 ]]; then
+	# A crashed Proton game is a zombie inside the game's own pressure-vessel
+	# container (pv-adverb), below the reaper. Killing that container root
+	# removes the game and its wine stack without touching Steam's client tree.
+	container=$(findContainerAncestor "$pid") || container=
+	if inGameLaunch "$pid" && [[ -n "$container" ]]; then
+		pids=()
+		mapfile -t pids < <(collectTree "$container")
+		name="$name (container)"
+	elif [[ "${tree:-0}" == 1 ]]; then
 		mapfile -t pids < <(collectTree "$pid")
 	else
 		pids=("$pid")
