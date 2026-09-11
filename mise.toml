@@ -1,6 +1,23 @@
 [settings]
 dotfiles.root = "~/.local/src/dotfiles"
 
+[bootstrap.macos.dock]
+autohide = true
+orientation = "left"
+
+[bootstrap.macos.finder]
+show_all_files = true
+show_pathbar = true
+preferred_view_style = "list"
+
+[bootstrap.macos.keyboard]
+key_repeat = 2
+initial_key_repeat = 15
+press_and_hold = false
+
+[bootstrap.macos.defaults]
+"com.apple.finder" = { AppleShowAllFiles = false }
+
 [dotfiles]
 "~/.config/mise/config.toml" = "mise.toml"
 "~/.bashrc" = { mode = "symlink" }
