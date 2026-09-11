@@ -21,6 +21,17 @@ _error() {
 	exit 1
 }
 
+_confirm() {
+	# non-interactive callers keep the old behaviour: no prompt, just proceed
+	[ -t 0 ] || return 0
+	printf "?? %s : %s [y/N] " "$(date -u "+%F %T")" "$1"
+	read -r reply
+	case "$reply" in
+		y | Y | yes | Yes) ;;
+		*) _error "aborted" ;;
+	esac
+}
+
 # === action =================================================================
 
 [ $# -ge 1 ] || _error "usage: worktree <branch> [path]"
@@ -45,6 +56,7 @@ if git show-ref --verify --quiet "refs/heads/$branch"; then
 	_info "adding worktree for existing branch $branch"
 	git worktree add "$path" "$branch" || _error "git worktree add failed"
 else
+	_confirm "branch $branch does not exist, create it?"
 	_info "adding worktree for new branch $branch"
 	git worktree add -b "$branch" "$path" || _error "git worktree add failed"
 fi
