@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+# Create a git worktree beside the current repo and bootstrap it.
+#
+# Repo-specific install steps live in that repo's `make bootstrap` target; this
+# script only creates the worktree and hands off.
+#
+# Usage:
+#   worktree <branch> [path]
+
+# === helpers =================================================================
+
+set -u
+
+_info() {
+	echo ":: $(date -u "+%F %T") : $1"
+}
+
+_error() {
+	echo "!! $(date -u "+%F %T") : $1"
+	exit 1
+}
+
+# === action =================================================================
+
+[ $# -ge 1 ] || _error "usage: worktree <branch> [path]"
+
+branch="$1"
+
+root="$(git rev-parse --show-toplevel 2>/dev/null)" ||
+	_error "not inside a git repository"
+
+if [ $# -ge 2 ]; then
+	path="$2"
+else
+	slug="$(echo "$branch" | tr '/' '-')"
+	path="$(dirname "$root")/$(basename "$root")-$slug"
+fi
+
+if [ -e "$path" ]; then
+	_error "path already exists: $path"
+fi
+
+if git show-ref --verify --quiet "refs/heads/$branch"; then
+	_info "adding worktree for existing branch $branch"
+	git worktree add "$path" "$branch" || _error "git worktree add failed"
+else
+	_info "adding worktree for new branch $branch"
+	git worktree add -b "$branch" "$path" || _error "git worktree add failed"
+fi
+
+cd "$path" || _error "cannot enter $path"
+
+if command -v mise > /dev/null 2>&1; then
+	_info "trusting mise config"
+	mise trust > /dev/null || _info "mise trust failed, continuing"
+else
+	_info "mise not found, skipping trust"
+fi
+
+if make -n bootstrap > /dev/null 2>&1; then
+	_info "running make bootstrap"
+	make bootstrap || _error "make bootstrap failed"
+else
+	_info "no bootstrap target, skipping install"
+fi
+
+_info "ready: $path"

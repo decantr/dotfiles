@@ -12,7 +12,8 @@ alias \
 	pa="php artisan" \
 	pat="php artisan --ansi tinker" \
 	fix="make fmt" \
-	pt="make test"
+	pt="make test" \
+	wt="$HOME/.local/src/dotfiles/scripts/worktree"
 
 # Linux only
 if type systemctl &>/dev/null; then
