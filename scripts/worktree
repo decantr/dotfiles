@@ -1,12 +1,14 @@
 #!/bin/sh
 #
-# Create a git worktree beside the current repo and bootstrap it.
+# Create a git worktree beside the current repo and bootstrap it, or remove one.
 #
-# Repo-specific install steps live in that repo's `make bootstrap` target; this
-# script only creates the worktree and hands off.
+# Repo-specific install and teardown steps live in that repo's `make bootstrap`
+# and `make teardown` targets; this script only manages the worktree and hands
+# off.
 #
 # Usage:
 #   worktree <branch> [path]
+#   worktree rm <branch|path>
 
 # === helpers =================================================================
 
@@ -21,9 +23,7 @@ _error() {
 	exit 1
 }
 
-_confirm() {
-	# non-interactive callers keep the old behaviour: no prompt, just proceed
-	[ -t 0 ] || return 0
+_ask() {
 	printf "?? %s : %s [y/N] " "$(date -u "+%F %T")" "$1"
 	read -r reply
 	case "$reply" in
@@ -32,14 +32,106 @@ _confirm() {
 	esac
 }
 
+# adding is reversible, so a non-interactive caller keeps the old behaviour
+_confirm() {
+	[ -t 0 ] || return 0
+	_ask "$1"
+}
+
+# discarding work is not reversible: never answer for a script
+_confirm_destructive() {
+	[ -t 0 ] || _error "not a terminal, refusing: $1"
+	_ask "$1"
+}
+
+_remove() {
+	target="$1"
+	[ -d "$target" ] && target="$(cd "$target" && pwd -P)"
+
+	main_path=""
+	path=""
+	branch=""
+	cur_path=""
+	cur_branch=""
+
+	# records are `worktree <path>` then optionally `branch refs/heads/<name>`
+	while IFS= read -r line || [ -n "$line" ]; do
+		case "$line" in
+			"worktree "*)
+				cur_path="${line#worktree }"
+				cur_branch=""
+				[ -n "$main_path" ] || main_path="$cur_path"
+				;;
+			"branch refs/heads/"*)
+				cur_branch="${line#branch refs/heads/}"
+				;;
+		esac
+
+		if [ "$cur_path" = "$target" ] || {
+			[ -n "$cur_branch" ] && [ "$cur_branch" = "$target" ]
+		}; then
+			path="$cur_path"
+			branch="$cur_branch"
+		fi
+	done <<- EOF
+		$(git worktree list --porcelain)
+	EOF
+
+	[ -n "$path" ] || _error "no worktree for: $target"
+	[ "$path" != "$main_path" ] || _error "refusing to remove the main worktree"
+
+	case "$PWD/" in
+		"$path"/*) _error "inside the target worktree, cd out first: $path" ;;
+	esac
+
+	force=""
+	dirty="$(git -C "$path" status --porcelain | wc -l | tr -d ' ')"
+	if [ "$dirty" -gt 0 ]; then
+		_confirm_destructive "$path has $dirty uncommitted change(s), discard them?"
+		force="--force"
+	fi
+
+	if make -C "$path" -n teardown > /dev/null 2>&1; then
+		_info "running make teardown"
+		make -C "$path" teardown || _error "make teardown failed"
+	else
+		_info "no teardown target, skipping uninstall"
+	fi
+
+	_info "removing worktree $path"
+	git worktree remove $force "$path" || _error "git worktree remove failed"
+
+	if [ -n "$branch" ]; then
+		if ! git branch -d "$branch" > /dev/null 2>&1; then
+			_confirm_destructive "branch $branch is not merged, delete it anyway?"
+			git branch -D "$branch" || _error "git branch -D failed"
+		fi
+		_info "deleted branch $branch"
+	else
+		_info "no branch checked out, skipping branch delete"
+	fi
+
+	git worktree prune
+
+	_info "removed: $path"
+}
+
 # === action =================================================================
 
-[ $# -ge 1 ] || _error "usage: worktree <branch> [path]"
-
-branch="$1"
+[ $# -ge 1 ] || _error "usage: worktree <branch> [path] | worktree rm <branch|path>"
 
 root="$(git rev-parse --show-toplevel 2>/dev/null)" ||
 	_error "not inside a git repository"
+
+case "$1" in
+	rm | -r)
+		[ $# -ge 2 ] || _error "usage: worktree rm <branch|path>"
+		_remove "$2"
+		exit 0
+		;;
+esac
+
+branch="$1"
 
 if [ $# -ge 2 ]; then
 	path="$2"
