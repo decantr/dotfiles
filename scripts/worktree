@@ -52,12 +52,18 @@ if [ -e "$path" ]; then
 	_error "path already exists: $path"
 fi
 
+base="$(git rev-parse --abbrev-ref HEAD)"
+if [ "$base" = "HEAD" ]; then
+	base="$(git rev-parse --short HEAD)"
+fi
+
 if git show-ref --verify --quiet "refs/heads/$branch"; then
+	_confirm "worktree for existing branch $branch at $path?"
 	_info "adding worktree for existing branch $branch"
 	git worktree add "$path" "$branch" || _error "git worktree add failed"
 else
-	_confirm "branch $branch does not exist, create it?"
-	_info "adding worktree for new branch $branch"
+	_confirm "branch $branch does not exist, create it from $base at $path?"
+	_info "adding worktree for new branch $branch off $base"
 	git worktree add -b "$branch" "$path" || _error "git worktree add failed"
 fi
 
@@ -70,11 +76,21 @@ else
 	_info "mise not found, skipping trust"
 fi
 
-if make -n bootstrap > /dev/null 2>&1; then
-	_info "running make bootstrap"
-	make bootstrap || _error "make bootstrap failed"
+if command -v make > /dev/null 2>&1; then
+	# make exits 2 both for a missing target and for a broken Makefile; only the
+	# "no rule to make target bootstrap" message tells them apart
+	probe="$(make -n bootstrap 2>&1 > /dev/null)"
+	probe_status=$?
+	if [ "$probe_status" -eq 0 ]; then
+		_info "running make bootstrap"
+		make bootstrap || _error "make bootstrap failed"
+	elif echo "$probe" | grep -qE "(o rule to make target|on't know how to make) .?bootstrap"; then
+		_info "no bootstrap target, skipping install"
+	else
+		_error "cannot read this repo's makefile: $probe"
+	fi
 else
-	_info "no bootstrap target, skipping install"
+	_info "make not found, skipping install"
 fi
 
 _info "ready: $path"
