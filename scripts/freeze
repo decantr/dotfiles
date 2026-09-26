@@ -3,10 +3,10 @@
 # suspend/resume process trees, by focused window or by program name.
 #
 # Usage:
-#   freeze window            freeze the focused window, or resume it if frozen
-#   freeze resume-all        resume everything this script froze
-#   freeze stop <prog>...    freeze programs by name
-#   freeze cont <prog>...    resume what `stop` froze for those names
+#   freeze window             freeze the focused window, or resume it if frozen
+#   freeze resume-all         resume everything this script froze
+#   freeze stop <prog>...     freeze programs by name
+#   freeze start <prog>...    resume what `stop` froze for those names
 #
 # To resume everything by hand:
 #   pkill -CONT -U $UID
@@ -20,7 +20,7 @@
 # Idle Example sway:
 #   exec swayidle -w \
 #       timeout 1800 '/path/to/freeze stop mpv firefox' \
-#       resume '/path/to/freeze cont mpv firefox'
+#       resume '/path/to/freeze start mpv firefox'
 
 set -u
 
@@ -34,7 +34,7 @@ BLOCKLIST="^(systemd|niri|sway|dms|qs|quickshell|dbus-daemon|dbus-broker|pipewir
 # one line per frozen tree root: pid, comm, source (window|idle)
 STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/freeze.state"
 
-# stop/cont run from swayidle with nobody watching, so only binds notify
+# stop/start run from swayidle with nobody watching, so only binds notify
 notify_enabled=0
 
 # helpers =====================================================================
@@ -64,7 +64,7 @@ Usage:
   freeze window
   freeze resume-all
   freeze stop <program> [program...]
-  freeze cont <program> [program...]
+  freeze start <program> [program...]
 EOF
 	exit 1
 }
@@ -261,7 +261,7 @@ stopByName() {
 	done
 }
 
-contByName() {
+startByName() {
 	local name entries entry pid comm source
 	mapfile -t entries < <(listFrozen idle)
 
@@ -297,9 +297,9 @@ stop)
 	[[ $# -gt 0 ]] || usage
 	stopByName "$@"
 	;;
-cont)
+start)
 	[[ $# -gt 0 ]] || usage
-	contByName "$@"
+	startByName "$@"
 	;;
 *)
 	usage

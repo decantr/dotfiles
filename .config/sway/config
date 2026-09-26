@@ -33,7 +33,7 @@ default_border pixel 2
 
 exec swayidle -w \
 	timeout 1800 'swaymsg "output * power off"; ~/.local/src/dotfiles/scripts/freeze stop mpv firefox' \
-	resume 'swaymsg "output * power on"; ~/.local/src/dotfiles/scripts/freeze cont mpv firefox'
+	resume 'swaymsg "output * power on"; ~/.local/src/dotfiles/scripts/freeze start mpv firefox'
 
 #### Bar
 
