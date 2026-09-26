@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+#
+# Freeze or resume process trees by program name.
+# Designed for swayidle screen-blank hooks.
+#
+# Usage:
+#   freeze-sleep freeze  <program> [program...]
+#   freeze-sleep resume  <program> [program...]
+#
+# Example (in sway config):
+#   exec swayidle -w \
+#       timeout 1800 \
+#           'swaymsg "output * power off"; freeze-sleep freeze mpv firefox' \
+#           resume \
+#           'swaymsg "output * power on"; freeze-sleep resume mpv firefox'
+
+set -u
+
+# never freeze list — names matched against `ps -o comm` (truncated at 15 chars)
+BLOCKLIST='^(systemd|niri|sway|dms|qs|quickshell|dbus-daemon|dbus-broker|pipewire|wireplumber|mako|Xwayland|xwayland-satell)$'
+
+# helpers =====================================================================
+
+_log() {
+	printf ':: %s : %s\n' "$(date -u '+%F %T')" "$1" >&2
+}
+
+die() {
+	printf '!! %s : %s\n' "$(date -u '+%F %T')" "$1" >&2
+	exit 1
+}
+
+# process tree ================================================================
+
+collectTree() {
+	local kid
+	printf '%s\n' "$1"
+	for kid in $(pgrep -P "$1" 2>/dev/null); do
+		collectTree "$kid"
+	done
+}
+
+freezeTree() {
+	local kid
+	kill -STOP "$1" 2>/dev/null
+	for kid in $(pgrep -P "$1" 2>/dev/null); do
+		freezeTree "$kid"
+	done
+}
+
+resumeTree() {
+	local pids
+	mapfile -t pids < <(collectTree "$1")
+	kill -CONT "${pids[@]}" 2>/dev/null
+}
+
+isFrozen() {
+	[[ $(ps -o state= -p "$1" 2>/dev/null) == T ]]
+}
+
+isProtected() {
+	local name
+	name=$(ps -o comm= -p "$1" 2>/dev/null)
+	[[ "$name" =~ $BLOCKLIST ]]
+}
+
+# main ========================================================================
+
+usage() {
+	cat >&2 <<'EOF'
+Usage:
+  freeze-sleep freeze  <program> [program...]
+  freeze-sleep resume  <program> [program...]
+EOF
+	exit 1
+}
+
+[[ $# -ge 2 ]] || usage
+
+action=$1
+shift
+
+[[ "$action" == freeze || "$action" == resume ]] || usage
+
+for name in "$@"; do
+	pids=$(pgrep -x "$name" 2>/dev/null)
+	[[ -n "$pids" ]] || { _log "No process found for '$name'"; continue; }
+
+	while IFS= read -r pid; do
+		isProtected "$pid" && { _log "Skipping protected process $pid ($name)"; continue; }
+
+		if [[ "$action" == freeze ]]; then
+			if isFrozen "$pid"; then
+				_log "$name ($pid) already frozen"
+			else
+				freezeTree "$pid"
+				_log "Froze $name ($pid)"
+			fi
+		else
+			if isFrozen "$pid"; then
+				resumeTree "$pid"
+				_log "Resumed $name ($pid)"
+			else
+				_log "$name ($pid) not frozen"
+			fi
+		fi
+	done <<<"$pids"
+done
