@@ -41,6 +41,7 @@ notify_enabled=0
 
 notify() {
 	[[ "$notify_enabled" == 1 ]] || return 0
+	command -v notify-send >/dev/null || return 0
 	notify-send -a "freeze" -u "$2" \
 		-h "string:x-canonical-private-synchronous:freeze" \
 		"Freeze" "$1"
@@ -81,29 +82,23 @@ isXwayland() {
 
 # sets pid and name for the focused window
 findFocusedWindow() {
-	local compositor raw real
+	local raw real
 
 	if [[ -n "${NIRI_SOCKET:-}" ]]; then
-		compositor=niri
 		requireCommands niri
-	elif [[ -n "${SWAYSOCK:-}" ]]; then
-		compositor=sway
-		requireCommands swaymsg
-	else
-		_error "Unsupported compositor. Only sway & niri"
-	fi
-
-	if [[ "$compositor" == niri ]]; then
 		raw=$(niri msg --json focused-window 2>/dev/null |
 			jq -er 'select(.pid)
 					| "\(.pid)\t\(first((.app_id, .title, "window")
 									   | select(. != null and . != "")))"')
-	else
+	elif [[ -n "${SWAYSOCK:-}" ]]; then
+		requireCommands swaymsg
 		raw=$(swaymsg -t get_tree 2>/dev/null |
 			jq -er 'first(recurse(.nodes[]?, .floating_nodes[]?)
 						  | select(.focused == true and .pid != null))
 					| "\(.pid)\t\(first((.app_id, .window_properties.class, .name, "window")
 									   | select(. != null and . != "")))"')
+	else
+		_error "Unsupported compositor. Only sway & niri"
 	fi
 
 	[[ -n "$raw" ]] || _error "No focused window"
@@ -151,22 +146,25 @@ isFrozen() {
 	[[ $(ps -o state= -p "$1" 2>/dev/null) == T ]]
 }
 
+ancestors=""
+
 # check pid against protected list
 isProtected() {
-	local pid=$1 cur name
+	local pid=$1 cur
 
-	name=$(ps -o comm= -p "$pid" 2>/dev/null)
-	[[ "$name" =~ $BLOCKLIST ]] && return 0
+	[[ $(ps -o comm= -p "$pid" 2>/dev/null) =~ $BLOCKLIST ]] && return 0
 
 	# Any ancestor of this script — freezing one freezes us mid-run, leaving
 	# the tree stopped with nothing left alive to resume it.
-	cur=$$
-	while [[ -n "$cur" && "$cur" != "0" ]]; do
-		[[ "$pid" == "$cur" ]] && return 0
-		cur=$(ps -o ppid= -p "$cur" 2>/dev/null | tr -d ' ')
-	done
+	if [[ -z "$ancestors" ]]; then
+		cur=$$
+		while [[ -n "$cur" && "$cur" != "0" ]]; do
+			ancestors+=" $cur "
+			cur=$(ps -o ppid= -p "$cur" 2>/dev/null | tr -d ' ')
+		done
+	fi
 
-	return 1
+	[[ "$ancestors" == *" $pid "* ]]
 }
 
 # state =======================================================================
@@ -193,6 +191,11 @@ recordFrozen() {
 	printf '%s\t%s\t%s\n' "$1" "$(ps -o comm= -p "$1" 2>/dev/null)" "$2" >>"$STATE_FILE"
 }
 
+thawRoot() {
+	resumeTree "$1"
+	forgetFrozen "$1"
+}
+
 # prints "pid<TAB>comm<TAB>source", optionally only for one source
 listFrozen() {
 	[[ -f "$STATE_FILE" ]] || return 0
@@ -202,13 +205,12 @@ listFrozen() {
 # actions =====================================================================
 
 toggleWindow() {
-	requireCommands jq notify-send
+	requireCommands jq
 	findFocusedWindow
 	kill -0 "$pid" 2>/dev/null || _error "$name is gone"
 
 	if isFrozen "$pid"; then
-		resumeTree "$pid"
-		forgetFrozen "$pid"
+		thawRoot "$pid"
 		_info "Resumed $name"
 		return 0
 	fi
@@ -225,14 +227,13 @@ toggleWindow() {
 
 resumeAll() {
 	local entries entry pid
-	requireCommands notify-send
 	mapfile -t entries < <(listFrozen)
 
 	for entry in "${entries[@]}"; do
-		pid=${entry%%$'\t'*}
+		IFS=$'\t' read -r pid _ <<<"$entry"
 		resumeTree "$pid"
-		forgetFrozen "$pid"
 	done
+	: >"$STATE_FILE"
 
 	_info "Resumed ${#entries[@]} frozen tree(s)"
 }
@@ -241,10 +242,10 @@ stopByName() {
 	local name pid pids
 	for name in "$@"; do
 		mapfile -t pids < <(pgrep -x "$name" 2>/dev/null)
-		[[ ${#pids[@]} -gt 0 ]] || {
+		if [[ ${#pids[@]} -eq 0 ]]; then
 			_info "No process found for '$name'"
 			continue
-		}
+		fi
 
 		for pid in "${pids[@]}"; do
 			if isProtected "$pid"; then
@@ -268,8 +269,7 @@ contByName() {
 		for entry in "${entries[@]}"; do
 			IFS=$'\t' read -r pid comm source <<<"$entry"
 			[[ "$comm" == "$name" ]] || continue
-			resumeTree "$pid"
-			forgetFrozen "$pid"
+			thawRoot "$pid"
 			_info "Resumed $name ($pid)"
 		done
 	done
