@@ -27,8 +27,8 @@ _ask() {
 	printf "?? %s : %s [y/N] " "$(date -u "+%F %T")" "$1"
 	read -r reply
 	case "$reply" in
-		y | Y | yes | Yes) ;;
-		*) _error "aborted" ;;
+	y | Y | yes | Yes) ;;
+	*) _error "aborted" ;;
 	esac
 }
 
@@ -44,6 +44,17 @@ _confirm_destructive() {
 	_ask "$1"
 }
 
+# check herd for 2.0
+_herd_serves() {
+	command -v herd >/dev/null 2>&1 || return 1
+	herd workspace --help >/dev/null 2>&1 || return 1
+
+	herd_parent="$(dirname "$1")"
+	herd paths 2>/dev/null | grep -qF "\"$herd_parent/\"" && return 0
+	herd links 2>/dev/null | grep -qF "$1" && return 0
+	return 1
+}
+
 _remove() {
 	target="$1"
 	[ -d "$target" ] && target="$(cd "$target" && pwd -P)"
@@ -57,14 +68,14 @@ _remove() {
 	# records are `worktree <path>` then optionally `branch refs/heads/<name>`
 	while IFS= read -r line || [ -n "$line" ]; do
 		case "$line" in
-			"worktree "*)
-				cur_path="${line#worktree }"
-				cur_branch=""
-				[ -n "$main_path" ] || main_path="$cur_path"
-				;;
-			"branch refs/heads/"*)
-				cur_branch="${line#branch refs/heads/}"
-				;;
+		"worktree "*)
+			cur_path="${line#worktree }"
+			cur_branch=""
+			[ -n "$main_path" ] || main_path="$cur_path"
+			;;
+		"branch refs/heads/"*)
+			cur_branch="${line#branch refs/heads/}"
+			;;
 		esac
 
 		if [ "$cur_path" = "$target" ] || {
@@ -73,7 +84,7 @@ _remove() {
 			path="$cur_path"
 			branch="$cur_branch"
 		fi
-	done <<- EOF
+	done <<-EOF
 		$(git worktree list --porcelain)
 	EOF
 
@@ -81,7 +92,7 @@ _remove() {
 	[ "$path" != "$main_path" ] || _error "refusing to remove the main worktree"
 
 	case "$PWD/" in
-		"$path"/*) _error "inside the target worktree, cd out first: $path" ;;
+	"$path"/*) _error "inside the target worktree, cd out first: $path" ;;
 	esac
 
 	force=""
@@ -91,7 +102,14 @@ _remove() {
 		force="--force"
 	fi
 
-	if make -C "$path" -n teardown > /dev/null 2>&1; then
+	# --keep-files and --keep-database leave the git side and the data to us
+	if [ -n "$branch" ] && _herd_serves "$main_path"; then
+		_info "unregistering herd workspace"
+		herd workspace:delete "$branch" --force --keep-files --keep-database \
+			>/dev/null 2>&1 || _info "herd workspace:delete failed, continuing"
+	fi
+
+	if make -C "$path" -n teardown >/dev/null 2>&1; then
 		_info "running make teardown"
 		make -C "$path" teardown || _error "make teardown failed"
 	else
@@ -102,7 +120,7 @@ _remove() {
 	git worktree remove $force "$path" || _error "git worktree remove failed"
 
 	if [ -n "$branch" ]; then
-		if ! git branch -d "$branch" > /dev/null 2>&1; then
+		if ! git branch -d "$branch" >/dev/null 2>&1; then
 			_confirm_destructive "branch $branch is not merged, delete it anyway?"
 			git branch -D "$branch" || _error "git branch -D failed"
 		fi
@@ -124,11 +142,11 @@ root="$(git rev-parse --show-toplevel 2>/dev/null)" ||
 	_error "not inside a git repository"
 
 case "$1" in
-	rm | -r)
-		[ $# -ge 2 ] || _error "usage: worktree rm <branch|path>"
-		_remove "$2"
-		exit 0
-		;;
+rm | -r)
+	[ $# -ge 2 ] || _error "usage: worktree rm <branch|path>"
+	_remove "$2"
+	exit 0
+	;;
 esac
 
 branch="$1"
@@ -161,17 +179,27 @@ fi
 
 cd "$path" || _error "cannot enter $path"
 
-if command -v mise > /dev/null 2>&1; then
+if command -v mise >/dev/null 2>&1; then
 	_info "trusting mise config"
-	mise trust > /dev/null || _info "mise trust failed, continuing"
+	mise trust >/dev/null || _info "mise trust failed, continuing"
 else
 	_info "mise not found, skipping trust"
 fi
 
-if command -v make > /dev/null 2>&1; then
+# herd copies the parent .env and rewrites APP_URL
+if _herd_serves "$root"; then
+	_info "registering workspace with herd"
+
+	herd workspace \
+		--database=shared \
+		--no-migrate ||
+		_info "herd workspace failed, continuing unregistered"
+fi
+
+if command -v make >/dev/null 2>&1; then
 	# make exits 2 both for a missing target and for a broken Makefile; only the
 	# "no rule to make target bootstrap" message tells them apart
-	probe="$(make -n bootstrap 2>&1 > /dev/null)"
+	probe="$(make -n bootstrap 2>&1 >/dev/null)"
 	probe_status=$?
 	if [ "$probe_status" -eq 0 ]; then
 		_info "running make bootstrap"
