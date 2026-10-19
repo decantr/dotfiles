@@ -20,6 +20,10 @@ if type mise &>/dev/null; then
 	eval "$(mise activate zsh)"
 fi
 
+if type herdr &>/dev/null; then
+	fpath=(~/.local/zfunc $fpath)
+fi
+
 # use fzf for history
 if type fzf &> /dev/null; then
 	eval "$(fzf --zsh)"
