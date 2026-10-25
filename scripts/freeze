@@ -17,7 +17,14 @@ _info() {
 
 _error() {
 	echo "!! $(date -u "+%F %T") : $1"
+	_notify "$1" critical
 	exit 1
+}
+
+requireCommands() {
+	for cmd in "$@"; do
+		command -v "$cmd" >/dev/null || _error "$cmd is required but not installed"
+	done
 }
 
 pidTree() {
@@ -44,8 +51,13 @@ isSkipped() {
 	return 1
 }
 
-isManual() {
-	grep -qx "$1" "$state_file" 2>/dev/null
+isHeldManual() {
+	held_pid=$1
+	while [ -n "$held_pid" ] && [ "$held_pid" != 0 ]; do
+		grep -qx "$held_pid" "$state_file" 2>/dev/null && return 0
+		held_pid=$(ps -o ppid= -p "$held_pid" | tr -d ' ')
+	done
+	return 1
 }
 
 recordManual() {
@@ -60,23 +72,27 @@ forgetManual() {
 
 focusedPid() {
 	if [ -n "${NIRI_SOCKET:-}" ]; then
-		niri msg --json focused-window | jq -r '.pid // empty'
+		niri msg --json focused-window 2>/dev/null | jq -r '.pid // empty'
 	else
-		swaymsg -t get_tree | jq -r 'first(recurse(.nodes[]?, .floating_nodes[]?) | select(.focused) | .pid // empty)'
+		swaymsg -t get_tree 2>/dev/null | jq -r 'first(recurse(.nodes[]?, .floating_nodes[]?) | select(.focused) | .pid // empty)'
 	fi
 }
 
 requirePid() {
 	case "$1" in
-		"" | *[!0-9]*)
-			_notify "$2" critical
-			_error "$2"
-			;;
+		"" | *[!0-9]*) _error "$2" ;;
 	esac
 }
 
 toggleWindow() {
-	[ -n "${NIRI_SOCKET:-}" ] || [ -n "${SWAYSOCK:-}" ] || _error "Unsupported compositor. Only sway & niri"
+	if [ -n "${NIRI_SOCKET:-}" ]; then
+		requireCommands niri
+	elif [ -n "${SWAYSOCK:-}" ]; then
+		requireCommands swaymsg
+	else
+		_error "Unsupported compositor. Only sway & niri"
+	fi
+	requireCommands jq
 
 	window_pid=$(focusedPid)
 	requirePid "$window_pid" "No focused window with a pid"
@@ -102,10 +118,7 @@ toggleWindow() {
 			_notify "Resumed $window_name"
 			;;
 		*)
-			if isSkipped "$window_pid"; then
-				_notify "Refusing to freeze $window_name" critical
-				_error "Refusing to freeze $window_name ($window_pid)"
-			fi
+			isSkipped "$window_pid" && _error "Refusing to freeze $window_name ($window_pid)"
 			recordManual "$window_pid"
 			signalTree STOP "$window_pid"
 			_info "Froze $window_name ($window_pid)"
@@ -137,7 +150,7 @@ stopByName() {
 startByName() {
 	for name in "$@"; do
 		for named_pid in $(findPids "$name"); do
-			isManual "$named_pid" || signalTree CONT "$named_pid"
+			isHeldManual "$named_pid" || signalTree CONT "$named_pid"
 		done
 	done
 }
@@ -149,6 +162,8 @@ resumeAll() {
 	done <"$state_file"
 	: >"$state_file"
 }
+
+requireCommands ps pgrep
 
 action=${1:-}
 [ $# -gt 0 ] && shift
