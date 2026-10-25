@@ -11,6 +11,11 @@
 # To resume everything by hand:
 #   pkill -CONT -U $UID
 #
+# stop/start/resume-all act on the roots recorded in $XDG_RUNTIME_DIR/freeze.state,
+# so they leave processes you stopped by hand alone. That file is pruned on every
+# run, and a tree whose root was killed is no longer tracked, so the pkill above
+# is still the way out of a stuck session.
+#
 # Binds Example niri:
 #   Mod+Pause { spawn "/path/to/freeze" "window"; }
 #   Mod+Shift+Pause { spawn "/path/to/freeze" "resume-all"; }
@@ -32,7 +37,10 @@ XWAYLAND='^(Xwayland|xwayland-satell)$'
 BLOCKLIST="^(systemd|niri|sway|dms|qs|quickshell|dbus-daemon|dbus-broker|pipewire|wireplumber|mako)$|$XWAYLAND"
 
 # one line per frozen tree root: pid, comm, source (window|idle)
-STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/freeze.state"
+# only roots are recorded, so a tree orphaned by a killed root needs the
+# pkill escape hatch above; anything recorded is resumed by `start`/`resume-all`
+: "${XDG_RUNTIME_DIR:?XDG_RUNTIME_DIR is unset, cannot track frozen trees}"
+STATE_FILE="$XDG_RUNTIME_DIR/freeze.state"
 
 # stop/start run from swayidle with nobody watching, so only binds notify
 notify_enabled=0
@@ -42,9 +50,10 @@ notify_enabled=0
 notify() {
 	[[ "$notify_enabled" == 1 ]] || return 0
 	command -v notify-send >/dev/null || return 0
+	# best effort: a missing notification daemon must not become the exit status
 	notify-send -a "freeze" -u "$2" \
 		-h "string:x-canonical-private-synchronous:freeze" \
-		"Freeze" "$1"
+		"Freeze" "$1" 2>/dev/null || true
 }
 
 _info() {
@@ -169,21 +178,41 @@ isProtected() {
 
 # state =======================================================================
 
+# fd of this run's lock, empty until first taken
+stateLock=""
+
+# the file is read-modify-written and a keypress can overlap the swayidle
+# hook, so every mutation happens under a lock held for the rest of the run
+lockState() {
+	[[ -n "$stateLock" ]] && return 0
+	exec {stateLock}>"$STATE_FILE.lock" || return 1
+	flock "$stateLock"
+}
+
+# replace the state file atomically, so no reader sees it half written
+writeState() {
+	local tmp
+	tmp=$(mktemp "$STATE_FILE.XXXXXX") || return 1
+	cat >"$tmp" || { rm -f "$tmp"; return 1; }
+	mv "$tmp" "$STATE_FILE"
+}
+
 # drop lines whose pid is gone or was reused by another program
 pruneFrozen() {
 	local pid comm source kept=""
+	lockState
 	[[ -f "$STATE_FILE" ]] || return 0
 	while IFS=$'\t' read -r pid comm source; do
 		[[ $(ps -o comm= -p "$pid" 2>/dev/null) == "$comm" ]] || continue
 		kept+="$pid"$'\t'"$comm"$'\t'"$source"$'\n'
 	done <"$STATE_FILE"
-	printf '%s' "$kept" >"$STATE_FILE"
+	printf '%s' "$kept" | writeState
 }
 
 forgetFrozen() {
+	lockState
 	[[ -f "$STATE_FILE" ]] || return 0
-	awk -F'\t' -v pid="$1" '$1 != pid' "$STATE_FILE" >"$STATE_FILE.tmp" &&
-		mv "$STATE_FILE.tmp" "$STATE_FILE"
+	awk -F'\t' -v pid="$1" '$1 != pid' "$STATE_FILE" | writeState
 }
 
 recordFrozen() {
@@ -200,6 +229,11 @@ thawRoot() {
 listFrozen() {
 	[[ -f "$STATE_FILE" ]] || return 0
 	awk -F'\t' -v source="${1:-}" 'source == "" || $3 == source' "$STATE_FILE"
+}
+
+clearState() {
+	lockState
+	: | writeState
 }
 
 # actions =====================================================================
@@ -233,7 +267,7 @@ resumeAll() {
 		IFS=$'\t' read -r pid _ <<<"$entry"
 		resumeTree "$pid"
 	done
-	: >"$STATE_FILE"
+	clearState
 
 	_info "Resumed ${#entries[@]} frozen tree(s)"
 }
@@ -262,22 +296,28 @@ stopByName() {
 }
 
 startByName() {
-	local name entries entry pid comm source
+	local name entries entry pid comm source found
 	mapfile -t entries < <(listFrozen idle)
 
 	for name in "$@"; do
+		found=
 		for entry in "${entries[@]}"; do
 			IFS=$'\t' read -r pid comm source <<<"$entry"
 			[[ "$comm" == "$name" ]] || continue
 			thawRoot "$pid"
 			_info "Resumed $name ($pid)"
+			found=1
 		done
+
+		# names come from `ps -o comm`, so a miss here means a typo, an
+		# untruncated name, or a state file that no longer knows about the tree
+		[[ -n "$found" ]] || _info "No tracked freeze for '$name'"
 	done
 }
 
 # main ========================================================================
 
-requireCommands ps pgrep awk
+requireCommands ps pgrep awk flock mktemp
 
 action=${1:-}
 [[ $# -gt 0 ]] && shift

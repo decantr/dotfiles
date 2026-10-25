@@ -32,8 +32,10 @@ default_border pixel 2
 #### Idle
 
 exec swayidle -w \
-	timeout 1800 'swaymsg "output * power off"; ~/.local/src/dotfiles/scripts/freeze stop mpv firefox' \
-	resume 'swaymsg "output * power on"; ~/.local/src/dotfiles/scripts/freeze start mpv firefox'
+	timeout 1800 \
+		'swaymsg "output * power off"; ~/.local/src/dotfiles/scripts/freeze stop firefox-esr RuneLite.AppIma' \
+		resume \
+		'swaymsg "output * power on"; ~/.local/src/dotfiles/scripts/freeze start firefox-esr RuneLite.AppIma'
 
 #### Bar
 
