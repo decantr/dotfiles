@@ -5,21 +5,26 @@ input {
 	keyboard {
 		xkb {
 			// xkeyboard-config(7).
-		layout "gb(mac)"
-		// layout "gb"
-		options "caps:escape"
+			layout "gb(mac)"
+			// layout "gb"
+			options "caps:escape"
 		}
 
+		numlock
 		repeat-delay 300
 		repeat-rate 50
-		numlock
 	}
 
 	mouse {
-		natural-scroll
-		accel-speed 0
 		accel-profile "flat"
+		accel-speed 0
+		natural-scroll
 		// scroll-method "no-scroll"
+	}
+
+	touchpad {
+		natural-scroll
+		tap
 	}
 
 	// Uncomment this to make the mouse warp to the center of newly focused windows.
