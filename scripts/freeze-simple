@@ -75,9 +75,17 @@ toggleWindow() {
 	esac
 }
 
+# comm is cut at 15 chars and an AppImage runs under a different comm, so also match argv[0]'s basename
+findPids() {
+	{
+		pgrep -x -U "$(id -u)" "$1" 2>/dev/null
+		pgrep -f -U "$(id -u)" "^([^ ]*/)?$1( |\$)"
+	} | sort -u
+}
+
 stopByName() {
 	for name in "$@"; do
-		for named_pid in $(pgrep -x -U "$(id -u)" "$name"); do
+		for named_pid in $(findPids "$name"); do
 			signalTree STOP "$named_pid"
 		done
 	done
@@ -85,7 +93,7 @@ stopByName() {
 
 startByName() {
 	for name in "$@"; do
-		for named_pid in $(pgrep -x -U "$(id -u)" "$name"); do
+		for named_pid in $(findPids "$name"); do
 			isManual "$named_pid" || signalTree CONT "$named_pid"
 		done
 	done
