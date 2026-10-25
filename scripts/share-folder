@@ -1,0 +1,130 @@
+#!/bin/sh
+# usage: share-folder [--guest] [--ro] <directory>
+
+_info() {
+	echo ":: $(date -u "+%F %T") : $1"
+}
+
+_error() {
+	echo "!! $(date -u "+%F %T") : $1"
+	exit 1
+}
+
+requireCommands() {
+	for cmd in "$@"; do
+		command -v "$cmd" >/dev/null || _error "$cmd is required but not installed"
+	done
+}
+
+cleanup() {
+	trap - EXIT INT TERM
+	_info "Stopping share"
+	[ -n "$smbd_pid" ] && kill "$smbd_pid" 2>/dev/null
+	# shellcheck disable=SC2086
+	[ -n "$ufw_rule" ] && ufw delete $ufw_rule >/dev/null 2>&1
+	rm -rf "$tmp_dir"
+}
+
+guest=no
+readonly=no
+share_path=
+smbd_pid=
+ufw_rule=
+tmp_dir=
+
+for arg in "$@"; do
+	case $arg in
+		--guest) guest=yes ;;
+		--ro) readonly=yes ;;
+		-*) _error "Unknown option $arg" ;;
+		*) share_path=$arg ;;
+	esac
+done
+
+[ -d "$share_path" ] || _error "Usage: share-folder [--guest] [--ro] <directory>"
+[ "$(id -u)" = 0 ] || exec sudo "$0" "$@"
+requireCommands smbd smbpasswd testparm ip
+
+share_path=$(cd "$share_path" && pwd)
+share_name=$(basename "$share_path")
+owner=$(ls -ld "$share_path" | awk '{print $3}')
+iface=$(ip -4 route show default | awk '{print $5; exit}')
+subnet=$(ip -4 -o route show dev "$iface" scope link | awk '{print $1; exit}')
+host_ip=$(ip -4 -o addr show dev "$iface" | awk '{print $4; exit}' | cut -d/ -f1)
+[ -n "$iface" ] || _error "No default network interface"
+
+tmp_dir=$(mktemp -d)
+trap cleanup EXIT INT TERM
+conf=$tmp_dir/smb.conf
+
+if [ "$guest" = yes ]; then
+	map_to_guest="bad user"
+	share_auth="guest ok = yes
+guest only = yes"
+else
+	map_to_guest=never
+	share_auth="valid users = $owner"
+fi
+
+cat >"$conf" <<EOF
+[global]
+server role = standalone server
+interfaces = lo $iface
+bind interfaces only = yes
+smb ports = 445
+disable netbios = yes
+server min protocol = SMB2_10
+map to guest = $map_to_guest
+passdb backend = tdbsam:$tmp_dir/passdb.tdb
+private dir = $tmp_dir
+lock directory = $tmp_dir
+state directory = $tmp_dir
+cache directory = $tmp_dir
+ncalrpc dir = $tmp_dir
+binddns dir = $tmp_dir
+pid directory = $tmp_dir
+log file = $tmp_dir/log.%m
+load printers = no
+printcap name = /dev/null
+disable spoolss = yes
+
+[$share_name]
+path = $share_path
+read only = $readonly
+force user = $owner
+$share_auth
+ea support = no
+store dos attributes = no
+map archive = no
+EOF
+
+testparm -s "$conf" >/dev/null 2>&1 || _error "Generated smb.conf is invalid"
+
+if [ "$guest" = no ]; then
+	printf "Password for '%s' (this session only): " "$owner"
+	stty -echo
+	read -r password
+	stty echo
+	echo
+	[ -n "$password" ] || _error "Password is empty"
+	printf '%s\n%s\n' "$password" "$password" | smbpasswd -c "$conf" -s -a "$owner" >/dev/null ||
+		_error "Could not set password"
+	password=
+fi
+
+if command -v ufw >/dev/null && ufw status | grep -q "Status: active"; then
+	ufw_rule="allow in on $iface from $subnet to any port 445 proto tcp"
+	# shellcheck disable=SC2086
+	ufw $ufw_rule >/dev/null
+	_info "Opened 445/tcp on $iface for $subnet"
+fi
+
+smbd --foreground --no-process-group --configfile="$conf" &
+smbd_pid=$!
+
+_info "Sharing $share_path as \"$share_name\" (readonly=$readonly, guest=$guest)"
+printf '  Windows: \\\\%s\\%s\n' "$host_ip" "$share_name"
+echo "  Others:  smb://$host_ip/$share_name"
+_info "Press Ctrl+C to stop"
+
+wait "$smbd_pid"
