@@ -1,347 +1,162 @@
-#!/usr/bin/env bash
-#
-# suspend/resume process trees, by focused window or by program name.
-#
-# Usage:
-#   freeze window             freeze the focused window, or resume it if frozen
-#   freeze resume-all         resume everything this script froze
-#   freeze stop <prog>...     freeze programs by name
-#   freeze start <prog>...    resume what `stop` froze for those names
-#
-# To resume everything by hand:
-#   pkill -CONT -U $UID
-#
-# stop/start/resume-all act on the roots recorded in $XDG_RUNTIME_DIR/freeze.state,
-# so they leave processes you stopped by hand alone. That file is pruned on every
-# run, and a tree whose root was killed is no longer tracked, so the pkill above
-# is still the way out of a stuck session.
-#
-# Binds Example niri:
-#   Mod+Pause { spawn "/path/to/freeze" "window"; }
-#   Mod+Shift+Pause { spawn "/path/to/freeze" "resume-all"; }
-# Binds Example sway:
-#   bindsym $mod+End exec /path/to/freeze window
-#   bindsym $mod+Shift+End exec /path/to/freeze resume-all
-# Idle Example sway:
-#   exec swayidle -w \
-#       timeout 1800 '/path/to/freeze stop mpv firefox' \
-#       resume '/path/to/freeze start mpv firefox'
+#!/bin/sh
 
-set -u
+# pids frozen by hand, one per line; `start` leaves these alone
+state_file=/tmp/freeze.state
 
-# freezing xwayland would freeze every X11 app at once
-XWAYLAND='^(Xwayland|xwayland-satell)$'
+# names matched against `ps -o comm`; xwayland would freeze every X11 app at once
+skip_list='^(systemd|niri|sway|dms|qs|quickshell|dbus-daemon|dbus-broker|pipewire|wireplumber|mako|Xwayland|xwayland-satell)$'
 
-# never freeze list
-# names matched against `ps -o comm`, truncated at 15 chars
-BLOCKLIST="^(systemd|niri|sway|dms|qs|quickshell|dbus-daemon|dbus-broker|pipewire|wireplumber|mako)$|$XWAYLAND"
-
-# one line per frozen tree root: pid, comm, source (window|idle)
-# only roots are recorded, so a tree orphaned by a killed root needs the
-# pkill escape hatch above; anything recorded is resumed by `start`/`resume-all`
-: "${XDG_RUNTIME_DIR:?XDG_RUNTIME_DIR is unset, cannot track frozen trees}"
-STATE_FILE="$XDG_RUNTIME_DIR/freeze.state"
-
-# stop/start run from swayidle with nobody watching, so only binds notify
-notify_enabled=0
-
-# helpers =====================================================================
-
-notify() {
-	[[ "$notify_enabled" == 1 ]] || return 0
+_notify() {
 	command -v notify-send >/dev/null || return 0
-	# best effort: a missing notification daemon must not become the exit status
-	notify-send -a "freeze" -u "$2" \
-		-h "string:x-canonical-private-synchronous:freeze" \
-		"Freeze" "$1" 2>/dev/null || true
+	notify-send -a "freeze" -u "${2:-normal}" -t 3000 -h "string:x-canonical-private-synchronous:freeze" "Freeze" "$1" 2>/dev/null || true
 }
 
 _info() {
-	printf ':: %s : %s\n' "$(date -u '+%F %T')" "$1" >&2
-	notify "$1" low
+	echo ":: $(date -u "+%F %T") : $1"
 }
 
 _error() {
-	printf '!! %s : %s\n' "$(date -u '+%F %T')" "$1" >&2
-	notify "$1" normal
+	echo "!! $(date -u "+%F %T") : $1"
 	exit 1
 }
 
-usage() {
-	cat >&2 <<'EOF'
-Usage:
-  freeze window
-  freeze resume-all
-  freeze stop <program> [program...]
-  freeze start <program> [program...]
-EOF
-	exit 1
-}
-
-requireCommands() {
-	local cmd
-	for cmd in "$@"; do
-		command -v "$cmd" >/dev/null || _error "$cmd is required but not installed"
+pidTree() {
+	echo "$1"
+	for child in $(pgrep -P "$1"); do
+		pidTree "$child"
 	done
 }
 
-isXwayland() {
-	[[ $(ps -o comm= -p "$1" 2>/dev/null) =~ $XWAYLAND ]]
+signalTree() {
+	# shellcheck disable=SC2046
+	kill -s "$1" $(pidTree "$2") 2>/dev/null
 }
 
-# sets pid and name for the focused window
-findFocusedWindow() {
-	local raw real
+isSkipped() {
+	ps -o comm= -p "$1" | grep -Eq "$skip_list" && return 0
 
-	if [[ -n "${NIRI_SOCKET:-}" ]]; then
-		requireCommands niri
-		raw=$(niri msg --json focused-window 2>/dev/null |
-			jq -er 'select(.pid)
-					| "\(.pid)\t\(first((.app_id, .title, "window")
-									   | select(. != null and . != "")))"')
-	elif [[ -n "${SWAYSOCK:-}" ]]; then
-		requireCommands swaymsg
-		raw=$(swaymsg -t get_tree 2>/dev/null |
-			jq -er 'first(recurse(.nodes[]?, .floating_nodes[]?)
-						  | select(.focused == true and .pid != null))
-					| "\(.pid)\t\(first((.app_id, .window_properties.class, .name, "window")
-									   | select(. != null and . != "")))"')
+	# freezing an ancestor of this script would stop it mid-run
+	ancestor=$$
+	while [ -n "$ancestor" ] && [ "$ancestor" != 0 ]; do
+		[ "$1" = "$ancestor" ] && return 0
+		ancestor=$(ps -o ppid= -p "$ancestor" | tr -d ' ')
+	done
+	return 1
+}
+
+isManual() {
+	grep -qx "$1" "$state_file" 2>/dev/null
+}
+
+recordManual() {
+	echo "$1" >>"$state_file"
+}
+
+forgetManual() {
+	[ -f "$state_file" ] || return 0
+	grep -vx "$1" "$state_file" >"$state_file.tmp"
+	mv "$state_file.tmp" "$state_file"
+}
+
+focusedPid() {
+	if [ -n "${NIRI_SOCKET:-}" ]; then
+		niri msg --json focused-window | jq -r '.pid // empty'
 	else
-		_error "Unsupported compositor. Only sway & niri"
+		swaymsg -t get_tree | jq -r 'first(recurse(.nodes[]?, .floating_nodes[]?) | select(.focused) | .pid // empty)'
 	fi
-
-	[[ -n "$raw" ]] || _error "No focused window"
-	IFS=$'\t' read -r pid name <<<"$raw"
-
-	isXwayland "$pid" || return 0
-
-	# xwayland's pid is only the proxy, so ask X which client owns the window
-	requireCommands xdotool
-	real=$(DISPLAY="${DISPLAY:-:0}" xdotool getactivewindow getwindowpid 2>/dev/null)
-	[[ "$real" =~ ^[0-9]+$ ]] || _error "Could not find the X11 client for $name"
-	pid=$real
 }
 
-# process tree ================================================================
-
-# prints the pid then every descendant, parents before children.
-collectTree() {
-	local kid
-	printf '%s\n' "$1"
-	for kid in $(pgrep -P "$1" 2>/dev/null); do
-		collectTree "$kid"
-	done
+requirePid() {
+	case "$1" in
+		"" | *[!0-9]*)
+			_notify "$2" critical
+			_error "$2"
+			;;
+	esac
 }
-
-# stop each parent before listing its children, so a still-running parent
-# cannot fork a child that escapes the freeze.
-freezeTree() {
-	local kid
-	kill -STOP "$1" 2>/dev/null
-	for kid in $(pgrep -P "$1" 2>/dev/null); do
-		freezeTree "$kid"
-	done
-}
-
-# collect first: a resumed parent can exit and reparent its children away
-# before we ever get to list them.
-resumeTree() {
-	local pids
-	mapfile -t pids < <(collectTree "$1")
-	kill -CONT "${pids[@]}" 2>/dev/null
-}
-
-isFrozen() {
-	[[ $(ps -o state= -p "$1" 2>/dev/null) == T ]]
-}
-
-ancestors=""
-
-# check pid against protected list
-isProtected() {
-	local pid=$1 cur
-
-	[[ $(ps -o comm= -p "$pid" 2>/dev/null) =~ $BLOCKLIST ]] && return 0
-
-	# Any ancestor of this script — freezing one freezes us mid-run, leaving
-	# the tree stopped with nothing left alive to resume it.
-	if [[ -z "$ancestors" ]]; then
-		cur=$$
-		while [[ -n "$cur" && "$cur" != "0" ]]; do
-			ancestors+=" $cur "
-			cur=$(ps -o ppid= -p "$cur" 2>/dev/null | tr -d ' ')
-		done
-	fi
-
-	[[ "$ancestors" == *" $pid "* ]]
-}
-
-# state =======================================================================
-
-# fd of this run's lock, empty until first taken
-stateLock=""
-
-# the file is read-modify-written and a keypress can overlap the swayidle
-# hook, so every mutation happens under a lock held for the rest of the run
-lockState() {
-	[[ -n "$stateLock" ]] && return 0
-	exec {stateLock}>"$STATE_FILE.lock" || return 1
-	flock "$stateLock"
-}
-
-# replace the state file atomically, so no reader sees it half written
-writeState() {
-	local tmp
-	tmp=$(mktemp "$STATE_FILE.XXXXXX") || return 1
-	cat >"$tmp" || { rm -f "$tmp"; return 1; }
-	mv "$tmp" "$STATE_FILE"
-}
-
-# drop lines whose pid is gone or was reused by another program
-pruneFrozen() {
-	local pid comm source kept=""
-	lockState
-	[[ -f "$STATE_FILE" ]] || return 0
-	while IFS=$'\t' read -r pid comm source; do
-		[[ $(ps -o comm= -p "$pid" 2>/dev/null) == "$comm" ]] || continue
-		kept+="$pid"$'\t'"$comm"$'\t'"$source"$'\n'
-	done <"$STATE_FILE"
-	printf '%s' "$kept" | writeState
-}
-
-forgetFrozen() {
-	lockState
-	[[ -f "$STATE_FILE" ]] || return 0
-	awk -F'\t' -v pid="$1" '$1 != pid' "$STATE_FILE" | writeState
-}
-
-recordFrozen() {
-	forgetFrozen "$1"
-	printf '%s\t%s\t%s\n' "$1" "$(ps -o comm= -p "$1" 2>/dev/null)" "$2" >>"$STATE_FILE"
-}
-
-thawRoot() {
-	resumeTree "$1"
-	forgetFrozen "$1"
-}
-
-# prints "pid<TAB>comm<TAB>source", optionally only for one source
-listFrozen() {
-	[[ -f "$STATE_FILE" ]] || return 0
-	awk -F'\t' -v source="${1:-}" 'source == "" || $3 == source' "$STATE_FILE"
-}
-
-clearState() {
-	lockState
-	: | writeState
-}
-
-# actions =====================================================================
 
 toggleWindow() {
-	requireCommands jq
-	findFocusedWindow
-	kill -0 "$pid" 2>/dev/null || _error "$name is gone"
+	[ -n "${NIRI_SOCKET:-}" ] || [ -n "${SWAYSOCK:-}" ] || _error "Unsupported compositor. Only sway & niri"
 
-	if isFrozen "$pid"; then
-		thawRoot "$pid"
-		_info "Resumed $name"
-		return 0
-	fi
+	window_pid=$(focusedPid)
+	requirePid "$window_pid" "No focused window with a pid"
 
-	if isProtected "$pid"; then
-		_error "Refusing to freeze $name — freezing it would lock the session"
-	fi
+	# the compositor reports the xwayland proxy, so ask X which client owns the window
+	case "$(ps -o comm= -p "$window_pid")" in
+		Xwayland | xwayland-satell)
+			command -v xdotool >/dev/null || _error "xdotool is required to freeze X11 windows"
+			window_pid=$(DISPLAY="${DISPLAY:-:0}" xdotool getactivewindow getwindowpid 2>/dev/null)
+			requirePid "$window_pid" "Could not find the X11 client"
+			;;
+	esac
 
-	freezeTree "$pid"
-	isFrozen "$pid" || _error "Could not freeze $name"
-	recordFrozen "$pid" window
-	_info "Froze $name"
+	window_name=$(ps -o comm= -p "$window_pid")
+	window_stat=$(ps -o stat= -p "$window_pid")
+	[ -n "$window_stat" ] || _error "Process $window_pid is gone"
+
+	case "$window_stat" in
+		T*)
+			signalTree CONT "$window_pid"
+			forgetManual "$window_pid"
+			_info "Resumed $window_name ($window_pid)"
+			_notify "Resumed $window_name"
+			;;
+		*)
+			if isSkipped "$window_pid"; then
+				_notify "Refusing to freeze $window_name" critical
+				_error "Refusing to freeze $window_name ($window_pid)"
+			fi
+			recordManual "$window_pid"
+			signalTree STOP "$window_pid"
+			_info "Froze $window_name ($window_pid)"
+			_notify "Froze $window_name"
+			;;
+	esac
 }
 
-resumeAll() {
-	local entries entry pid
-	mapfile -t entries < <(listFrozen)
-
-	for entry in "${entries[@]}"; do
-		IFS=$'\t' read -r pid _ <<<"$entry"
-		resumeTree "$pid"
-	done
-	clearState
-
-	_info "Resumed ${#entries[@]} frozen tree(s)"
+# comm is cut at 15 chars and an AppImage runs under a different comm, so also match argv[0]'s basename
+findPids() {
+	{
+		pgrep -x -U "$(id -u)" "$1" 2>/dev/null
+		pgrep -f -U "$(id -u)" "^([^ ]*/)?$1( |\$)"
+	} | sort -u
 }
 
 stopByName() {
-	local name pid pids
 	for name in "$@"; do
-		mapfile -t pids < <(pgrep -x "$name" 2>/dev/null)
-		if [[ ${#pids[@]} -eq 0 ]]; then
-			_info "No process found for '$name'"
-			continue
-		fi
-
-		for pid in "${pids[@]}"; do
-			if isProtected "$pid"; then
-				_info "Skipping protected $name ($pid)"
-			elif isFrozen "$pid"; then
-				_info "$name ($pid) already frozen"
-			else
-				freezeTree "$pid"
-				recordFrozen "$pid" idle
-				_info "Froze $name ($pid)"
+		for named_pid in $(findPids "$name"); do
+			if isSkipped "$named_pid"; then
+				_info "Skipping $name ($named_pid)"
+				continue
 			fi
+			signalTree STOP "$named_pid"
 		done
 	done
 }
 
 startByName() {
-	local name entries entry pid comm source found
-	mapfile -t entries < <(listFrozen idle)
-
 	for name in "$@"; do
-		found=
-		for entry in "${entries[@]}"; do
-			IFS=$'\t' read -r pid comm source <<<"$entry"
-			[[ "$comm" == "$name" ]] || continue
-			thawRoot "$pid"
-			_info "Resumed $name ($pid)"
-			found=1
+		for named_pid in $(findPids "$name"); do
+			isManual "$named_pid" || signalTree CONT "$named_pid"
 		done
-
-		# names come from `ps -o comm`, so a miss here means a typo, an
-		# untruncated name, or a state file that no longer knows about the tree
-		[[ -n "$found" ]] || _info "No tracked freeze for '$name'"
 	done
 }
 
-# main ========================================================================
-
-requireCommands ps pgrep awk flock mktemp
+resumeAll() {
+	[ -f "$state_file" ] || return 0
+	while read -r manual_pid; do
+		signalTree CONT "$manual_pid"
+	done <"$state_file"
+	: >"$state_file"
+}
 
 action=${1:-}
-[[ $# -gt 0 ]] && shift
-
-pruneFrozen
+[ $# -gt 0 ] && shift
 
 case "$action" in
-window)
-	notify_enabled=1
-	toggleWindow
-	;;
-resume-all)
-	notify_enabled=1
-	resumeAll
-	;;
-stop)
-	[[ $# -gt 0 ]] || usage
-	stopByName "$@"
-	;;
-start)
-	[[ $# -gt 0 ]] || usage
-	startByName "$@"
-	;;
-*)
-	usage
-	;;
+	window) toggleWindow ;;
+	resume-all) resumeAll ;;
+	stop) stopByName "$@" ;;
+	start) startByName "$@" ;;
+	*) _info "Usage: freeze window | resume-all | stop <prog>... | start <prog>..." ;;
 esac

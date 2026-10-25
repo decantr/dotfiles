@@ -566,4 +566,7 @@ binds {
 	// Powers off the monitors. To turn them back on, do any input like
 	// moving the mouse or pressing any other key.
 	Mod+Shift+P { power-off-monitors; }
+
+	Mod+Pause hotkey-overlay-title="Freeze/Resume Window" repeat=false { spawn "~/.local/src/dotfiles/scripts/freeze" "window"; }
+	Mod+Shift+Pause hotkey-overlay-title="Resume All Frozen Windows" repeat=false { spawn "~/.local/src/dotfiles/scripts/freeze" "resume-all"; }
 }
