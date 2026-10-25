@@ -574,4 +574,5 @@ binds {
 
 	Mod+Pause hotkey-overlay-title="Freeze/Resume Window" repeat=false { spawn "~/.local/src/dotfiles/scripts/freeze" "window"; }
 	Mod+Shift+Pause hotkey-overlay-title="Resume All Frozen Windows" repeat=false { spawn "~/.local/src/dotfiles/scripts/freeze" "resume-all"; }
+	// Mod+Insert hotkey-overlay-title="Toggle Shift Spam" repeat=false { spawn "~/.local/src/dotfiles/scripts/shift-toggle.sh"; }
 }
