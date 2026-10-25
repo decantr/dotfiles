@@ -129,9 +129,10 @@ toggleWindow() {
 
 # comm is cut at 15 chars and an AppImage runs under a different comm, so also match argv[0]'s basename
 findPids() {
+	name_re=$(printf '%s' "$1" | sed 's/[][\.*^$+?(){}|]/\\&/g')
 	{
-		pgrep -x -U "$(id -u)" "$1" 2>/dev/null
-		pgrep -f -U "$(id -u)" "^([^ ]*/)?$1( |\$)"
+		pgrep -x -U "$(id -u)" "$name_re" 2>/dev/null
+		pgrep -f -U "$(id -u)" "^([^ ]*/)?$name_re( |\$)" 2>/dev/null
 	} | sort -u
 }
 
