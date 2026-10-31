@@ -27,3 +27,5 @@ press_and_hold = false
 "~/.config/niri/config.kdl" = { mode = "symlink" }
 "~/.config/skhd/skhdrc" = { mode = "symlink" }
 "~/.config/git/config" = { mode = "symlink" }
+"~/.config/nautilus/scripts-accels" = { mode = "symlink" }
+"~/.local/share/nautilus/scripts/Open Terminal" = { mode = "symlink" }

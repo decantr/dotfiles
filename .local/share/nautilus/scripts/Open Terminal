@@ -1,0 +1,11 @@
+#!/bin/sh
+
+first_selected=$(printf "%s" "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS" | head -n 1)
+
+if [ -d "$first_selected" ]; then
+	target_dir=$first_selected
+else
+	target_dir=$PWD
+fi
+
+exec ghostty --gtk-single-instance=false --working-directory="$target_dir"
